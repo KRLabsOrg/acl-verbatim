@@ -1,0 +1,181 @@
+{
+  "QuestionTypes": [
+    {
+      "Type": "Verification",
+      "Definition": "Verification questions seek a simple 'yes' or 'no' answer to confirm specific details.",
+      "Examples": [
+        "Can ground temperature reflect the influence of water in permafrost on thermokarst lakes?",
+        "Can the canopy height model (CHM) reliably reflect the actual tree height values when compared to ground truth data?",
+        "Does the method used to generate the Digital Elevation Model (DEM) from LIDAR data match the expected accuracy outlined in previous studies?",
+        "Is there a large number of thermokarst lakes in the inland regions of the Tibetan Plateau?"
+      ]
+    },
+    {
+      "Type": "Disjunctive",
+      "Definition": "Disjunctive questions present multiple options, asking the researcher to identify which one is applicable.",
+      "Examples": [
+        "Which index is more effective for extracting glacier lakes (MNDWI, NDWI, AWEI, or other indexes)?",
+        "What is the main data source for glacier lake datasets now? Landsat or Sentinel?",
+        "Are the extraction methods for glacier lake datasets mainly based on random forests, deep learning, or visual interpretation?"
+      ]
+    },
+    {
+      "Type": "Concept Completion",
+      "Definition": "Concept completion questions start with 'Who?', 'What?', 'When?', or 'Where?' to prompt the identification or completion of a specific term or defined element.",
+      "Examples": [
+        "What is a thermokarst lake? Where do they typically develop? When do they form?",
+        "What is the time range for extracting glacier lake imagery?",
+        "Where is the distribution of glacier lakes most concentrated on the Qinghai-Tibet Plateau?"
+      ]
+    },
+    {
+      "Type": "Example",
+      "Definition": "Example questions ask for instances that illustrate a particular scientific concept.",
+      "Examples": [
+        "Please provide a recent example of a small glacier lake outburst flood (GLOF) that caused loss of life and property.",
+        "Can you provide an example of a thermokarst lake in the Tibetan Plateau rapidly draining?",
+        "Please provide an example of how to calculate the abrupt change point in lake area variation."
+      ]
+    },
+    {
+      "Type": "Feature Specification",
+      "Definition": "Feature specification questions inquire about the properties or characteristics of a concept, object, or phenomenon.",
+      "Examples": [
+        "What are the characteristics of reservoir changes?",
+        "What are the basis for inferring the establishment time of reservoirs based on remote sensing data?",
+        "What specific attributes of the tree canopy are measured using LIDAR?",
+        "What are the properties of a bar graph?",
+        "What are the factors influencing thermokarst lake changes?"
+      ]
+    },
+    {
+      "Type": "Quantification",
+      "Definition": "Quantification questions seek numerical or measurable information.",
+      "Examples": [
+        "How many samples are included in the gene expression dataset?",
+        "How many thermokarst lakes are there on the Tibetan Plateau?",
+        "What is the total area of rivers globally?"
+      ]
+    },
+    {
+      "Type": "Definition",
+      "Definition": "Definition questions ask researchers to explain the meaning of a specific term or concept.",
+      "Examples": [
+        "What does 'open-access' mean in the context of scientific publications?",
+        "What is thermokarst lake drainage?",
+        "What does 'tree vertex recognition' mean in the context of tree height extraction?"
+      ]
+    },
+    {
+      "Type": "Comparison",
+      "Definition": "Comparison questions require researchers to identify similarities and/or differences between two or more scientific resources or concepts.",
+      "Examples": [
+        "How does the accuracy of tree height extraction from LIDAR data using the HASM-AD algorithm compare to traditional field-based survey methods?",
+        "How does the performance of the tree vertex recognition algorithm in mixed forests compare to that in monoculture forests?",
+        "What is the difference in accuracy between CHMs generated from 1 m resolution LIDAR data versus 0.5 m resolution LIDAR data in dense forest environments?",
+        "What are the similarities and differences between thermokarst lakes and small lakes in permafrost regions?"
+      ]
+    },
+    {
+      "Type": "Interpretation",
+      "Definition": "Interpretation questions ask researchers to infer underlying rules of their observed data patterns.",
+      "Examples": [
+        "What does the spike in temperature data from 2010 to 2020 indicate about climate trends?",
+        "What physical phenomena can be inferred from static or periodic patterns in vibration data?"
+
+      ]
+    },
+    {
+      "Type": "Causal Antecedent",
+      "Definition": "Causal antecedent questions inquire about the reasons or causes behind an event, trend",
+      "Examples": [
+        "What factors lead to errors in tree height extraction, especially in areas with high tree density?",
+        "What are the key causes of error when extracting tree heights from LIDAR data in areas with dense tree crowns?",
+        "Why the Tibetan Plateau influences global climate？",
+        "Why has the frequency of extreme weather events increased in recent decades?"
+      ]
+    },
+    {
+      "Type": "Causal Consequence",
+      "Definition": "Causal consequence questions ask about the outcomes or results that follow from a specific event, trend",
+      "Examples": [
+        "If current trends in urbanization persist, what are the likely effects on local biodiversity in metropolitan areas?",
+        "What is the impact on accuracy of inputting data from multiple sources over using only a single high resolution data?",
+        "What rock glacier data brings to improving permafrost mapping accuracy?",
+        "What happens after thermokarst lakes expand?"
+      ]
+    },
+    {
+      "Type": "Goal Orientation",
+      "Definition": "Goal orientation questions investigate the objectives or intentions behind the creation of a dataset, publication, or research project.",
+      "Examples": [
+        "What is the ultimate goal of using the HASM-AD algorithm for LIDAR point cloud processing in forest environments?",
+        "Why is it crucial to implement a predictive model for early diagnosis of diabetes in primary healthcare settings?",
+        "Why is it necessary to survey lakes using high-resolution imagery?",
+        "Why use multi-temporal data fusion to monitor land cover types in mountainous areas?"
+      ]
+    },
+    {
+      "Type": "Instrumental/Procedural",
+      "Definition": "Instrumental or procedural questions ask how to achieve certain goals",
+      "Examples": [
+        "What steps were taken to preprocess the data before conducting the analysis in the GHI machine learning project?",
+        "What specific procedures are followed to classify LIDAR point cloud data into ground, vegetation, and other categories before generating a Canopy Height Model?",
+        "What is the detailed process of thermokarst lake extraction?",
+        "Can you outline the step-by-step procedure for implementing the tree vertex identification algorithm to extract tree heights from LIDAR data?",
+        "How is water supplied to thermokarst lakes in permafrost areas?",
+        "How can Sentinel imagery be used to distinguish different types of lakes?"
+      ]
+    },
+    {
+      "Type": "Enablement",
+      "Definition": "Enablement questions focus on identifying the resources or conditions that enable an agent to perform a specific action",
+      "Examples": [
+        "What technological advancements enabled the collection of high-resolution climate data?",
+        "How does the use of high-resolution LIDAR data enable more accurate tree height extraction in dense forests?",
+        "In what ways does the integration of differential GPS positioning enhance the accuracy of tree height measurements in forested areas?",
+        "What conditions lead to a glacier lake outburst flood (GLOF)?"
+      ]
+    },
+    {
+      "Type": "Expectation",
+      "Definition": "Expectation questions inquire about anticipated outcomes or reasons why expected results did not occur.",
+      "Examples": [
+        "Why are small glacial lakes rarely reported as having outburst events?",
+        "Why uncertainty is high for small lakes in existing datasets？",
+        "Why thermokarst lakes cannot be identified using traditional water body extraction methods such as thresholding？"
+
+      ]
+    },
+    {
+      "Type": "Judgmental",
+      "Definition": "Judgmental questions ask researchers to express their opinions or evaluations.",
+      "Examples": [
+        "What is the assessment of the reliability of the findings presented in the DEF climate change report?",
+        "What do you think of the future risk of small glacial lake outbursts?",
+        "How SWOT satellite launches contribute to water monitoring？",
+        "Can we confidently say that the spatial resolution of 1m is adequate for accurate tree height extraction, based on the study’s regression analysis?"
+      ]
+    },
+    {
+      "Type": "Assertion",
+      "Definition": "Makes a statement indicating helacks knowledge or does not understand an idea.",
+      "Examples": [
+        "I can't make sense of how this specific gene-editing method impacts the CRISPR-Cas9 system’s efficiency.",
+        "I’m unsure about the significance of the activation function used in this neural network architecture for image classification.",
+        "I don't understand how the data from this sensor can be processed so quickly in real-time applications.",
+        "I don’t understand why the risk of glacial lake outbursts is high?"
+
+      ]
+    },
+    {
+      "Type": "Request/Directive",
+      "Definition": "Request or directive questions involve asking researchers to perform specific tasks, such as summarizing information, analyzing data, or conduz`cting searches.",
+      "Examples": [
+        "Please provide a comparison of tree height extraction results using the HASM-AD algorithm with different spatial resolutions of CHM.",
+        "Please provide a detailed comparison of tree height extraction performance using different algorithms on LIDAR point cloud data with varying resolution settings.",
+        "Please optimize the glacial lake outburst risk assessment model."
+      ]
+    }
+  ]
+}
