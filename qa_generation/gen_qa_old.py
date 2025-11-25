@@ -16,7 +16,7 @@ def get_orig_prompt(paper, keywords):
 
 
 def get_prompt(chunk):
-    return f"Attached is an excerpt from a scientific paper.\n\n{chunk}\n\nYour task is to formulate 3 Q&A pairs that are concerned with the facts presented in this text. The questions should be short, resembling what a user might type into a question-answering system. Steer clear of questions that are purely section-specific (e.g., 'What does Figure 5 represent?'). Ensure diversity in your Q&A pairs, avoiding any duplication. Return ONLY valid JSON - an array of objects, no markdown or explanations."
+    return f"Attached is an excerpt from a scientific paper.\n\n{chunk}\n\nYour task is to formulate 3 Q&A pairs that are concerned with the facts presented in this text. The questions should be short, resembling what a user might type into a search engine. Steer clear of questions that are purely section-specific (e.g., 'What does Figure 5 represent?'). Ensure diversity in your Q&A pairs, avoiding any duplication. Return ONLY valid JSON - an array of objects, no markdown or explanations."
 
 
 def get_args():
@@ -46,13 +46,18 @@ def main():
         chunk_tuples = chunker.chunk(content)
         with open(output_path / f"{paper_id}.json", "w") as f:
             for i, (chunk, e_chunk) in enumerate(chunk_tuples):
+                if i < 3:
+                    continue
+                out = {"chunk_index": i, "chunk": e_chunk, "qa": None}
                 prompt = get_prompt(e_chunk)
-                response = llm_client.complete(prompt, json_mode=True)
-                out = {"qa": json.loads(response), "chunk_index": i}
+                try:
+                    response = llm_client.complete(prompt, json_mode=True)
+                    out["qa"] = json.loads(response)
+                except Exception as e:
+                    out["err"] = f"{e}"
                 f.write(json.dumps(out))
-                print(response)
-                break  # while we are testing
-        break  # while we are testing
+                # break  # while we are testing
+        # break  # while we are testing
 
 
 if __name__ == "__main__":
