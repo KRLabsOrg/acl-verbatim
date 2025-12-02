@@ -1,5 +1,6 @@
 import argparse
 import json
+import random
 from pathlib import Path
 
 from tqdm import tqdm
@@ -41,6 +42,10 @@ def get_args():
     )
     parser.add_argument("--input-dir", required=True, help="path to MD papers")
     parser.add_argument("--output-dir", required=True, help="output path")
+    parser.add_argument("--papers-file", help="optional list of papers to keep")
+    parser.add_argument(
+        "--n", type=int, help="optional number of chunks to sample per paper"
+    )
     return parser.parse_args()
 
 
@@ -57,29 +62,44 @@ def main():
         max_chunk_size=5000,
     )
 
+    to_keep = None
+    if args.papers_file:
+        with open(args.papers_file) as f:
+            papers = json.load(f)
+            to_keep = set(paper["url"].split("/")[-2] for paper in papers)
+
     output_path = Path(args.output_dir)
-    for file_path in tqdm(Path(args.input_dir).rglob("*")):
+    for file_path in tqdm(Path(args.input_dir).rglob("*.md")):
         paper_id = file_path.stem
+        if to_keep and paper_id not in to_keep:
+            continue
+
+        print(f"chunking paper {paper_id}")
         content = file_path.read_text(encoding="utf-8")
         chunk_tuples = chunker.chunk(content)
+        to_classify = None
+        if args.n:
+            to_classify = set(random.sample(range(len(chunk_tuples)), args.n))
         with open(output_path / f"{paper_id}.json", "w") as f:
             for i, (chunk, e_chunk) in enumerate(chunk_tuples):
                 out = {"chunk_index": i, "chunk": e_chunk, "qa": None}
-                prompt = get_prompt(e_chunk)
-                try:
-                    response = llm_client.complete(prompt, json_mode=True)
-                    out["q_types"] = []
-                    for item in json.loads(response):
-                        for key in ("type", "name"):
-                            if key in item:
-                                out["q_types"].append(item[key])
-                                break
-                        else:
-                            print(
-                                f"WARNING, no known key in response item: {item}, skipping"
-                            )
-                except Exception as e:
-                    out["err"] = f"{e}"
+                if to_classify is None or i in to_classify:
+                    prompt = get_prompt(e_chunk)
+                    try:
+                        response = llm_client.complete(prompt, json_mode=True)
+                        out["q_types"] = []
+                        for item in json.loads(response):
+                            for key in ("type", "name"):
+                                if key in item:
+                                    out["q_types"].append(item[key])
+                                    break
+                            else:
+                                print(
+                                    f"WARNING, no known key in response item: {item}, skipping"
+                                )
+                    except Exception as e:
+                        out["err"] = f"{e}"
+
                 f.write(json.dumps(out) + "\n")
                 # break  # while we are testing
         # break  # while we are testing

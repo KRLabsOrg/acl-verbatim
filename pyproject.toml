@@ -1,0 +1,20 @@
+[project]
+name = "acl-verbatim"
+version = "0.0.1"
+description = "An application of the verbatim-rag library to research papers in the ACL anthology"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Gabor Recski", email = "recski@krlabs.eu"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "verbatim-rag>=0.1.7",
+    "lingua-language-detector",
+]
+
+[tool.setuptools]
+py-modules = []

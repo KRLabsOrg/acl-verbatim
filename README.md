@@ -35,20 +35,25 @@ python scripts/query_index.py --index-file acl.db --device cuda  --collection-na
 ```
 
 
+### QA benchmark generation
+New, still needs fixes, see NOTES.md
+
+Sample 33 random papers.
+```bash
+python acl-verbatim/qa_generation/sample_papers.py --input-file papers.json --output-file sample_data/random_papers_33.json --n 33 --seed 20251202
+```
+
+Chunk papers and choose one random chunk that is classified based on question type, generating
+three question types for each chunk.
+```bash
+python qa_generation/chunk_and_classify.py --input-dir ../verbatim-rag/acl_md --output-dir sample_data/chunks --papers-file sample_data/random_papers_33.json --n 1
+```
+
+Generate questions for these chunks.
+```bash
+python acl-verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
+```
 
 
-## NOTES
 
-### 2025. 11. 10
-Finished processing all anthology papers, stats:
-|   |   |
-|---|---|
-|total PDFs | 111 640 |
-|total MDs created | 107 559 |
-|skipped because not listed in metadata file | 4 037 |
-|fails to convert | 63 |
-|empty MDs (??) | 154 |
-
-Out of the 63 PDFs that fail to convert, 47 will fail fast with an exception, the other 16 are listed
-as `TO_SKIP` because they either cause segfaults (7 papers) or take a long time to fail (9 papers)
 
