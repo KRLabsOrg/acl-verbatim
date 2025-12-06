@@ -26,6 +26,11 @@ Sample command to chunk and index all md files in a given directory (using a GPU
 time python scripts/index_acl.py --input-dir acl_md/acl --index-file acl.db --metadata-file papers.json --collection-name acl --device cuda &> acl_log/20251103_index_acl.log
 ```
 
+Use cloud Milvus instance:
+```bash
+python scripts/index_acl.py --input-dir acl_md/ --metadata-file papers.json --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
+```
+
 ### Querying
 
 Sample command for loading an index and trying some queries
@@ -34,6 +39,10 @@ Sample command for loading an index and trying some queries
 python scripts/query_index.py --index-file acl.db --device cuda  --collection-name acl
 ```
 
+Using cloud Milvus instance:
+```bash
+python scripts/query_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
+```
 
 ### QA benchmark generation
 New, still needs fixes, see NOTES.md

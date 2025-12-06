@@ -34,7 +34,7 @@ TO_SKIP = {
     "W02-1004",
     "W10-1405",
     "2024.findings-acl.961",
-    "2025.findings-naacl.300"
+    "2025.findings-naacl.300",
 }
 
 

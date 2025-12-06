@@ -62,13 +62,15 @@ def main():
                 for line in f:
                     try:
                         chunk_data = json.loads(line)
-                        if 'q_types' in chunk_data:
+                        if "q_types" in chunk_data:
                             chunk_data["paper_id"] = paper_id
                             chunk_data["qa"] = []
                             for q_type in chunk_data["q_types"]:
                                 prompt = get_prompt(chunk_data["chunk"], q_type)
                                 response = llm_client.complete(prompt, json_mode=False)
-                                chunk_data["qa"].append({'q_type': q_type, 'question': response})
+                                chunk_data["qa"].append(
+                                    {"q_type": q_type, "question": response}
+                                )
                     except Exception as e:
                         chunk_data["err"] = f"{e}"
 
