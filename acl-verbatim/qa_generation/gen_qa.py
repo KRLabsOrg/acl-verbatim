@@ -75,6 +75,7 @@ def main():
                         chunk_data["err"] = f"{e}"
 
                     of.write(json.dumps(chunk_data))
+                    of.write('\n')
                     # break  # while we are testing
         # break  # while we are testing
 

@@ -31,18 +31,30 @@ Use cloud Milvus instance:
 python scripts/index_acl.py --input-dir acl_md/ --metadata-file papers.json --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
 ```
 
-### Querying
+### Testing
 
-Sample command for loading an index and trying some queries
+Load a local index and try some queries interactively:
 
 ```bash
-python scripts/query_index.py --index-file acl.db --device cuda  --collection-name acl
+python scripts/test_index.py --index-file acl.db --device cuda  --collection-name acl
 ```
 
 Using cloud Milvus instance:
 ```bash
-python scripts/query_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
+python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
 ```
+
+Or to test only retrieval:
+```bash
+python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r
+```
+
+
+Batch testing for retrieval only using ground truth data:
+```bash
+python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl
+```
+
 
 ### QA benchmark generation
 New, still needs fixes, see NOTES.md
