@@ -280,7 +280,7 @@ def main():
 
             with st.spinner("Searching..."):
                 try:
-                    search_params = {"nprobe": 128000}
+                    search_params = {"nprobe": 60000}
 
                     # Build info string based on search mode
                     if hybrid_weights:
