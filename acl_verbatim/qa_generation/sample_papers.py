@@ -2,16 +2,13 @@ import argparse
 import json
 import random
 
-import langdetect
-
 
 def _keep_paper(paper):
-    if langdetect.detect(paper["title"]) != "en":
+    if paper["lang"] != "en":
         return False
     if not paper["authors"]:
         # removing volumes
         return False
-
     return True
 
 
