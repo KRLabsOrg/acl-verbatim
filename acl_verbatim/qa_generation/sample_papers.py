@@ -4,16 +4,15 @@ import random
 
 
 def _keep_paper(paper):
-    if paper["lang"] != "en":
+    if "language" in paper and paper["language"] != "English":
         return False
-    if not paper["authors"]:
+    if 'author' not in paper or len(paper["author"]) == 0:
         # removing volumes
         return False
+    if 'aclanthology' not in paper["url"]:
+        # removing papers not available from anthology (less than 5K out of 110K, mostly LREC)
+        return False
     return True
-
-
-def filter_papers(papers):
-    return [paper for paper in papers if _keep_paper(paper)]
 
 
 def get_args():
@@ -29,12 +28,13 @@ def get_args():
 def main():
     args = get_args()
     with open(args.input_file) as f:
-        data = json.load(f)
-        filtered_papers = filter_papers(data)
+        filtered_papers = [
+            paper for paper in (json.loads(line) for line in f) if _keep_paper(paper)
+        ]
     with open(args.output_file, "w") as of:
         random.seed(args.seed)
         print(
-            f"randomly choosing {args.n} papers from {len(data)}, random seed is {args.seed}"
+            f"randomly choosing {args.n} papers from {len(filtered_papers)}, random seed is {args.seed}"
         )
         sample = random.sample(filtered_papers, args.n)
         json.dump(sample, of)

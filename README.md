@@ -61,18 +61,18 @@ New, still needs fixes, see NOTES.md
 
 Sample 33 random papers.
 ```bash
-python acl-verbatim/qa_generation/sample_papers.py --input-file papers.json --output-file sample_data/random_papers_33.json --n 33 --seed 20251202
+python acl_verbatim/qa_generation/sample_papers.py --input-file papers.json --output-file sample_data/random_papers_33.json --n 33 --seed 20251202
 ```
 
 Chunk papers and choose one random chunk that is classified based on question type, generating
 three question types for each chunk.
 ```bash
-python qa_generation/chunk_and_classify.py --input-dir ../verbatim-rag/acl_md --output-dir sample_data/chunks --papers-file sample_data/random_papers_33.json --n 1
+python acl_verbatim/qa_generation/chunk_and_classify.py --input-dir ../verbatim-rag/acl_md --output-dir sample_data/chunks --papers-file sample_data/random_papers_33.json --n 1
 ```
 
 Generate questions for these chunks.
 ```bash
-python acl-verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
+python acl_verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
 ```
 
 

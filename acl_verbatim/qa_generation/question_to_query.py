@@ -16,7 +16,7 @@ def get_args():
 
 
 def get_prompt(question):
-    return f"""You are a researcher using a search engine to find information in research papers.
+    return f"""You are a researcher using a search engine to find information.
 **Your question**: {question}
 
 Please generate a search query that you would use to find the answer to this question.
@@ -25,16 +25,21 @@ Please generate a search query that you would use to find the answer to this que
 1. Only return a search query without any other information.
 2. The query should be short and simple, resembling what a user might type into a search engine.
 3. The query does not need to be grammatical.
-4. The query should be equivalent to the original question.
 """
+
+
+# 4. The query should be equivalent to the original question.
 
 
 def main():
     args = get_args()
 
+    # llm_client = LLMClient(
+    #     model="moonshotai/kimi-k2-instruct-0905",
+    #     api_base="https://api.groq.com/openai/v1/",
+    # )
     llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
+        model="gpt-5.2",
     )
 
     output_path = Path(args.output_dir)
@@ -45,10 +50,12 @@ def main():
                 for line in f:
                     try:
                         chunk_data = json.loads(line)
-                        if chunk_data.get('qa') is not None:
+                        if chunk_data.get("qa") is not None:
                             for q in chunk_data["qa"]:
                                 prompt = get_prompt(q["question"])
-                                q['query'] = llm_client.complete(prompt, json_mode=False)
+                                q["query"] = llm_client.complete(
+                                    prompt, json_mode=False
+                                )
                     except Exception as e:
                         traceback.print_exc()
                         chunk_data["err"] = f"{e}"

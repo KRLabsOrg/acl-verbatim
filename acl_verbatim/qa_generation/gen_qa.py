@@ -49,9 +49,12 @@ Please generate one question that can be answered by the above text and which be
 def main():
     args = get_args()
 
+    # llm_client = LLMClient(
+    #     model="moonshotai/kimi-k2-instruct-0905",
+    #     api_base="https://api.groq.com/openai/v1/",
+    # )
     llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
+        model="gpt-5.2",
     )
 
     output_path = Path(args.output_dir)
@@ -63,14 +66,17 @@ def main():
                     try:
                         chunk_data = json.loads(line)
                         if "q_types" in chunk_data:
-                            chunk_data["paper_id"] = paper_id
-                            chunk_data["qa"] = []
-                            for q_type in chunk_data["q_types"]:
-                                prompt = get_prompt(chunk_data["chunk"], q_type)
-                                response = llm_client.complete(prompt, json_mode=False)
-                                chunk_data["qa"].append(
-                                    {"q_type": q_type, "question": response}
-                                )
+                            if chunk_data['qa']:
+                                print(f'questions already exist for {paper_id=}, skipping...')
+                            else:
+                                chunk_data["paper_id"] = paper_id
+                                chunk_data["qa"] = []
+                                for q_type in chunk_data["q_types"]:
+                                    prompt = get_prompt(chunk_data["chunk"], q_type)
+                                    response = llm_client.complete(prompt, json_mode=False)
+                                    chunk_data["qa"].append(
+                                        {"q_type": q_type, "question": response}
+                                    )
                     except Exception as e:
                         chunk_data["err"] = f"{e}"
 

@@ -1,6 +1,8 @@
 import argparse
 import json
+import os
 import random
+import traceback
 from pathlib import Path
 
 from tqdm import tqdm
@@ -56,6 +58,9 @@ def main():
         model="moonshotai/kimi-k2-instruct-0905",
         api_base="https://api.groq.com/openai/v1/",
     )
+    # llm_client = LLMClient(
+    #     model="gpt-5.2",
+    # )
 
     chunker = MarkdownChunkerProvider(
         min_chunk_size=500,
@@ -80,7 +85,11 @@ def main():
         to_classify = None
         if args.n:
             to_classify = set(random.sample(range(len(chunk_tuples)), args.n))
-        with open(output_path / f"{paper_id}.json", "w") as f:
+        out_file = output_path / f"{paper_id}.json"
+        if os.path.exists(out_file):
+            print(f"{out_file=} exists, skipping")
+            continue
+        with open(out_file, "w") as f:
             for i, (chunk, e_chunk) in enumerate(chunk_tuples):
                 out = {"chunk_index": i, "chunk": e_chunk, "qa": None}
                 if to_classify is None or i in to_classify:
@@ -98,6 +107,7 @@ def main():
                                     f"WARNING, no known key in response item: {item}, skipping"
                                 )
                     except Exception as e:
+                        traceback.print_exc()
                         out["err"] = f"{e}"
 
                 f.write(json.dumps(out) + "\n")

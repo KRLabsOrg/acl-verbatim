@@ -17,12 +17,22 @@ from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.core import LLMClient
 
 
+HYBRID_WEIGHTS = {"dense": 0.4, "sparse": 0.4, "full_text": 0.2}
+
+
 def get_args():
     parser = argparse.ArgumentParser(description="Query ACL Anthology index")
     parser.add_argument("--index-file", help="File for storing index db (local mode)")
     parser.add_argument("--collection-name", required=True, help="Name of collection")
+    parser.add_argument(
+        "-s",
+        "--search-type",
+        required=True,
+        help='Type of search ("dense", "sparse", "hybrid", "full_text", "auto")',
+    )
     parser.add_argument("--questions-dir", help="Path to questions")
     parser.add_argument("--output-file", help="File for storing search results")
+    parser.add_argument("-f", "--query-field", help="Field to use as search query")
     parser.add_argument("-k", type=int, default=5)
     parser.add_argument(
         "--device", required=True, help="Device to use for embedding (e.g. cpu or cuda)"
@@ -73,9 +83,10 @@ def save_results(results, output_file):
 def get_results_for_query(query, index, paper_id, chunk_index, args):
     search_results = index.query(
         text=query,
+        search_type=args.search_type,
         k=args.k,
         rrf_k=60,
-        hybrid_weights=None,
+        hybrid_weights=HYBRID_WEIGHTS,
         filter=None,
     )
     output = {
@@ -135,7 +146,7 @@ def get_results(index, rag, args):
                 for q in chunk_data["qa"]:
                     results.append(
                         get_results_for_query(
-                            q["question"], index, paper_id, chunk_index, args
+                            q[args.query_field], index, paper_id, chunk_index, args
                         )
                     )
     return results
@@ -144,20 +155,25 @@ def get_results(index, rag, args):
 def get_overall_stats(stats, args):
 
     rows = []
-
+    print(
+        f"Results for {args.output_file=}, {args.query_field=}, {args.search_type=}, {HYBRID_WEIGHTS=}"
+    )
+    print(f"Total queries: {stats['queries']}\n")
     for i in range(1, args.k + 1):
         stats[f"total_corr_paper@{i}"] = (
-            stats[f"total_corr_paper@{i-1}"] + stats[f"corr_paper@{i}"]
+            stats[f"total_corr_paper@{i - 1}"] + stats[f"corr_paper@{i}"]
         )
         paper_recall_at_i = stats[f"total_corr_paper@{i}"] / stats["queries"]
 
         stats[f"total_corr_chunk@{i}"] = (
-            stats[f"total_corr_chunk@{i-1}"] + stats[f"corr_chunk@{i}"]
+            stats[f"total_corr_chunk@{i - 1}"] + stats[f"corr_chunk@{i}"]
         )
         chunk_recall_at_i = stats[f"total_corr_chunk@{i}"] / stats["queries"]
 
         if i in (1, 3, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000):
-            rows.append([f"{i}", f"{paper_recall_at_i:.2%}", f"{chunk_recall_at_i:.2%}"])
+            rows.append(
+                [f"{i}", f"{paper_recall_at_i:.2%}", f"{chunk_recall_at_i:.2%}"]
+            )
 
     print(tabulate(rows, headers=["k", "paper R @ k", "chunk R @ k"]))
 

@@ -1,4 +1,8 @@
-### 2025.12.11
+### 2025.12.15
+- built larger sample (1000 papers) for benchmark generation
+- will skip papers whose full text is not in the anthology. Based on URLs this appears to be less
+  than 5K papers, and almost all of them are older LREC papers (2016 was the first LREC included in
+  the anthology). Remaining papers are less than 300.
 
 ### 2025.12.02
 - to fix in benchmark generation
