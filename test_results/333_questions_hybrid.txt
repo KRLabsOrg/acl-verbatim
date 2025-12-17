@@ -1,0 +1,14 @@
+output file sample_data/333_20251215/search_results_333_500_question.jsonl exists, will not run search
+Total queries: 881
+
+  k  paper R @ k    chunk R @ k
+---  -------------  -------------
+  1  32.80%         16.12%
+  3  39.50%         27.36%
+  5  42.57%         31.67%
+ 10  47.33%         35.98%
+ 20  54.82%         42.22%
+ 50  66.40%         50.74%
+100  70.49%         54.71%
+200  74.01%         58.12%
+500  79.57%         64.36%
