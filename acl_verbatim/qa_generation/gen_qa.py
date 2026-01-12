@@ -66,14 +66,18 @@ def main():
                     try:
                         chunk_data = json.loads(line)
                         if "q_types" in chunk_data:
-                            if chunk_data['qa']:
-                                print(f'questions already exist for {paper_id=}, skipping...')
+                            if chunk_data["qa"]:
+                                print(
+                                    f"questions already exist for {paper_id=}, skipping..."
+                                )
                             else:
                                 chunk_data["paper_id"] = paper_id
                                 chunk_data["qa"] = []
                                 for q_type in chunk_data["q_types"]:
                                     prompt = get_prompt(chunk_data["chunk"], q_type)
-                                    response = llm_client.complete(prompt, json_mode=False)
+                                    response = llm_client.complete(
+                                        prompt, json_mode=False
+                                    )
                                     chunk_data["qa"].append(
                                         {"q_type": q_type, "question": response}
                                     )
@@ -81,7 +85,7 @@ def main():
                         chunk_data["err"] = f"{e}"
 
                     of.write(json.dumps(chunk_data))
-                    of.write('\n')
+                    of.write("\n")
                     # break  # while we are testing
         # break  # while we are testing
 

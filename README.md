@@ -52,7 +52,7 @@ python scripts/test_index.py --collection-name acl --device cuda --use-cloud --c
 
 Batch testing for retrieval only using ground truth data:
 ```bash
-python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl
+python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl --query-field question
 ```
 
 
@@ -74,7 +74,6 @@ Generate questions for these chunks.
 ```bash
 python acl_verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
 ```
-
 
 
 
