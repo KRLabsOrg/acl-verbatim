@@ -6,10 +6,10 @@ import random
 def _keep_paper(paper):
     if "language" in paper and paper["language"] != "English":
         return False
-    if 'author' not in paper or len(paper["author"]) == 0:
+    if "author" not in paper or len(paper["author"]) == 0:
         # removing volumes
         return False
-    if 'aclanthology' not in paper["url"]:
+    if "aclanthology" not in paper["url"]:
         # removing papers not available from anthology (less than 5K out of 110K, mostly LREC)
         return False
     return True

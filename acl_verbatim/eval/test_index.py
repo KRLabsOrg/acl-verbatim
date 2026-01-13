@@ -1,93 +1,239 @@
 import argparse
 import json
 import logging
-import os
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Optional, Sequence
 
 from tabulate import tabulate
 from tqdm import tqdm
 
-from verbatim_rag import VerbatimIndex, VerbatimRAG
+from verbatim_rag import VerbatimIndex, VerbatimRAG, BaseReranker
 from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
     SpladeProvider,
 )
+from verbatim_rag.vector_stores.base import SearchResult
 from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.core import LLMClient
 
 
-HYBRID_WEIGHTS = {"dense": 0.4, "sparse": 0.4, "full_text": 0.2}
+HYBRID_WEIGHTS = {"dense": 0.3, "full_text": 0.7}
 
 
-def get_args():
-    parser = argparse.ArgumentParser(description="Query ACL Anthology index")
-    parser.add_argument("--index-file", help="File for storing index db (local mode)")
-    parser.add_argument("--collection-name", required=True, help="Name of collection")
-    parser.add_argument(
+@dataclass(frozen=True)
+class TestIndexArgs:
+    index_file: Optional[Path]
+    collection_name: str
+    search_type: str
+    questions_dir: Optional[Path]
+    output_file: Optional[Path]
+    query_field: Optional[str]
+    k: int
+    device: str
+    retrieve_only: bool
+    use_cloud: bool
+    cloud_uri: Optional[str]
+    rerank: bool
+    log_level: str
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Query / evaluate the ACL Anthology index"
+    )
+
+    index_group = parser.add_argument_group("Index")
+    index_group.add_argument(
+        "--collection-name", required=True, help="Milvus collection name"
+    )
+    index_group.add_argument(
+        "--index-file", type=Path, help="Local Milvus DB path (local mode)"
+    )
+
+    search_group = parser.add_argument_group("Search")
+    search_group.add_argument(
         "-s",
         "--search-type",
-        required=True,
-        help='Type of search ("dense", "sparse", "hybrid", "full_text", "auto")',
+        default="auto",
+        choices=("dense", "sparse", "hybrid", "full_text", "auto"),
+        help='Search type (default: "auto")',
     )
-    parser.add_argument("--questions-dir", help="Path to questions")
-    parser.add_argument("--output-file", help="File for storing search results")
-    parser.add_argument("-f", "--query-field", help="Field to use as search query")
-    parser.add_argument("-k", type=int, default=5)
-    parser.add_argument(
-        "--device", required=True, help="Device to use for embedding (e.g. cpu or cuda)"
+    search_group.add_argument(
+        "-k", type=int, default=5, help="Top-k to retrieve (default: 5)"
     )
-    parser.add_argument(
+    search_group.add_argument(
+        "--device",
+        default="cpu",
+        help="Embedding device (e.g. cpu, cuda) (default: cpu)",
+    )
+    search_group.add_argument(
         "-r",
         "--retrieve-only",
         action="store_true",
-        help="Only test retrieval",
+        help="Only test retrieval (skip LLM answer generation)",
     )
-    parser.add_argument(
+
+    mode_group = parser.add_argument_group("Mode")
+    mode_group.add_argument(
+        "--questions-dir", type=Path, help="Batch mode: directory of question files"
+    )
+    mode_group.add_argument(
+        "--output-file",
+        type=Path,
+        help="Batch mode: JSONL output file (created if missing)",
+    )
+    mode_group.add_argument(
+        "-f",
+        "--query-field",
+        help="Batch mode: field name to use as query (e.g. question or question_en)",
+    )
+
+    store_group = parser.add_argument_group("Milvus Store")
+    store_group.add_argument(
         "--use-cloud",
         action="store_true",
         help="Use CloudMilvusStore instead of LocalMilvusStore",
     )
-    parser.add_argument(
+    store_group.add_argument(
         "--cloud-uri",
-        help="URI for cloud Milvus instance (e.g. http://localhost:19530)",
+        help="Cloud Milvus URI (e.g. http://localhost:19530) (required with --use-cloud)",
     )
 
-    args = parser.parse_args()
+    rerank_group = parser.add_argument_group("Reranking")
+    rerank_group.add_argument(
+        "--rerank",
+        action="store_true",
+        help="Enable reranking of retrieved results",
+    )
 
-    # Validate arguments
-    if args.use_cloud:
-        if not args.cloud_uri:
-            parser.error("--cloud-uri is required when --use-cloud is specified")
-    else:
-        if not args.index_file:
-            parser.error("--index-file is required when --use-cloud is not specified")
+    logging_group = parser.add_argument_group("Logging")
+    logging_group.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=("CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"),
+        help="Logging verbosity (default: INFO)",
+    )
 
-    return args
+    return parser
 
 
-def load_results(results_file):
-    results = []
-    with open(results_file) as f:
+def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
+    """Parse and validate CLI args."""
+    parser = _build_parser()
+    ns = parser.parse_args(argv)
+
+    if ns.use_cloud and not ns.cloud_uri:
+        parser.error("--cloud-uri is required when --use-cloud is specified")
+    if not ns.use_cloud and not ns.index_file:
+        parser.error("--index-file is required when --use-cloud is not specified")
+
+    if ns.questions_dir:
+        if not ns.output_file:
+            parser.error("--output-file is required when --questions-dir is specified")
+        if not ns.query_field:
+            parser.error("--query-field is required when --questions-dir is specified")
+
+    return TestIndexArgs(
+        index_file=ns.index_file,
+        collection_name=ns.collection_name,
+        search_type=ns.search_type,
+        questions_dir=ns.questions_dir,
+        output_file=ns.output_file,
+        query_field=ns.query_field,
+        k=ns.k,
+        device=ns.device,
+        retrieve_only=ns.retrieve_only,
+        use_cloud=ns.use_cloud,
+        cloud_uri=ns.cloud_uri,
+        rerank=ns.rerank,
+        log_level=ns.log_level,
+    )
+
+
+def setup_logging(log_level: str) -> None:
+    logging.basicConfig(
+        level=getattr(logging, log_level), format="%(levelname)s: %(message)s"
+    )
+
+
+def load_results(results_file: Path) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    with results_file.open() as f:
         for line in f:
             results.append(json.loads(line))
     return results
 
 
-def save_results(results, output_file):
-    with open(output_file, "w") as of:
+def save_results(results: list[dict[str, Any]], output_file: Path) -> None:
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with output_file.open("w") as of:
         for res in results:
             of.write(json.dumps(res) + "\n")
 
 
-def get_results_for_query(query, index, paper_id, chunk_index, args):
-    search_results = index.query(
-        text=query,
-        search_type=args.search_type,
-        k=args.k,
+def build_reranker(args: TestIndexArgs) -> Optional[BaseReranker]:
+    """Create a reranker instance from args (or None)."""
+    if not args.rerank:
+        return None
+
+    from verbatim_rag import SentenceTransformersReranker
+
+    return SentenceTransformersReranker(
+        model="jinaai/jina-reranker-v2-base-multilingual",
+        device=args.device,
+        rerank_k=args.k,
+        text_field="enhanced_text",
+    )
+
+
+def _query_index(
+    index: VerbatimIndex,
+    question: str,
+    search_type: str,
+    k: int,
+    reranker: Optional[BaseReranker],
+) -> list[SearchResult]:
+    """Run retrieval and optionally rerank results."""
+    retrieve_k = k
+    if reranker is not None:
+        retrieve_k = max(retrieve_k, int(getattr(reranker, "rerank_k", retrieve_k)))
+
+    hybrid_weights = HYBRID_WEIGHTS if search_type in ("auto", "hybrid") else None
+    results = index.query(
+        text=question,
+        search_type=search_type,
+        k=retrieve_k,
         rrf_k=60,
-        hybrid_weights=HYBRID_WEIGHTS,
+        hybrid_weights=hybrid_weights,
         filter=None,
+    )
+    if not reranker:
+        return results[:k]
+    try:
+        return reranker.rerank(question, results)[:k]
+    except Exception as exc:
+        logging.warning(f"Reranker failed, using original order: {exc}")
+        return results[:k]
+
+
+def get_results_for_query(
+    query: str,
+    index: VerbatimIndex,
+    paper_id: str,
+    chunk_index: int,
+    search_type: str,
+    k: int,
+    reranker: Optional[BaseReranker],
+) -> dict[str, Any]:
+    """Run a single query and compute whether the gold paper/chunk is retrieved."""
+    search_results = _query_index(
+        index=index,
+        question=query,
+        search_type=search_type,
+        k=k,
+        reranker=reranker,
     )
     output = {
         "query": query,
@@ -113,8 +259,8 @@ def get_results_for_query(query, index, paper_id, chunk_index, args):
     return output
 
 
-def get_stats_from_results(results):
-    stats = Counter()
+def get_stats_from_results(results: list[dict[str, Any]]) -> Counter[str]:
+    stats: Counter[str] = Counter()
     gold_papers, gold_chunks = set(), set()
     for res in results:
         gold_papers.add(res["gold_paper"])
@@ -133,9 +279,14 @@ def get_stats_from_results(results):
     return stats
 
 
-def get_results(index, rag, args):
-    results = []
-    for file_path in tqdm(Path(args.questions_dir).rglob("*")):
+def get_results(
+    index: VerbatimIndex,
+    args: TestIndexArgs,
+    reranker: Optional[BaseReranker],
+) -> list[dict[str, Any]]:
+    """Compute retrieval results for all questions under `questions_dir`."""
+    results: list[dict[str, Any]] = []
+    for file_path in tqdm(args.questions_dir.rglob("*")):
         paper_id = file_path.stem
         with open(file_path) as f:
             for line in f:
@@ -146,17 +297,22 @@ def get_results(index, rag, args):
                 for q in chunk_data["qa"]:
                     results.append(
                         get_results_for_query(
-                            q[args.query_field], index, paper_id, chunk_index, args
+                            q[args.query_field],
+                            index,
+                            paper_id,
+                            chunk_index,
+                            args.search_type,
+                            args.k,
+                            reranker,
                         )
                     )
     return results
 
 
-def get_overall_stats(stats, args):
-
+def get_overall_stats(stats: Counter[str], args: TestIndexArgs) -> None:
     rows = []
     print(
-        f"Results for {args.output_file=}, {args.query_field=}, {args.search_type=}, {HYBRID_WEIGHTS=}"
+        f"Results for {args.output_file=}, {args.query_field=}, {args.search_type=}, {HYBRID_WEIGHTS=}, {args.rerank=}"
     )
     print(f"Total queries: {stats['queries']}\n")
     for i in range(1, args.k + 1):
@@ -178,30 +334,34 @@ def get_overall_stats(stats, args):
     print(tabulate(rows, headers=["k", "paper R @ k", "chunk R @ k"]))
 
 
-def test_batch(args):
-    if os.path.exists(args.output_file):
+def test_batch(args: TestIndexArgs) -> None:
+    """Batch retrieval evaluation against a ground-truth questions directory."""
+    if not args.output_file:
+        raise ValueError("output_file is required for batch mode")
+    if not args.questions_dir:
+        raise ValueError("questions_dir is required for batch mode")
+    if not args.query_field:
+        raise ValueError("query_field is required for batch mode")
+
+    reranker = build_reranker(args)
+
+    if args.output_file.exists():
         print(f"output file {args.output_file} exists, will not run search")
         results = load_results(args.output_file)
     else:
         index = get_index(args)
-        if args.retrieve_only:
-            rag = None
-        else:
-            rag = get_rag(index, args)
-
-        results = get_results(index, rag, args)
+        results = get_results(index, args, reranker)
         save_results(results, args.output_file)
 
     stats = get_stats_from_results(results)
     get_overall_stats(stats, args)
 
 
-def test_interactive(args):
+def test_interactive(args: TestIndexArgs) -> None:
+    """Interactive querying for QA (`VerbatimRAG`) or retrieval-only."""
     index = get_index(args)
-    if args.retrieve_only:
-        rag = None
-    else:
-        rag = get_rag(index, args)
+    reranker = build_reranker(args)
+    rag = None if args.retrieve_only else get_rag(index, args, reranker)
 
     while True:
         test_query = input(">")
@@ -210,17 +370,22 @@ def test_interactive(args):
             response = rag.query(test_query)
             logging.info(f"answer: {response.answer}")
         else:
-            results = index.query(
-                text=test_query, k=args.k, rrf_k=60, hybrid_weights=None, filter=None
+            results = _query_index(
+                index=index,
+                question=test_query,
+                search_type=args.search_type,
+                k=args.k,
+                reranker=reranker,
             )
-            for i, res in enumerate(results[::-1]):
+            for i, res in enumerate(results, start=1):
                 d = res.metadata
                 logging.info(
                     f"{i}. Paper: {d['document_id']}, Chunk: {d['chunk_number']}, Title: {d['title']}, URL: {d['url']}, Score: {res.score}"
                 )
 
 
-def get_index(args):
+def get_index(args: TestIndexArgs) -> VerbatimIndex:
+    """Create a `VerbatimIndex` configured for ACL Anthology search."""
     dense_provider = SentenceTransformersProvider(
         model_name="ibm-granite/granite-embedding-english-r2", device=args.device
     )
@@ -245,7 +410,7 @@ def get_index(args):
     else:
         logging.info(f"Using LocalMilvusStore at {args.index_file}")
         vector_store = LocalMilvusStore(
-            db_path=args.index_file,
+            db_path=str(args.index_file),
             collection_name=args.collection_name,
             enable_dense=True,
             enable_sparse=True,
@@ -264,23 +429,26 @@ def get_index(args):
     return index
 
 
-def get_rag(index, args):
+def get_rag(
+    index: VerbatimIndex, args: TestIndexArgs, reranker: Optional[BaseReranker]
+) -> VerbatimRAG:
     llm_client = LLMClient(
         model="moonshotai/kimi-k2-instruct-0905",
         api_base="https://api.groq.com/openai/v1/",
     )
-    rag = VerbatimRAG(index, llm_client=llm_client, k=args.k)
+    rag = VerbatimRAG(index, llm_client=llm_client, k=args.k, reranker=reranker)
 
     return rag
 
 
 def main():
-    args = get_args()
+    args = parse_args()
+    setup_logging(args.log_level)
 
-    if args.questions_dir:
+    if args.questions_dir is not None:
         test_batch(args)
-    else:
-        test_interactive(args)
+        return
+    test_interactive(args)
 
 
 if __name__ == "__main__":

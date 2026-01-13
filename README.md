@@ -52,7 +52,7 @@ python scripts/test_index.py --collection-name acl --device cuda --use-cloud --c
 
 Batch testing for retrieval only using ground truth data:
 ```bash
-python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl
+python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl --query-field question
 ```
 
 
@@ -96,7 +96,6 @@ results:
 ```bash
 python acl_verbatim/eval/compare_results.py sample_data/333_20251215/search_results_ft.jsonl sample_data/333_20251215/search_results_hybrid.jsonl -k 10
 ```
-
 
 
 
