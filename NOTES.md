@@ -1,3 +1,9 @@
+### 2026.01.13
+- how could question generation include something specific to the paper? Consider the question
+  "What is the auto-complete field used for in the search interface?" for a paper about INCEpTION
+  (no mention of the tool in the question)
+
+
 ### 2025.12.15
 - built larger sample (1000 papers) for benchmark generation
 - will skip papers whose full text is not in the anthology. Based on URLs this appears to be less

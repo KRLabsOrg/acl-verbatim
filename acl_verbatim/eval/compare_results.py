@@ -1,12 +1,10 @@
+import argparse
 import json
-import sys
 
 from scipy.stats import spearmanr
 
-DOC_ONLY = False
 
-
-def load_results(fn, k):
+def load_results(fn, k, doc_only):
     query_to_res = {}
     query_to_gold = {}
     query_to_res_to_rank = {}
@@ -17,7 +15,7 @@ def load_results(fn, k):
             query_to_res[q] = []
             query_to_res_to_rank[q] = {}
             for i, res in enumerate(d["results"][:k]):
-                if DOC_ONLY:
+                if doc_only:
                     chunk = res["document_id"]
                 else:
                     chunk = (res["document_id"], res["chunk_number"])
@@ -69,10 +67,28 @@ def compare_rankings(r_to_rank1, r_to_rank2):
     print(f"Spearman correlation: {spearman:.2f}")
 
 
+def get_args():
+    parser = argparse.ArgumentParser(description="Compare sets of search results")
+
+    parser.add_argument("file1")
+    parser.add_argument("file2")
+    parser.add_argument("-k", type=int, help="Top k results to compare")
+    parser.add_argument(
+        "-d",
+        "--doc-only",
+        action="store_true",
+        help="Compare only documents, not chunks",
+    )
+
+    args = parser.parse_args()
+
+    return args
+
+
 def main():
-    k = int(sys.argv[3])
-    res1, gold1, r_to_rank1 = load_results(sys.argv[1], k)
-    res2, gold2, r_to_rank2 = load_results(sys.argv[2], k)
+    args = get_args()
+    res1, gold1, r_to_rank1 = load_results(args.file1, args.k, args.doc_only)
+    res2, gold2, r_to_rank2 = load_results(args.file2, args.k, args.doc_only)
     assert gold1 == gold2, "gold annotation doesn't match"
     compare_rankings(r_to_rank1, r_to_rank2)
     compare_results(res1, res2)

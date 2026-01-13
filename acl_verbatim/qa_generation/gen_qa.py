@@ -49,13 +49,14 @@ Please generate one question that can be answered by the above text and which be
 def main():
     args = get_args()
 
-    # llm_client = LLMClient(
-    #     model="moonshotai/kimi-k2-instruct-0905",
-    #     api_base="https://api.groq.com/openai/v1/",
-    # )
     llm_client = LLMClient(
-        model="gpt-5.2",
+        model="moonshotai/kimi-k2-instruct-0905",
+        api_base="https://api.groq.com/openai/v1/",
     )
+    
+    # llm_client = LLMClient(
+    #     model="gpt-5.2",
+    # )
 
     output_path = Path(args.output_dir)
     for file_path in tqdm(Path(args.input_dir).rglob("*")):

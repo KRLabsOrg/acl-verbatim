@@ -75,6 +75,28 @@ Generate questions for these chunks.
 python acl_verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
 ```
 
+Generate queries from questions.
+```bash
+python acl_verbatim/qa_generation/question_to_query.py --input-dir sample_data/questions/ --output-dir sample_data/queries/
+```
+
+### Automatic evaluation
+
+Run queries against index, store results, calculate metrics. Search type can be `dense`, `sparse`,
+`hybrid`, or `full_text`. Here is an example with full text search.
+
+```bash
+python scripts/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri http://localhost:19530 -r -k 500 --questions-dir sample_data/333_20251215/queries -f query --output-file sample_data/333_20251215/search_results_ft.jsonl -s full_text | tee sample_data/333_20251215/search_metrics_ft.txt
+```
+
+
+Compare two sets of search results. This example compares results at the chunk level for the top 10
+results:
+
+```bash
+python acl_verbatim/eval/compare_results.py sample_data/333_20251215/search_results_ft.jsonl sample_data/333_20251215/search_results_hybrid.jsonl -k 10
+```
+
 
 
 
