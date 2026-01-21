@@ -31,6 +31,7 @@ class TestIndexArgs:
     output_file: Optional[Path]
     query_field: Optional[str]
     k: int
+    nprobe: int
     device: str
     retrieve_only: bool
     use_cloud: bool
@@ -62,6 +63,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     search_group.add_argument(
         "-k", type=int, default=5, help="Top-k to retrieve (default: 5)"
+    )
+    search_group.add_argument(
+        "--nprobe", type=int, default=8, help="The number of cluster units to search."
     )
     search_group.add_argument(
         "--device",
@@ -143,6 +147,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         output_file=ns.output_file,
         query_field=ns.query_field,
         k=ns.k,
+        nprobe=ns.nprobe,
         device=ns.device,
         retrieve_only=ns.retrieve_only,
         use_cloud=ns.use_cloud,
@@ -193,6 +198,8 @@ def _query_index(
     question: str,
     search_type: str,
     k: int,
+    search_params: dict,
+    hybrid_weights: dict,
     reranker: Optional[BaseReranker],
 ) -> list[SearchResult]:
     """Run retrieval and optionally rerank results."""
@@ -200,13 +207,12 @@ def _query_index(
     if reranker is not None:
         retrieve_k = max(retrieve_k, int(getattr(reranker, "rerank_k", retrieve_k)))
 
-    hybrid_weights = HYBRID_WEIGHTS if search_type in ("auto", "hybrid") else None
     results = index.query(
         text=question,
-        search_type=search_type,
         k=retrieve_k,
         rrf_k=60,
         hybrid_weights=hybrid_weights,
+        search_params=search_params,
         filter=None,
     )
     if not reranker:
@@ -225,26 +231,58 @@ def get_results_for_query(
     chunk_index: int,
     search_type: str,
     k: int,
+    nprobe: int,
     reranker: Optional[BaseReranker],
+    rag: Optional[VerbatimRAG],
 ) -> dict[str, Any]:
     """Run a single query and compute whether the gold paper/chunk is retrieved."""
-    search_results = _query_index(
-        index=index,
-        question=query,
-        search_type=search_type,
-        k=k,
-        reranker=reranker,
-    )
     output = {
         "query": query,
         "gold_paper": paper_id,
         "gold_chunk": chunk_index,
-        "results": [res.metadata for res in search_results],
+        "results": [],
         "paper_found": False,
         "chunk_found": False,
         "corr_paper_rank": None,
         "corr_chunk_rank": None,
     }
+
+    hybrid_weights = (
+        HYBRID_WEIGHTS if search_type in ("auto", "hybrid") else {search_type: 1.0}
+    )
+    search_params = {"nprobe": nprobe}
+
+    if rag is not None:
+        rag_response, search_results = rag.query(
+            query,
+            k=k,
+            hybrid_weights=hybrid_weights,
+            search_params=search_params,
+            return_search_results=True,
+        )
+    else:
+        search_results = _query_index(
+            index=index,
+            question=query,
+            hybrid_weights=hybrid_weights,
+            k=k,
+            search_params=search_params,
+            reranker=reranker,
+        )
+
+    for i, res in enumerate(search_results):
+        result = res.metadata
+        result["extraction"] = (
+            None
+            if rag is None
+            else [
+                {"text": hl.text, "start": hl.start, "end": hl.end}
+                for hl in rag_response.documents[i].highlights
+            ]
+        )
+
+        output["results"].append(result)
+
     for i, res in enumerate(search_results):
         d = res.metadata
         if d["document_id"] == paper_id:
@@ -283,6 +321,7 @@ def get_results(
     index: VerbatimIndex,
     args: TestIndexArgs,
     reranker: Optional[BaseReranker],
+    rag: Optional[VerbatimRAG],
 ) -> list[dict[str, Any]]:
     """Compute retrieval results for all questions under `questions_dir`."""
     results: list[dict[str, Any]] = []
@@ -303,7 +342,9 @@ def get_results(
                             chunk_index,
                             args.search_type,
                             args.k,
+                            args.nprobe,
                             reranker,
+                            rag,
                         )
                     )
     return results
@@ -343,14 +384,14 @@ def test_batch(args: TestIndexArgs) -> None:
     if not args.query_field:
         raise ValueError("query_field is required for batch mode")
 
-    reranker = build_reranker(args)
-
     if args.output_file.exists():
         print(f"output file {args.output_file} exists, will not run search")
         results = load_results(args.output_file)
     else:
         index = get_index(args)
-        results = get_results(index, args, reranker)
+        reranker = build_reranker(args)
+        rag = None if args.retrieve_only else get_rag(index, args, reranker)
+        results = get_results(index, args, reranker, rag)
         save_results(results, args.output_file)
 
     stats = get_stats_from_results(results)
@@ -375,6 +416,7 @@ def test_interactive(args: TestIndexArgs) -> None:
                 question=test_query,
                 search_type=args.search_type,
                 k=args.k,
+                nprobe=args.nprobe,
                 reranker=reranker,
             )
             for i, res in enumerate(results, start=1):
@@ -432,11 +474,18 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
 def get_rag(
     index: VerbatimIndex, args: TestIndexArgs, reranker: Optional[BaseReranker]
 ) -> VerbatimRAG:
+    print("initializing RAG...")
     llm_client = LLMClient(
         model="moonshotai/kimi-k2-instruct-0905",
         api_base="https://api.groq.com/openai/v1/",
     )
-    rag = VerbatimRAG(index, llm_client=llm_client, k=args.k, reranker=reranker)
+    rag = VerbatimRAG(
+        index,
+        llm_client=llm_client,
+        k=args.k,
+        reranker=reranker,
+        template_mode="static",
+    )
 
     return rag
 

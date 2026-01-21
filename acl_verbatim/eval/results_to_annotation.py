@@ -31,11 +31,16 @@ def get_chunk(paper_url, chunk_no, chunks_dir, client):
 def results2csv(results, k, client):
     query = results["query"]
     rows = []
-    for i, res in enumerate(results["results"]):
-        if i + 1 > k:
+    for c, res in enumerate(results["results"]):
+        if c + 1 > k:
             break
         chunk, title = get_chunk(res["url"], res["chunk_number"], k, client)
-        rows.append([query, f"{i + 1}", title, res["url"], res["chunk_number"], chunk])
+        for hl in res["extraction"]:
+            i, j = hl["start"], hl["end"]
+            assert chunk[i:j] == hl["text"], f"mismatch: {chunk[i:j]=}, {hl['text']=}"
+            chunk = chunk[:i] + chunk[i:j].upper() + chunk[j:]
+
+        rows.append([query, f"{c + 1}", title, res["url"], res["chunk_number"], chunk])
     return rows
 
 
@@ -50,6 +55,7 @@ def main():
                 query_rows = results2csv(query_results, args.k, client)
                 for row in query_rows:
                     writer.writerow(row)
+                writer.writerow([])
                 # if i == 10:
                 #     break  # for testing
 
