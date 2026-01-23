@@ -1,3 +1,32 @@
+### 2026.01.23
+- vector search (dense) results are much better than full text
+- extraction now has some significant false negatives, i.e. good chunks with no extraction
+    - we should wait and see whether discarding chunks without extraction is nevertheless viable or
+      we need a fallback strategy (e.g. secondary index at the paragraph level) for choosing what to show from a chunk
+- when annotating gold spans, I go for the longest continuous segment that is still relevant,
+  potentially including a connecting sentence between two good sentences as opposed to splitting
+  them up. I.e. I am looking for the best snippet as opposed to a precise list of relevant spans,
+  because the latter would be much more subjective. This also allows me to mark a non-continuous
+  system extraction as correct if all parts of it are relevant. The typical example is row 5, a
+  more extreme example is row 15, both in [this document](https://docs.google.com/spreadsheets/d/1TpSsOljXsL-QsNlLTHWvLJ5HNHYi6ZgC2HmOI-uZTZw/edit?usp=sharing).
+- there are also once again cases where a query is generic and so it is unclear which parts of a
+  chunk should be extracted - but highlighting the whole chunk would be useless, since we cannot
+  present that much text to the user. Here once again it could be good to have a secondary index
+  that lets us "zoom in"
+- this could also help with the annotation; the most time-consuming part of the manual annotation
+  is the reading of long chunks to find the parts that might be relevant and need a closer look
+- but the current LLM-based extraction can come up empty if the returned span was not found in the source
+    - maybe first we should try an extraction method that reliably always find real spans, and redo
+      the annotation - e.g. the semantic highlighting from ziliz
+- when retrieval results are very bad, it is typically because they are missing a key aspect of the
+  query, e.g.
+    - 4/5 results for "maximum BLEU improvement clustering over baseline" are not about
+  BLEU or even MT
+    - 4/5 results for "BLEU perplexity model combination fixed weight interpolation smoothed clustering k=10" do not mention any kind of interpolation.
+    - 4/5 results for "multimodal compact bilinear pooling vs weighted averaging visual text classification" do not mention weighted averages
+  The BM25-based search rarely made such obvious errors, so clever ensembling of the two should have high potential (weighting or even just going with the vector search but discarding chunks that do not rank above some threshold with BM25)
+
+
 ### 2026.01.22
 - for some very specific queries we get 4/5 bad results (`recursive embeddings time series forecasting without retraining`, `recursive embedding model predict future without retrain`)
 - for a long but generic query the chunk and the extraction can be both relevant, but who knows if
