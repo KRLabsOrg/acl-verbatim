@@ -14,7 +14,7 @@ from tqdm import tqdm
 from verbatim_rag import VerbatimIndex, VerbatimRAG, BaseReranker
 from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
-    SpladeProvider,
+    # SpladeProvider,
 )
 from verbatim_rag.extractors import LLMSpanExtractor, SemanticHighlightExtractor
 from verbatim_rag.vector_stores.base import SearchResult
@@ -514,10 +514,10 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
     dense_provider = SentenceTransformersProvider(
         model_name="ibm-granite/granite-embedding-english-r2", device=args.device
     )
-    sparse_provider = SpladeProvider(
-        model_name="opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill",
-        device=args.device,
-    )
+    # sparse_provider = SpladeProvider(
+    #     model_name="opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill",
+    #     device=args.device,
+    # )
 
     # Create vector store
     if args.use_cloud:
@@ -526,11 +526,11 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
             uri=args.cloud_uri,
             collection_name=args.collection_name,
             enable_dense=True,
-            enable_sparse=True,
+            enable_sparse=False,
             enable_full_text=True,
             dense_dim=dense_provider.get_dimension(),
-            sparse_dim=sparse_provider.get_dimension(),
-            nlist=16384,
+            # sparse_dim=sparse_provider.get_dimension(),
+            nlist=32768,
         )
     else:
         logging.info(f"Using LocalMilvusStore at {args.index_file}")
@@ -538,17 +538,17 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
             db_path=str(args.index_file),
             collection_name=args.collection_name,
             enable_dense=True,
-            enable_sparse=True,
+            enable_sparse=False,
             dense_dim=dense_provider.get_dimension(),
-            sparse_dim=sparse_provider.get_dimension(),
-            nlist=16384,
+            # sparse_dim=sparse_provider.get_dimension(),
+            nlist=32768,
         )
 
     # Create index
     index = VerbatimIndex(
         vector_store=vector_store,
         dense_provider=dense_provider,
-        sparse_provider=sparse_provider,
+        # sparse_provider=sparse_provider,
     )
 
     return index

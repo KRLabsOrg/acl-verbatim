@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 from verbatim_rag import VerbatimIndex, VerbatimRAG
 from verbatim_rag.embedding_providers import (
-    SpladeProvider,
     SentenceTransformersProvider,
 )
 from verbatim_rag.core import LLMClient
@@ -22,12 +21,50 @@ logging.basicConfig(
 )
 
 
-def index_acl(args):
-    with open(args.metadata_file) as f:
-        papers = {paper["url"].split("/")[-2]: paper for paper in json.load(f)}
+def load_papers_jsonl(path: str) -> dict:
+    """Load JSONL format paper data.
 
-    logging.info("loading documents...")
+    Each line is a JSON object. Extract ID from URL for backward compatibility
+    with markdown filenames (e.g., 2025.acl-long.553.md).
+    """
+    papers = {}
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            paper = json.loads(line)
+            # Extract ID from URL: https://aclanthology.org/2025.acl-long.553/ -> 2025.acl-long.553
+            paper_id = paper["url"].rstrip("/").split("/")[-1]
+            papers[paper_id] = paper
+    return papers
+
+
+def extract_authors(paper: dict) -> list[str]:
+    """Extract author full names from structured data.
+
+    New format: [{"id": "...", "first": "...", "last": "...", "full": "Ashish Vaswani"}, ...]
+    Falls back to author_string if structured data unavailable.
+    """
+    authors = paper.get("author", [])
+    if isinstance(authors, list) and authors and isinstance(authors[0], dict):
+        return [a["full"] for a in authors if a.get("full")]
+    # Fallback to author_string if available
+    author_string = paper.get("author_string")
+    if author_string:
+        return [name.strip() for name in author_string.split(",") if name.strip()]
+    return []
+
+
+def index_acl(args):
+    # Load JSONL instead of JSON array
+    logging.info(f"Loading paper metadata from {args.metadata_file}...")
+    papers = load_papers_jsonl(args.metadata_file)
+    logging.info(f"Loaded {len(papers)} papers from metadata")
+
+    logging.info("Loading documents...")
     documents = []
+
     for file_path in tqdm(Path(args.input_dir).rglob("*")):
         if file_path.suffix.lower() != ".md":
             logging.warning(f"skipping file because extension isn't md: {file_path}")
@@ -37,21 +74,34 @@ def index_acl(args):
             logging.warning(f"skipping paper not in metadata file: {paper_id}")
             continue
 
+        paper = papers[paper_id]
         content = file_path.read_text(encoding="utf-8")
+
+        # Extract year as int if valid
+        year_str = paper.get("year", "")
+        year = (
+            int(year_str) if isinstance(year_str, str) and year_str.isdigit() else None
+        )
 
         document = DocumentSchema(
             id=paper_id,
             content=content,
-            title=papers[paper_id]["title"],
-            url=papers[paper_id]["url"],
-            authors=papers[paper_id].get("authors", []),
-            year=papers[paper_id].get("year", None),
-            publisher=papers[paper_id].get("publisher", None),
+            title=paper["title"],
+            url=paper["url"],
+            authors=extract_authors(paper),  # Clean list from structured data
+            year=year,
+            venue=paper.get("venue"),  # Full venue name for facets
+            booktitle=paper.get("booktitle"),
+            publisher=paper.get("publisher"),
+            bibtex=paper.get("bibtex"),  # Pre-generated BibTeX
+            pdf_url=paper.get("pdf"),  # Direct PDF link
+            doi=paper.get("doi"),
+            pages=paper.get("pages"),
         )
 
         documents.append(document)
 
-    logging.info("indexing documents...")
+    logging.info(f"Found {len(documents)} documents to index")
 
     chunker = MarkdownChunkerProvider(
         min_chunk_size=500,
@@ -60,10 +110,6 @@ def index_acl(args):
     dense_provider = SentenceTransformersProvider(
         model_name="ibm-granite/granite-embedding-english-r2", device=args.device
     )
-    sparse_provider = SpladeProvider(
-        model_name="opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill",
-        device=args.device,
-    )
 
     if args.use_cloud:
         logging.info(f"Using CloudMilvusStore at {args.cloud_uri}")
@@ -71,11 +117,10 @@ def index_acl(args):
             uri=args.cloud_uri,
             collection_name=args.collection_name,
             enable_dense=True,
-            enable_sparse=True,
+            enable_sparse=False,
             enable_full_text=True,
             dense_dim=dense_provider.get_dimension(),
-            sparse_dim=sparse_provider.get_dimension(),
-            nlist=16384,
+            nlist=32768,
         )
     else:
         logging.info(f"Using LocalMilvusStore at {args.index_file}")
@@ -83,27 +128,28 @@ def index_acl(args):
             db_path=args.index_file,
             collection_name=args.collection_name,
             enable_dense=True,
-            enable_sparse=True,
+            enable_sparse=False,
             dense_dim=dense_provider.get_dimension(),
-            sparse_dim=sparse_provider.get_dimension(),
-            nlist=16384,
+            nlist=32768,
         )
 
     index = VerbatimIndex(
         vector_store=vector_store,
         dense_provider=dense_provider,
-        sparse_provider=sparse_provider,
         chunker_provider=chunker,
     )
-    logging.info("chunking and indexing documents...")
+    logging.info("Chunking and indexing documents...")
     index.add_documents(documents)
+
     return index
 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Preprocess ACL Anthology papers")
     parser.add_argument(
-        "--metadata-file", required=True, help="Path to paper metadata file"
+        "--metadata-file",
+        required=True,
+        help="Path to paper metadata file (JSONL format)",
     )
     parser.add_argument(
         "--input-dir", required=True, help="Directory for downloaded papers"
