@@ -5,6 +5,8 @@ import json
 from pymilvus import MilvusClient
 from tqdm import tqdm
 
+from acl_verbatim.eval.utils import get_chunk
+
 
 def get_args():
     parser = argparse.ArgumentParser(description="Generate QA data")
@@ -18,23 +20,13 @@ def get_args():
     return parser.parse_args()
 
 
-def get_chunk(paper_url, chunk_no, chunks_dir, client):
-    docs = client.query(
-        collection_name="acl",
-        filter=f'metadata["url"] == \'{paper_url}\' AND metadata["chunk_number"] == {chunk_no}',
-        output_fields=["text", "metadata"],
-    )
-    assert len(docs) == 1, f"retrieved zero or several chunks: {docs=}"
-    return docs[0]["text"], docs[0]["metadata"]["title"]
-
-
 def results2csv(results, k, client):
     query = results["query"]
     rows = []
     for c, res in enumerate(results["results"]):
         if c + 1 > k:
             break
-        chunk, title = get_chunk(res["url"], res["chunk_number"], k, client)
+        chunk, title = get_chunk(res["url"], res["chunk_number"], client)
         for hl in res["extraction"]:
             i, j = hl["start"], hl["end"]
             assert chunk[i:j] == hl["text"], f"mismatch: {chunk[i:j]=}, {hl['text']=}"

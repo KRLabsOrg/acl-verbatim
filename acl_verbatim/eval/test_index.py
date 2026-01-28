@@ -4,8 +4,10 @@ import logging
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Optional, Sequence
 
+from pymilvus import MilvusClient
 from tabulate import tabulate
 from tqdm import tqdm
 
@@ -14,10 +16,12 @@ from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
     SpladeProvider,
 )
+from verbatim_rag.extractors import LLMSpanExtractor, SemanticHighlightExtractor
 from verbatim_rag.vector_stores.base import SearchResult
 from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.core import LLMClient
 
+from acl_verbatim.eval.utils import get_chunk
 
 HYBRID_WEIGHTS = {"dense": 0.3, "full_text": 0.7}
 
@@ -28,6 +32,7 @@ class TestIndexArgs:
     collection_name: str
     search_type: str
     questions_dir: Optional[Path]
+    search_results_file: Optional[Path]
     output_file: Optional[Path]
     query_field: Optional[str]
     k: int
@@ -37,6 +42,7 @@ class TestIndexArgs:
     use_cloud: bool
     cloud_uri: Optional[str]
     rerank: bool
+    extractor: str
     log_level: str
 
 
@@ -84,6 +90,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--questions-dir", type=Path, help="Batch mode: directory of question files"
     )
     mode_group.add_argument(
+        "--search-results-file",
+        type=Path,
+        help="For testing extraction only: file with search results",
+    )
+    mode_group.add_argument(
         "--output-file",
         type=Path,
         help="Batch mode: JSONL output file (created if missing)",
@@ -112,6 +123,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Enable reranking of retrieved results",
     )
 
+    extraction_group = parser.add_argument_group("Extraction")
+    extraction_group.add_argument(
+        "--extractor",
+        default="LLM",
+        choices=("LLM", "SHL"),
+        help="Extractor to use (default: LLM)",
+    )
+
     logging_group = parser.add_argument_group("Logging")
     logging_group.add_argument(
         "--log-level",
@@ -133,10 +152,21 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
     if not ns.use_cloud and not ns.index_file:
         parser.error("--index-file is required when --use-cloud is not specified")
 
-    if ns.questions_dir:
+    if ns.questions_dir or ns.search_results_file:
         if not ns.output_file:
-            parser.error("--output-file is required when --questions-dir is specified")
-        if not ns.query_field:
+            parser.error(
+                "--output-file is required when --questions-dir or --search-results-file are specified"
+            )
+        if ns.search_results_file:
+            if ns.questions_dir:
+                parser.error(
+                    "only one of --questions-dir and --search-results-file can be specified"
+                )
+            if ns.query_field:
+                parser.error(
+                    "only one of --query-field and --search-results-file can be specified"
+                )
+        elif not ns.query_field:
             parser.error("--query-field is required when --questions-dir is specified")
 
     return TestIndexArgs(
@@ -144,6 +174,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         collection_name=ns.collection_name,
         search_type=ns.search_type,
         questions_dir=ns.questions_dir,
+        search_results_file=ns.search_results_file,
         output_file=ns.output_file,
         query_field=ns.query_field,
         k=ns.k,
@@ -153,6 +184,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         use_cloud=ns.use_cloud,
         cloud_uri=ns.cloud_uri,
         rerank=ns.rerank,
+        extractor=ns.extractor,
         log_level=ns.log_level,
     )
 
@@ -265,6 +297,7 @@ def get_results_for_query(
             index=index,
             question=query,
             hybrid_weights=hybrid_weights,
+            search_type=search_type,
             k=k,
             search_params=search_params,
             reranker=reranker,
@@ -317,7 +350,7 @@ def get_stats_from_results(results: list[dict[str, Any]]) -> Counter[str]:
     return stats
 
 
-def get_results(
+def get_rag_results(
     index: VerbatimIndex,
     args: TestIndexArgs,
     reranker: Optional[BaseReranker],
@@ -347,7 +380,49 @@ def get_results(
                             rag,
                         )
                     )
+
     return results
+
+
+def get_extraction_results_for_query(data, extractor, client):
+    chunks = [
+        get_chunk(res["url"], res["chunk_number"], client)[0] for res in data["results"]
+    ]
+    all_spans = extractor.extract_spans(
+        data["query"], [SimpleNamespace(text=chunk) for chunk in chunks]
+    )
+    for i, res in enumerate(data["results"]):
+        res["extraction"] = []
+        chunk = chunks[i]
+        spans = all_spans.get(chunk)
+        if spans is None:
+            continue
+        for span in spans:
+            start = chunk.find(span)
+            end = start + len(span)
+            res["extraction"].append({"text": span, "start": start, "end": end})
+
+    return data
+
+
+def get_extraction_results(args):
+    """run extraction only on previously fetched search results, without using VerbatimRAG"""
+    extractor = get_extractor(args)
+    if extractor is None:
+        # VerbatimRAG would initialize this by default
+        extractor = LLMSpanExtractor(
+            llm_client=get_llm_client(),
+            extraction_mode="auto",
+            max_display_spans=5,
+        )
+
+    client = MilvusClient(uri=args.cloud_uri)
+
+    with open(args.search_results_file) as f:
+        return [
+            get_extraction_results_for_query(json.loads(line), extractor, client)
+            for line in f
+        ]
 
 
 def get_overall_stats(stats: Counter[str], args: TestIndexArgs) -> None:
@@ -379,19 +454,27 @@ def test_batch(args: TestIndexArgs) -> None:
     """Batch retrieval evaluation against a ground-truth questions directory."""
     if not args.output_file:
         raise ValueError("output_file is required for batch mode")
-    if not args.questions_dir:
-        raise ValueError("questions_dir is required for batch mode")
-    if not args.query_field:
-        raise ValueError("query_field is required for batch mode")
+    if not args.questions_dir and not args.search_results_file:
+        raise ValueError(
+            "questions_dir or search_results_file is required for batch mode"
+        )
+    if args.questions_dir and not args.query_field:
+        raise ValueError(
+            "questions_dir and query_field are both required for batch mode"
+        )
 
     if args.output_file.exists():
         print(f"output file {args.output_file} exists, will not run search")
         results = load_results(args.output_file)
     else:
-        index = get_index(args)
-        reranker = build_reranker(args)
-        rag = None if args.retrieve_only else get_rag(index, args, reranker)
-        results = get_results(index, args, reranker, rag)
+        if args.questions_dir:
+            index = get_index(args)
+            reranker = build_reranker(args)
+            rag = None if args.retrieve_only else get_rag(index, args, reranker)
+            results = get_rag_results(index, args, reranker, rag)
+        else:
+            results = get_extraction_results(args)
+
         save_results(results, args.output_file)
 
     stats = get_stats_from_results(results)
@@ -471,16 +554,34 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
     return index
 
 
+def get_llm_client():
+    return LLMClient(
+        model="moonshotai/kimi-k2-instruct-0905",
+        api_base="https://api.groq.com/openai/v1/",
+    )
+
+
+def get_extractor(args):
+    if args.extractor == "LLM":
+        return None
+    elif args.extractor == "SHL":
+        return SemanticHighlightExtractor(output_mode="spans")
+    else:
+        raise ValueError(f"unsupported extractor: {args.extractor}")
+
+
 def get_rag(
     index: VerbatimIndex, args: TestIndexArgs, reranker: Optional[BaseReranker]
 ) -> VerbatimRAG:
     print("initializing RAG...")
-    llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
-    )
+
+    extractor = get_extractor(args)
+
+    llm_client = get_llm_client()
+
     rag = VerbatimRAG(
         index,
+        extractor=extractor,
         llm_client=llm_client,
         k=args.k,
         reranker=reranker,
@@ -494,7 +595,7 @@ def main():
     args = parse_args()
     setup_logging(args.log_level)
 
-    if args.questions_dir is not None:
+    if args.questions_dir is not None or args.search_results_file is not None:
         test_batch(args)
         return
     test_interactive(args)

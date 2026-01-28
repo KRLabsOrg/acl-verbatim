@@ -1,20 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "acl-verbatim"
 version = "0.0.1"
-description = "An application of the verbatim-rag library to research papers in the ACL anthology"
+description = "Tools for deploying and evaluating verbatim-rag with papers from the ACL Anthology"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
 authors = [
     {name = "Gabor Recski", email = "recski@krlabs.eu"},
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "verbatim-rag>=0.1.7",
-    "lingua-language-detector",
+    # Core ML/AI dependencies
+    "verbatim-rag>=0.1.9",
+    
+    # Vector storage and search
+    "pymilvus>=2.6.3",
+    "pymilvus[milvus_lite]",
+    
+    # Utilities
+    "tqdm>=4.65.0",
 ]
 
-[tool.setuptools]
-py-modules = []
+
+[project.urls]
+"Homepage" = "https://github.com/krlabsorg/acl-verbatim"
+"Bug Tracker" = "https://github.com/krlabsorg/acl-verbatim/issues"
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["acl_verbatim"]
