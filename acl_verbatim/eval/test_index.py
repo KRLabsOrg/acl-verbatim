@@ -421,7 +421,7 @@ def get_extraction_results(args):
     with open(args.search_results_file) as f:
         return [
             get_extraction_results_for_query(json.loads(line), extractor, client)
-            for line in f
+            for line in tqdm(f)
         ]
 
 
@@ -565,7 +565,7 @@ def get_extractor(args):
     if args.extractor == "LLM":
         return None
     elif args.extractor == "SHL":
-        return SemanticHighlightExtractor(output_mode="spans")
+        return SemanticHighlightExtractor(output_mode="sentences")
     else:
         raise ValueError(f"unsupported extractor: {args.extractor}")
 
