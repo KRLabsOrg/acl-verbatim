@@ -1,3 +1,18 @@
+### 2026.02.02
+
+- Fuzzy matching for span extraction: accepts near-matches using rapidfuzz, logs partial matches to CSV
+- Milvus cloud authentication support via `--milvus-token`
+
+### 2026.01.29
+
+- used Ziliz semantic highlighter for extraction, checked results on the same sample of 10x5
+  chunks
+    - generally worse than the LLM-based extractor
+    - performs fewer extractions, left more chunks without any highlights
+    - when it does highlight, it is usually as good as the LLM, just a bit worse at boundaries
+    - maybe look into thresholds?
+        - but only after we have automatic eval with gold data
+
 ### 2026.01.23
 - vector search (dense) results are much better than full text
 - extraction now has some significant false negatives, i.e. good chunks with no extraction

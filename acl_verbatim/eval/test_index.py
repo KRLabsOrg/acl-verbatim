@@ -1,13 +1,15 @@
 import argparse
+import csv
 import json
 import logging
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
 
 from pymilvus import MilvusClient
+from rapidfuzz import fuzz
 from tabulate import tabulate
 from tqdm import tqdm
 
@@ -24,6 +26,40 @@ from verbatim_rag.core import LLMClient
 from acl_verbatim.eval.utils import get_chunk
 
 HYBRID_WEIGHTS = {"dense": 0.3, "full_text": 0.7}
+
+
+class MyLLMClient(LLMClient):
+
+    def _build_extraction_prompt(self, question: str, documents: Dict[str, str]) -> str:
+        """Build the prompt for batch span extraction."""
+        return f"""Extract EXACT verbatim text spans from multiple documents that answer the question.
+
+# Rules
+1. Extract **only** text that is relevant to the question
+2. Include complete sentences or paragraphs to provide sufficient context
+3. If the same information is stated multiple times, choose the best version
+4. Never paraphrase, modify, or add to the original text
+5. Preserve original wording, capitalization, and punctuation
+6. Order spans within each document by relevance - MOST RELEVANT FIRST
+
+
+# Output Format
+Return a JSON object mapping document IDs to span arrays ordered by relevance:
+{{
+  "doc_0": ["most relevant span", "next most relevant span"],
+  "doc_1": ["most relevant from doc 1"],
+  "doc_2": []
+}}
+
+If no relevant information in a document, use empty array.
+
+# Your Task
+Question: {question}
+
+Documents:
+{json.dumps(documents, indent=2)}
+
+Extract verbatim spans from each document:"""
 
 
 @dataclass(frozen=True)
@@ -44,6 +80,8 @@ class TestIndexArgs:
     rerank: bool
     extractor: str
     log_level: str
+    partial_matches_file: Optional[Path]
+    milvus_token: Optional[str]
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -115,6 +153,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--cloud-uri",
         help="Cloud Milvus URI (e.g. http://localhost:19530) (required with --use-cloud)",
     )
+    store_group.add_argument(
+        "--milvus-token",
+        help="Authentication token for Milvus connection",
+    )
 
     rerank_group = parser.add_argument_group("Reranking")
     rerank_group.add_argument(
@@ -129,6 +171,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default="LLM",
         choices=("LLM", "SHL"),
         help="Extractor to use (default: LLM)",
+    )
+    extraction_group.add_argument(
+        "--partial-matches-file",
+        type=Path,
+        help="File to store partial matches (score < 1.0) in TSV format",
     )
 
     logging_group = parser.add_argument_group("Logging")
@@ -186,6 +233,8 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         rerank=ns.rerank,
         extractor=ns.extractor,
         log_level=ns.log_level,
+        partial_matches_file=ns.partial_matches_file,
+        milvus_token=ns.milvus_token,
     )
 
 
@@ -384,7 +433,9 @@ def get_rag_results(
     return results
 
 
-def get_extraction_results_for_query(data, extractor, client):
+def get_extraction_results_for_query(
+    data, extractor, client, fuzzy_threshold=0.9, partial_matches_writer=None
+):
     chunks = [
         get_chunk(res["url"], res["chunk_number"], client)[0] for res in data["results"]
     ]
@@ -398,9 +449,16 @@ def get_extraction_results_for_query(data, extractor, client):
         if spans is None:
             continue
         for span in spans:
-            start = chunk.find(span)
-            end = start + len(span)
-            res["extraction"].append({"text": span, "start": start, "end": end})
+            alignment = fuzz.partial_ratio_alignment(span, chunk)
+            score = alignment.score / 100.0
+            start = alignment.dest_start
+            end = alignment.dest_end
+            matched_text = chunk[start:end]
+            if score < 1.0 and partial_matches_writer is not None:
+                partial_matches_writer.writerow([f"{score:.4f}", span, matched_text])
+            if score < fuzzy_threshold:
+                continue
+            res["extraction"].append({"text": matched_text, "start": start, "end": end})
 
     return data
 
@@ -414,15 +472,33 @@ def get_extraction_results(args):
             llm_client=get_llm_client(),
             extraction_mode="auto",
             max_display_spans=5,
+            verify_spans=False,
         )
 
-    client = MilvusClient(uri=args.cloud_uri)
+    milvus_kwargs = {"uri": args.cloud_uri}
+    if args.milvus_token:
+        milvus_kwargs["token"] = args.milvus_token
+    client = MilvusClient(**milvus_kwargs)
 
-    with open(args.search_results_file) as f:
-        return [
-            get_extraction_results_for_query(json.loads(line), extractor, client)
-            for line in tqdm(f)
-        ]
+    partial_matches_file = None
+    partial_matches_writer = None
+    if args.partial_matches_file:
+        args.partial_matches_file.parent.mkdir(parents=True, exist_ok=True)
+        partial_matches_file = open(args.partial_matches_file, "w", newline="")
+        partial_matches_writer = csv.writer(partial_matches_file)
+
+    try:
+        with open(args.search_results_file) as f:
+            return [
+                get_extraction_results_for_query(
+                    json.loads(line), extractor, client,
+                    partial_matches_writer=partial_matches_writer
+                )
+                for line in tqdm(f)
+            ]
+    finally:
+        if partial_matches_file:
+            partial_matches_file.close()
 
 
 def get_overall_stats(stats: Counter[str], args: TestIndexArgs) -> None:
@@ -555,7 +631,7 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
 
 
 def get_llm_client():
-    return LLMClient(
+    return MyLLMClient(
         model="moonshotai/kimi-k2-instruct-0905",
         api_base="https://api.groq.com/openai/v1/",
     )
