@@ -17,6 +17,10 @@ def get_args():
         "--cloud-uri",
         help="Cloud Milvus URI (e.g. http://localhost:19530)",
     )
+    parser.add_argument(
+        "--milvus-token",
+        help="Authentication token for Milvus connection",
+    )
     return parser.parse_args()
 
 
@@ -38,7 +42,10 @@ def results2csv(results, k, client):
 
 def main():
     args = get_args()
-    client = MilvusClient(uri=args.cloud_uri)
+    milvus_kwargs = {"uri": args.cloud_uri}
+    if args.milvus_token:
+        milvus_kwargs["token"] = args.milvus_token
+    client = MilvusClient(**milvus_kwargs)
     with open(args.output_file, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         with open(args.input_file) as f:

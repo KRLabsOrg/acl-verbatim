@@ -6,7 +6,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, Optional, Sequence
+from typing import Any, Optional, Sequence
 
 from pymilvus import MilvusClient
 from rapidfuzz import fuzz
@@ -26,40 +26,6 @@ from verbatim_rag.core import LLMClient
 from acl_verbatim.eval.utils import get_chunk
 
 HYBRID_WEIGHTS = {"dense": 0.3, "full_text": 0.7}
-
-
-class MyLLMClient(LLMClient):
-
-    def _build_extraction_prompt(self, question: str, documents: Dict[str, str]) -> str:
-        """Build the prompt for batch span extraction."""
-        return f"""Extract EXACT verbatim text spans from multiple documents that answer the question.
-
-# Rules
-1. Extract **only** text that is relevant to the question
-2. Include complete sentences or paragraphs to provide sufficient context
-3. If the same information is stated multiple times, choose the best version
-4. Never paraphrase, modify, or add to the original text
-5. Preserve original wording, capitalization, and punctuation
-6. Order spans within each document by relevance - MOST RELEVANT FIRST
-
-
-# Output Format
-Return a JSON object mapping document IDs to span arrays ordered by relevance:
-{{
-  "doc_0": ["most relevant span", "next most relevant span"],
-  "doc_1": ["most relevant from doc 1"],
-  "doc_2": []
-}}
-
-If no relevant information in a document, use empty array.
-
-# Your Task
-Question: {question}
-
-Documents:
-{json.dumps(documents, indent=2)}
-
-Extract verbatim spans from each document:"""
 
 
 @dataclass(frozen=True)
@@ -82,6 +48,7 @@ class TestIndexArgs:
     log_level: str
     partial_matches_file: Optional[Path]
     milvus_token: Optional[str]
+    llm_response_log: Optional[Path]
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -175,7 +142,12 @@ def _build_parser() -> argparse.ArgumentParser:
     extraction_group.add_argument(
         "--partial-matches-file",
         type=Path,
-        help="File to store partial matches (score < 1.0) in TSV format",
+        help="File to store partial matches (score < 1.0) in CSV format",
+    )
+    extraction_group.add_argument(
+        "--llm-response-log",
+        type=Path,
+        help="File to log raw LLM responses (JSON Lines format)",
     )
 
     logging_group = parser.add_argument_group("Logging")
@@ -235,6 +207,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         log_level=ns.log_level,
         partial_matches_file=ns.partial_matches_file,
         milvus_token=ns.milvus_token,
+        llm_response_log=ns.llm_response_log,
     )
 
 
@@ -455,7 +428,9 @@ def get_extraction_results_for_query(
             end = alignment.dest_end
             matched_text = chunk[start:end]
             if score < 1.0 and partial_matches_writer is not None:
-                partial_matches_writer.writerow([f"{score:.4f}", span, matched_text])
+                partial_matches_writer.writerow(
+                    [f"{score:.4f}", span, matched_text, res["url"]]
+                )
             if score < fuzzy_threshold:
                 continue
             res["extraction"].append({"text": matched_text, "start": start, "end": end})
@@ -469,7 +444,7 @@ def get_extraction_results(args):
     if extractor is None:
         # VerbatimRAG would initialize this by default
         extractor = LLMSpanExtractor(
-            llm_client=get_llm_client(),
+            llm_client=get_llm_client(args.llm_response_log),
             extraction_mode="auto",
             max_display_spans=5,
             verify_spans=False,
@@ -491,8 +466,10 @@ def get_extraction_results(args):
         with open(args.search_results_file) as f:
             return [
                 get_extraction_results_for_query(
-                    json.loads(line), extractor, client,
-                    partial_matches_writer=partial_matches_writer
+                    json.loads(line),
+                    extractor,
+                    client,
+                    partial_matches_writer=partial_matches_writer,
                 )
                 for line in tqdm(f)
             ]
@@ -630,10 +607,11 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
     return index
 
 
-def get_llm_client():
-    return MyLLMClient(
+def get_llm_client(response_log_file: Optional[Path] = None):
+    return LLMClient(
         model="moonshotai/kimi-k2-instruct-0905",
         api_base="https://api.groq.com/openai/v1/",
+        response_log_file=str(response_log_file) if response_log_file else None,
     )
 
 
@@ -653,7 +631,7 @@ def get_rag(
 
     extractor = get_extractor(args)
 
-    llm_client = get_llm_client()
+    llm_client = get_llm_client(args.llm_response_log)
 
     rag = VerbatimRAG(
         index,
