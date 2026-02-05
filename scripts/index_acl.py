@@ -14,6 +14,8 @@ from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.schema import DocumentSchema
 from verbatim_rag.chunker_providers import MarkdownChunkerProvider
 
+from acl_verbatim.utils.preprocess import preprocess_markdown
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -76,6 +78,7 @@ def index_acl(args):
 
         paper = papers[paper_id]
         content = file_path.read_text(encoding="utf-8")
+        content = preprocess_markdown(content)
 
         # Extract year as int if valid
         year_str = paper.get("year", "")
@@ -115,6 +118,7 @@ def index_acl(args):
         logging.info(f"Using CloudMilvusStore at {args.cloud_uri}")
         vector_store = CloudMilvusStore(
             uri=args.cloud_uri,
+            token=args.milvus_token,
             collection_name=args.collection_name,
             enable_dense=True,
             enable_sparse=False,
@@ -168,6 +172,10 @@ def get_args():
     parser.add_argument(
         "--cloud-uri",
         help="URI for cloud Milvus instance (e.g. http://localhost:19530)",
+    )
+    parser.add_argument(
+        "--milvus-token",
+        help="Authentication token for Milvus connection",
     )
 
     args = parser.parse_args()

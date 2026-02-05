@@ -1,13 +1,12 @@
 import argparse
 import csv
-import html
-import re
 
 from pymilvus import MilvusClient
 from rapidfuzz import fuzz
 from tqdm import tqdm
 
 from acl_verbatim.eval.utils import get_paper_chunks
+from acl_verbatim.utils.preprocess import preprocess_markdown
 
 
 def get_args():
@@ -25,11 +24,6 @@ def get_args():
     return parser.parse_args()
 
 
-def preprocess_chunk(chunk):
-    new_chunk = html.unescape(chunk)
-    return re.sub(r"(?<=\S)  +(?=\S)", r" ", new_chunk)
-
-
 def check_extraction(span, url, client):
     try:
         chunks = get_paper_chunks(url, client)
@@ -44,15 +38,15 @@ def check_extraction(span, url, client):
             best_chunk = chunk
 
     old_score = round(best_alignment.score / 100.0, 4)
-    new_chunk = preprocess_chunk(best_chunk)
-    new_span = preprocess_chunk(span)
+    new_chunk = preprocess_markdown(best_chunk)
+    new_span = preprocess_markdown(span)
     new_alignment = fuzz.partial_ratio_alignment(new_span, new_chunk)
     score = round(new_alignment.score / 100.0, 4)
     matched_text = new_chunk[new_alignment.dest_start : new_alignment.dest_end]
     if score == old_score:
-        status = 'unchanged'
+        status = "unchanged"
     elif score > old_score:
-        status = 'better'
+        status = "better"
     else:
         status = "worse"
     return [status, f"{score:.4f}", f"{old_score:.4f}", new_span, matched_text, url]
