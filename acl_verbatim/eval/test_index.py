@@ -403,15 +403,12 @@ def get_rag_results(
 
 
 def get_extraction_results_for_query(
-    data, extractor, client, fuzzy_threshold=0.9, partial_matches_writer=None
+    data, extractor, k, client, fuzzy_threshold=0.9, partial_matches_writer=None
 ):
     chunks = [
-        get_chunk(res["url"], res["chunk_number"], client)[0] for res in data["results"]
+        get_chunk(res["url"], res["chunk_number"], client)[0]
+        for res in data["results"][:k]
     ]
-    # for safety
-    assert (
-        len(chunks) <= 10
-    ), "will refuse to run extraction for more than 10 chunks per query"
     all_spans = extractor.extract_spans(
         data["query"], [SimpleNamespace(text=chunk) for chunk in chunks]
     )
@@ -468,6 +465,7 @@ def get_extraction_results(args):
                 yield get_extraction_results_for_query(
                     json.loads(line),
                     extractor,
+                    args.k,
                     client,
                     partial_matches_writer=partial_matches_writer,
                 )
@@ -504,6 +502,11 @@ def get_overall_stats(stats: Counter[str], args: TestIndexArgs) -> None:
 
 def test_batch(args: TestIndexArgs) -> None:
     """Batch retrieval evaluation against a ground-truth questions directory."""
+
+    assert (
+        args.retrieve_only or args.k <= 10
+    ), "will refuse to run extraction for more than 10 chunks per query in batch mode"
+
     if not args.output_file:
         raise ValueError("output_file is required for batch mode")
     if not args.questions_dir and not args.search_results_file:
@@ -629,10 +632,6 @@ def get_rag(
     index: VerbatimIndex, args: TestIndexArgs, reranker: Optional[BaseReranker]
 ) -> VerbatimRAG:
     print("initializing RAG...")
-
-    assert (
-        args.k <= 10
-    ), "will refuse to run extraction for more than 10 chunks per query"
 
     extractor = get_extractor(args)
 
