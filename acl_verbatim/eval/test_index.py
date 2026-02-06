@@ -3,6 +3,7 @@ import csv
 import json
 import logging
 from collections import Counter
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
@@ -225,7 +226,7 @@ def load_results(results_file: Path) -> list[dict[str, Any]]:
     return results
 
 
-def save_results(results: list[dict[str, Any]], output_file: Path) -> None:
+def save_results(results: Iterator[dict[str, Any]], output_file: Path) -> None:
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with output_file.open("w") as of:
         for res in results:
@@ -379,7 +380,6 @@ def get_rag_results(
     rag: Optional[VerbatimRAG],
 ) -> list[dict[str, Any]]:
     """Compute retrieval results for all questions under `questions_dir`."""
-    results: list[dict[str, Any]] = []
     for file_path in tqdm(args.questions_dir.rglob("*")):
         paper_id = file_path.stem
         with open(file_path) as f:
@@ -389,21 +389,17 @@ def get_rag_results(
                     continue
                 chunk_index = chunk_data["chunk_index"]
                 for q in chunk_data["qa"]:
-                    results.append(
-                        get_results_for_query(
-                            q[args.query_field],
-                            index,
-                            paper_id,
-                            chunk_index,
-                            args.search_type,
-                            args.k,
-                            args.nprobe,
-                            reranker,
-                            rag,
-                        )
+                    yield get_results_for_query(
+                        q[args.query_field],
+                        index,
+                        paper_id,
+                        chunk_index,
+                        args.search_type,
+                        args.k,
+                        args.nprobe,
+                        reranker,
+                        rag,
                     )
-
-    return results
 
 
 def get_extraction_results_for_query(
@@ -464,15 +460,14 @@ def get_extraction_results(args):
 
     try:
         with open(args.search_results_file) as f:
-            return [
-                get_extraction_results_for_query(
+            for line in tqdm(f):
+                yield get_extraction_results_for_query(
                     json.loads(line),
                     extractor,
                     client,
                     partial_matches_writer=partial_matches_writer,
                 )
-                for line in tqdm(f)
-            ]
+
     finally:
         if partial_matches_file:
             partial_matches_file.close()
@@ -524,11 +519,11 @@ def test_batch(args: TestIndexArgs) -> None:
             index = get_index(args)
             reranker = build_reranker(args)
             rag = None if args.retrieve_only else get_rag(index, args, reranker)
-            results = get_rag_results(index, args, reranker, rag)
+            results_generator = get_rag_results(index, args, reranker, rag)
         else:
-            results = get_extraction_results(args)
+            results_generator = get_extraction_results(args)
 
-        save_results(results, args.output_file)
+        save_results(results_generator, args.output_file)
 
     stats = get_stats_from_results(results)
     get_overall_stats(stats, args)
