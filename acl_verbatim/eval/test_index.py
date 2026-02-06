@@ -513,7 +513,6 @@ def test_batch(args: TestIndexArgs) -> None:
 
     if args.output_file.exists():
         print(f"output file {args.output_file} exists, will not run search")
-        results = load_results(args.output_file)
     else:
         if args.questions_dir:
             index = get_index(args)
@@ -524,6 +523,8 @@ def test_batch(args: TestIndexArgs) -> None:
             results_generator = get_extraction_results(args)
 
         save_results(results_generator, args.output_file)
+
+    results = load_results(args.output_file)
 
     stats = get_stats_from_results(results)
     get_overall_stats(stats, args)
