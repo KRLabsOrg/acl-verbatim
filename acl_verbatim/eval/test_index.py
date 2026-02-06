@@ -577,6 +577,7 @@ def get_index(args: TestIndexArgs) -> VerbatimIndex:
         logging.info(f"Using CloudMilvusStore at {args.cloud_uri}")
         vector_store = CloudMilvusStore(
             uri=args.cloud_uri,
+            token=args.milvus_token,
             collection_name=args.collection_name,
             enable_dense=True,
             enable_sparse=False,
