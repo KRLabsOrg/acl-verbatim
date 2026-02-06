@@ -412,7 +412,7 @@ def get_extraction_results_for_query(
     all_spans = extractor.extract_spans(
         data["query"], [SimpleNamespace(text=chunk) for chunk in chunks]
     )
-    for i, res in enumerate(data["results"]):
+    for i, res in enumerate(data["results"][:k]):
         res["extraction"] = []
         chunk = chunks[i]
         spans = all_spans.get(chunk)
