@@ -408,6 +408,10 @@ def get_extraction_results_for_query(
     chunks = [
         get_chunk(res["url"], res["chunk_number"], client)[0] for res in data["results"]
     ]
+    # for safety
+    assert (
+        len(chunks) <= 10
+    ), "will refuse to run extraction for more than 10 chunks per query"
     all_spans = extractor.extract_spans(
         data["query"], [SimpleNamespace(text=chunk) for chunk in chunks]
     )
@@ -625,6 +629,10 @@ def get_rag(
     index: VerbatimIndex, args: TestIndexArgs, reranker: Optional[BaseReranker]
 ) -> VerbatimRAG:
     print("initializing RAG...")
+
+    assert (
+        args.k <= 10
+    ), "will refuse to run extraction for more than 10 chunks per query"
 
     extractor = get_extractor(args)
 
