@@ -1,3 +1,44 @@
+### 2026.02.19
+
+- created postprocessing script for annotations
+    - chunks must have a binary relevance label (r)elevant or (n)ot relevant. Chunks marked as not relevant should not have further annotation.
+    - relevant chunks have a ternary extraction label: (c)orrect, (p)artial, or (n)ot correct.
+    - relevant chunks with partial or not correct extraction should have a `gold_extractions` field with
+      empty lines separating multiple extractions
+    - gold extractions are fuzzy matched against the chunk text to create
+      `gold_extractions_mapped', complete with start and end positions
+
+### 2026.02.06
+
+- added preprocessing to indexing
+    - runs html.unescape
+    - replaces multiple spaces with single space between two non-whitespace characters
+    - testing: checked effect on outcome of the `check_extraction` script that runs fuzzy matching
+      and prints scores. In most cases match was 1.0 after the preprocessing, in all other cases
+      there was still an improvement or no change (when the reason was something else).
+- reindexed ACL, logs are on datalab
+- generated new sample with the existing pipeline
+    - started with 333 papers (aiming for 999 queries maximum), 310 could be matched to existing md
+      files (this matching is still based on filenames vs URLs, needs to be investigated)
+    - question type generation failed for three chunks, one contained only images, this I removed
+      from the sample, the other two were just JSON validation issues that could be fixed
+      by hand
+    - from 3x310=930 question types we generated 906 questions. The rest were mostly invalid question types, plus in 3 cases it was temporary groq issues
+- ran retrieval evaluation on new sample
+    - for top 100 instead of top 500, because now we are using ziliz cloud and with 500 the
+      MilvusClient raised an error: `grpc: received message larger than max (8511262 vs.
+      4194304)`
+    - see `EVAL.md` for results
+- reran extraction
+    - added some safety rules: extraction won't run for k>=10 in batch mode
+    - capacity issues on groq lead to sporadic failures
+        - usually fallback to individual extraction is enough
+        - but when that fails too, extractor returns empty list, just as if the LLM had responded
+          with no extractions, and there is no trace in the data or the logs where this happened,
+          this should be fixed unless we are OK with it
+
+
+
 ### 2026.02.02
 
 - Fuzzy matching for span extraction: accepts near-matches using rapidfuzz, logs partial matches to CSV
