@@ -1,3 +1,55 @@
+### 2026.03.05
+
+- new preprocessing done
+    - loaded metadata for 120 034 papers, kept 114 567
+    - stats on skipped papers: `[('lrec', 4351), ('no_pdf', 829), ('doi', 148), ('springer', 139)]`
+    - (side note: total PDFs: 118375, stats on PDFs skipped: not in metadata file 1990, specified in `TO_SKIP`: 17, we don't know what the rest of the PDFs are but don't care much, metadata file is what matters)
+    - total MDs created: 114 475
+    - Docling errors: PDFs failed to convert: 49, unexpected error while opening the document: 11
+    - 114 475 + 49 + 11 = 114 535, leaving 114 567 - 114 535 = 32 papers unaccounted for, we should
+      look into this later just for a sanity check
+
+- more annotation considerations
+    - what to do about bibliography sections? I will mark them with ? (to indicate _won't
+      annotate_), because even though it might make sense to annotate them for both relevance and
+      extraction, this would require that I check the listed papers for relevance. If we care about
+      paper-level relevance (as opposed to chunk-level relevance), there could be explicit ways (e.g.
+      derive them from chunk relevance).
+    - annotation can require considerable understanding of specific topics, consider e.g. the
+      chunks retrieved for the query `parsing merge predicate sequence equivalence conditions`
+    - The authors note that their ability to judge the relevance of chunks and spans for a given
+      query strongly depends on their level of expertise in the subject matter. In particular, only
+      when the query concerns a topic that the annotator is quite familiar with, is it possible to
+      correctly annotate excerpts that appear very much on-topic but are actually misleading (`red
+      herrings'). This means that our dataset cannot be considered a proper gold standard for
+      rigorous evaluation. We
+      nevertheless consider it valuable as a proxy for determining the perceived usefulness of our
+      system's outputs for its users, who we expect will also search for information outside of their
+      narrowest field of expertise. (add note that a lot of things in NLP are annotated for based
+      on the layman's (subjective) understanding, e.g. hate speech).
+    - a dimension we are not considering but usually informs literature research is (perceived) paper
+      quality, but this is intentional, our tool is not intended to automate the critical judgements of researchers taken during literature research, it should only increase their efficiency in identifying potentially relevant excerpts
+
+
+### 2026.03.04
+- annotation considerations
+    - we always annotate full paragraphs (many examples of why it doesn't make sense to think about
+      more fine-grained boundaries)
+    - we don't require a span to be relevant for all parts of a complex query, otherwise we would
+      have e.g. almost nothing to annotate for _multi-label hate speech dataset multiple annotators features_ or _MSIT vs GPT-4 attribute extraction precision images bullet points titles_
+    - but it's different when the whole chunk is not relevant for the whole query, only the more
+      generic part, consider e.g. rows 39-40 vs. row 30
+      [here](https://docs.google.com/spreadsheets/d/1t1bprbngBS4j44lI-HO1O_8hVHWdfLV96qQs_Qyd4MA/edit?usp=sharing)
+    - another issue with our synthesis method is when a query isn't relevant for any other paper,
+      e.g. because it is about a method presented by the paper that noone cited yet (MSIT)
+    - if a table is relevant, we annotate its caption but not the table itself - this should capture the fact of the table
+      being relevant and we can decide later how we want to represent tables in our data. Figures,
+      images, and most formulas are not rendered in markdown, we do not make assumptions on whether
+      they might be relevant. When this impacts our ability to annotate the whole chunk, we mark
+      the row with `?` characters to indicate _won't annotate_. Rows marked with `?!` indicate that
+      there is also some preprocessing issue that will require our attention.
+
+
 ### 2026.02.19
 
 - created postprocessing script for annotations
@@ -7,6 +59,7 @@
       empty lines separating multiple extractions
     - gold extractions are fuzzy matched against the chunk text to create
       `gold_extractions_mapped', complete with start and end positions
+
 
 ### 2026.02.06
 
