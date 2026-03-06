@@ -1,3 +1,11 @@
+### 2026.03.06
+- annotation for 100 rows done
+    - json on gdrive, [333_20260206_dense_top5_20260305.json](https://drive.google.com/file/d/1BJObxAeZZnSgTOkE0Fsr1EsI71SAAn3O/view?usp=drive_link)
+    - stats:
+        - 100 chunks (20 queries, 5 chunks per query)
+        - relevant: 47, not relevant: 44, cannot be annotated: 9
+        - total annotated extractions: 78
+
 ### 2026.03.05
 
 - new preprocessing done
