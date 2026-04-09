@@ -1,101 +1,163 @@
 # acl-verbatim
 
-Q&A system based on papers in the ACL Anthology and the VerbatimRAG system
+Trustworthy question answering on the ACL Anthology using VerbatimRAG.
+
+This README first describes all steps necessary to reproduce our published experimental results
+(downloading data, indexing, evaluation), then it also provides instructions for all other steps
+required to run our complete pipeline (extracting paper metadata from the ACL Anthology,
+downloading and preprocessing PDFs of papers, as well as the generation of synthetic queries for
+annotation).
+
 
 ## Prerequisites
 
-### Getting PDFs
-PDFs are currently scraped via the Makefile of the acl-anthology repo
-
-### Preprocessing
-
-Sample command to preprocess all PDFs to MDs under a top-level directory:
+### Installation
 
 ```bash
-python scripts/preprocess_acl.py --input-dir ../acl-anthology/build/anthology-files/pdf --output-dir acl_md --metadata-file papers.json --doc-batch-size 512 --page-batch-size 1024 &> acl_logs/20251103/202511030845.log
+pip install acl-verbatim
 ```
 
-You can find everyhing we have on both `neptun` and `datalab` in my home dirs, under
-`projects/verbatim-rag/acl_md`
 
-### Indexing
+### Downloading benchmark data
 
-Sample command to chunk and index all md files in a given directory (using a GPU):
+The benchmark dataset described in **TODO** can be downloaded from **TODO**. This dataset can be
+used to reproduce our experimental results and also to perform additional annotation. For
+instructions on generating more synthetic queries, see the section on [Generating synthetic evaluation data](#generating-synthetic-evaluation-data)
 
+### Downloading markdown data
+
+The markdown version of all papers as of **TODO** are available from **TODO**
+This data is sufficient to perform most experiments as well as benchmark generation. For instructions on generating this data, see the section [Obtaining and preprocessing PDFs](#obtaining-and-preprocessing-pdfs)
+
+
+### Obtaining paper metadata
+
+The paper metadata file necessary for experiments with the published benchmark data can be
+downloaded from **TODO**. For instructions on extracting up-to-date metadata from the ACL
+anthology, see the section on [Extracting paper metadata](#extracting-paper-metadata).
+
+---
+
+## Indexing
+
+Chunk markdown files and build a Milvus vector index using the following command. DEVICE can be set to
+`cuda` for GPU and `cpu` for CPU. Indexing to a file using `LocalMilvusStore` is also possible, but the
+use of `CloudMilvusStore` (locally or remotely) is recommended. When creating a locally hosted index `CLOUD_URI` can be set to e.g. `http://localhost:19530`
+
+Indexing to file using `LocalMilvusStore`:
 ```bash
-time python scripts/index_acl.py --input-dir acl_md/acl --index-file acl.db --metadata-file papers.json --collection-name acl --device cuda &> acl_log/20251103_index_acl.log
+time python scripts/index_acl.py --input-dir PATH_TO_MARKDOWN_DATA --index-file acl.db --metadata-file paper_data.jsonl --collection-name acl --device DEVICE
 ```
 
-Use cloud Milvus instance:
+Indexing to `CloudMilvusStore`:
 ```bash
-python scripts/index_acl.py --input-dir acl_md/ --metadata-file papers.json --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
+python scripts/index_acl.py --input-dir acl_md/ --metadata-file paper_data.jsonl --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
 ```
 
-### Testing
+---
+
+## Testing the index interactively
 
 Load a local index and try some queries interactively:
-
 ```bash
-python scripts/test_index.py --index-file acl.db --device cuda  --collection-name acl
+python acl_verbatim/eval/test_index.py --index-file acl.db --device DEVICE  --collection-name acl
 ```
 
 Using cloud Milvus instance:
 ```bash
-python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
+python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI
 ```
 
-Or to test only retrieval:
+Retrieval only:
 ```bash
-python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r
+python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI -r
 ```
 
+---
 
-Batch testing for retrieval only using ground truth data:
-```bash
-python scripts/test_index.py --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530 -r -k 100 --questions-dir sample_data/questions/ --output-file sample_data/search_results_100.jsonl --query-field question
-```
+## Automatic evaluation
 
-
-### QA benchmark generation
-New, still needs fixes, see NOTES.md
-
-Sample 33 random papers.
-```bash
-python acl_verbatim/qa_generation/sample_papers.py --input-file papers.json --output-file sample_data/random_papers_33.json --n 33 --seed 20251202
-```
-
-Chunk papers and choose one random chunk that is classified based on question type, generating
-three question types for each chunk.
-```bash
-python acl_verbatim/qa_generation/chunk_and_classify.py --input-dir ../verbatim-rag/acl_md --output-dir sample_data/chunks --papers-file sample_data/random_papers_33.json --n 1
-```
-
-Generate questions for these chunks.
-```bash
-python acl_verbatim/qa_generation/gen_qa.py --input-dir sample_data/chunks --output-dir sample_data/questions
-```
-
-Generate queries from questions.
-```bash
-python acl_verbatim/qa_generation/question_to_query.py --input-dir sample_data/questions/ --output-dir sample_data/queries/
-```
-
-### Automatic evaluation
-
-Run queries against index, store results, calculate metrics. Search type can be `dense`, `sparse`,
-`hybrid`, or `full_text`. Here is an example with full text search.
+Run queries against the index, store results, and calculate metrics. `SEARCH\_TYPE` can be `dense`,
+`sparse`, `hybrid`, `full_text`, or `auto` (default).
+**CAUTION: note that without the -r option the script would also run extraction on all retrieved chunks**
 
 ```bash
-python scripts/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri http://localhost:19530 -r -k 500 --questions-dir sample_data/333_20251215/queries -f query --output-file sample_data/333_20251215/search_results_ft.jsonl -s full_text | tee sample_data/333_20251215/search_metrics_ft.txt
+python acl_verbatim/eval/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri CLOUD_URI -r -k 500 --questions-dir QUERIES_PATH -f query --output-file SEARCH_RESULTS_FILE -s SEARCH_TYPE | tee METRICS_FILE
 ```
 
-
-Compare two sets of search results. This example compares results at the chunk level for the top 10
-results:
+Compare two sets of search results at the chunk level for the top k results:
 
 ```bash
-python acl_verbatim/eval/compare_results.py sample_data/333_20251215/search_results_ft.jsonl sample_data/333_20251215/search_results_hybrid.jsonl -k 10
+python acl_verbatim/eval/compare_results.py SEARCH_RESULTS_FILE_1 SEARCH_RESULTS_FILE_2 -k TOP_K_TO_COMPARE
 ```
 
+## Additional steps
 
+### Extracting paper metadata
 
+An up-to-date version of the
+[acl-anthology](https://github.com/acl-org/acl-anthology)
+repository is necessary to obtain paper metadata. Since the script _get_anthology_metadata.py_ relies on Python code from `acl-anthology` that cannot
+be installed as part of a package, the path to the repository must be passed via `--anthology-path`:
+
+```bash
+python scripts/get_anthology_metadata.py --anthology-path /path/to/acl-anthology --output-file paper_data.jsonl
+```
+
+### Generating synthetic evaluation data
+
+**Step 1** — Sample random papers:
+```bash
+python acl_verbatim/qa_generation/sample_papers.py --input-file paper_data.jsonl --output-file SAMPLE_PAPERS_FILE --n NO_OF_PAPERS_TO_SAMPLE --seed RANDOM_SEED
+```
+
+**Step 2** — Chunk papers and choose one random chunk per paper, classified by question type:
+```bash
+python acl_verbatim/qa_generation/chunk_and_classify.py --input-dir ACL_MD_PATH --output-dir CHUNKS_DIR --papers-file SAMPLE_PAPERS_FILE --n 1
+```
+
+**Step 3** — Generate questions for these chunks:
+```bash
+python acl_verbatim/qa_generation/gen_qa.py --input-dir CHUNK_PATH --output-dir QUESTIONS_PATH
+```
+
+**Step 4** — Generate queries from questions:
+```bash
+python acl_verbatim/qa_generation/question_to_query.py --input-dir QUESTIONS_PATH --output-dir QUERIES_PATH
+
+```
+NOTE: the file generated by this final step will contain both questions and queries as well as the chunk
+contents and can therefore be used for all subsequent evaluation steps.
+
+---
+
+### Obtaining and preprocessing PDFs
+
+PDFs of ACL Anthology papers can be downloaded via the [acl-anthology](https://github.com/acl-org/acl-anthology), which provides
+detailed instructions.
+
+**NOTE: the markdown version of all papers is sufficient to perform most experiments, downloading PDFs is only
+required if you need to rerun the conversion step. We kindly ask that you observe the ACL
+Anthology's request not to download large amounts of data unnecessarily. Without their permissive
+policies this project would not have been possible.**
+
+PDFs can be converted to markdown via docling using the following command (batch sizes for docling were tested on a single
+A100 GPU):
+
+```bash
+python scripts/preprocess_acl.py --input-dir ../acl-anthology/build/anthology-files/pdf --output-dir acl_md --metadata-file paper_data.jsonl --doc-batch-size 512 --page-batch-size 1024 &> acl_logs/20251103/202511030845.log
+```
+
+## License
+
+Apache 2.0 -- see [LICENSE](LICENSE).
+
+## Citation
+
+**TODO** paper
+**TODO** ACL Anthology
+
+## Acknowledgements
+
+**TODO** ACL Anthology
+**TODO** test users

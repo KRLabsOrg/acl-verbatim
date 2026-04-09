@@ -1,15 +1,33 @@
+import argparse
 import json
 import sys
 
-ANTHOLOGY_PATH = "/home/recski/projects/acl-anthology/"
-sys.path.append(f"{ANTHOLOGY_PATH}/python")
-sys.path.append(f"{ANTHOLOGY_PATH}/bin")
-from acl_anthology import Anthology
-from create_hugo_data import paper_to_dict
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description="Extract paper metadata from a local ACL Anthology repository."
+    )
+    parser.add_argument(
+        "--anthology-path",
+        required=True,
+        help="Path to the root of a local clone of the acl-anthology repository.",
+    )
+    parser.add_argument(
+        "--output-file",
+        required=True,
+        help="Path to the output JSONL file (one JSON object per line).",
+    )
+    return parser.parse_args()
 
 
 def main():
-    anthology = Anthology(datadir=f"{ANTHOLOGY_PATH}/data").load_all()
+    args = get_args()
+    sys.path.append(f"{args.anthology_path}/python")
+    sys.path.append(f"{args.anthology_path}/bin")
+    from acl_anthology import Anthology
+    from create_hugo_data import paper_to_dict
+
+    anthology = Anthology(datadir=f"{args.anthology_path}/data").load_all()
 
     papers = []
     for collection in anthology.collections.values():
@@ -25,7 +43,7 @@ def main():
                 data.update(volume_data)
                 papers.append(data)
 
-    with open("../paper_data.json", "w") as of:
+    with open(args.output_file, "w") as of:
         for paper in papers:
             of.write(json.dumps(paper) + "\n")
 

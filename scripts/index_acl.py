@@ -64,48 +64,6 @@ def index_acl(args):
     papers = load_papers_jsonl(args.metadata_file)
     logging.info(f"Loaded {len(papers)} papers from metadata")
 
-    logging.info("Loading documents...")
-    documents = []
-
-    for file_path in tqdm(Path(args.input_dir).rglob("*")):
-        if file_path.suffix.lower() != ".md":
-            logging.warning(f"skipping file because extension isn't md: {file_path}")
-            continue
-        paper_id = file_path.stem
-        if paper_id not in papers:
-            logging.warning(f"skipping paper not in metadata file: {paper_id}")
-            continue
-
-        paper = papers[paper_id]
-        content = file_path.read_text(encoding="utf-8")
-        content = preprocess_markdown(content)
-
-        # Extract year as int if valid
-        year_str = paper.get("year", "")
-        year = (
-            int(year_str) if isinstance(year_str, str) and year_str.isdigit() else None
-        )
-
-        document = DocumentSchema(
-            id=paper_id,
-            content=content,
-            title=paper["title"],
-            url=paper["url"],
-            authors=extract_authors(paper),  # Clean list from structured data
-            year=year,
-            venue=paper.get("venue"),  # Full venue name for facets
-            booktitle=paper.get("booktitle"),
-            publisher=paper.get("publisher"),
-            bibtex=paper.get("bibtex"),  # Pre-generated BibTeX
-            pdf_url=paper.get("pdf"),  # Direct PDF link
-            doi=paper.get("doi"),
-            pages=paper.get("pages"),
-        )
-
-        documents.append(document)
-
-    logging.info(f"Found {len(documents)} documents to index")
-
     chunker = MarkdownChunkerProvider(
         min_chunk_size=500,
         max_chunk_size=5000,
@@ -142,8 +100,57 @@ def index_acl(args):
         dense_provider=dense_provider,
         chunker_provider=chunker,
     )
-    logging.info("Chunking and indexing documents...")
-    index.add_documents(documents)
+
+    logging.info("Loading documents...")
+    documents = []
+
+    for file_path in tqdm(Path(args.input_dir).rglob("*")):
+        if file_path.suffix.lower() != ".md":
+            logging.warning(f"skipping file because extension isn't md: {file_path}")
+            continue
+        paper_id = file_path.stem
+        if paper_id not in papers:
+            logging.warning(f"skipping paper not in metadata file: {paper_id}")
+            continue
+        if index.get_document(paper_id) is not None:
+            logging.debug(f"skipping already indexed document: {paper_id}")
+            continue
+
+        paper = papers[paper_id]
+        content = file_path.read_text(encoding="utf-8")
+        content = preprocess_markdown(content)
+
+        # Extract year as int if valid
+        year_str = paper.get("year", "")
+        year = (
+            int(year_str) if isinstance(year_str, str) and year_str.isdigit() else None
+        )
+
+        document = DocumentSchema(
+            id=paper_id,
+            content=content,
+            title=paper["title"],
+            url=paper["url"],
+            authors=extract_authors(paper),  # Clean list from structured data
+            year=year,
+            venue=paper.get("venue"),  # Full venue name for facets
+            booktitle=paper.get("booktitle"),
+            publisher=paper.get("publisher"),
+            bibtex=paper.get("bibtex"),  # Pre-generated BibTeX
+            pdf_url=paper.get("pdf"),  # Direct PDF link
+            doi=paper.get("doi"),
+            pages=paper.get("pages"),
+        )
+
+        documents.append(document)
+
+    logging.info(f"Found {len(documents)} new documents to index")
+    if documents:
+        if args.dry_run:
+            logging.info('stopping here because --dry-run is enabled')
+        else:
+            logging.info("Chunking and indexing documents...")
+            index.add_documents(documents)
 
     return index
 
