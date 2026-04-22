@@ -14,7 +14,7 @@ def get_args():
         default="answerdotai/ModernBERT-base",
         help="HF tokenizer name",
     )
-    parser.add_argument("--max-length", type=int, default=2048)
+    parser.add_argument("--max-length", type=int, default=8192)
     parser.add_argument(
         "--doc-stride",
         type=int,

@@ -14,7 +14,7 @@ def get_args():
         required=True,
         help="Trained token classification model dir/name",
     )
-    parser.add_argument("--max-length", type=int, default=2048)
+    parser.add_argument("--max-length", type=int, default=8192)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument(
         "--doc-stride",

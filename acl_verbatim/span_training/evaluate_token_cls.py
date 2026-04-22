@@ -46,7 +46,7 @@ def get_args():
         default=None,
         help="Optional JSONL file to write normalized predictions",
     )
-    parser.add_argument("--max-length", type=int, default=2048)
+    parser.add_argument("--max-length", type=int, default=8192)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument(
         "--doc-stride",
@@ -103,6 +103,11 @@ def main():
     if args.hf_dataset:
         if args.gold_file:
             raise SystemExit("Use either --gold-file or --hf-dataset, not both.")
+        if args.hf_config == "encoder":
+            raise SystemExit(
+                "The 'encoder' config is pretokenized and has no raw chunks; "
+                "evaluate against --hf-config canonical --gold-split test instead."
+            )
         gold_rows = load_gold_rows_from_hf(
             repo_id=args.hf_dataset,
             config=args.hf_config,

@@ -118,6 +118,36 @@ Expected fields:
 | `attention_mask` | list[int] | Attention mask |
 | `labels` | list[int] | Binary or BIO token labels |
 
+### How the `encoder` split was built
+
+The `encoder` split was pretokenized with:
+
+| parameter | value |
+|---|---|
+| tokenizer | `answerdotai/ModernBERT-base` |
+| max_length | 8192 |
+| doc_stride | 256 |
+| truncation | `only_second` (question kept whole, chunk windowed) |
+| label_scheme | binary (`0` = outside, `1` = evidence) |
+| drop_unlabeled_positives | true |
+
+If you want to train with a different tokenizer or label scheme, rebuild from
+the `canonical` config:
+
+```bash
+python acl_verbatim/span_training/prepare_token_cls_dataset.py \
+  --input-file <canonical_train.jsonl> \
+  --output-file train.my_tokenizer.binary.jsonl \
+  --tokenizer <your-tokenizer> \
+  --label-scheme binary \
+  --drop-unlabeled-positives
+```
+
+Evaluation always uses `canonical/test` (raw text); the `encoder` config
+intentionally does **not** include a test split, because span-level scoring
+needs to map token predictions back to character offsets in the original chunk,
+which requires retokenizing at inference time.
+
 ## Annotation Convention
 
 The benchmark uses **paragraph-oriented evidence annotation** rather than minimal SQuAD-style

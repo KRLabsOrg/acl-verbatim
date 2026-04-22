@@ -77,12 +77,6 @@ def get_args():
     parser.add_argument("--gold-file", type=Path, required=True)
     parser.add_argument("--encoder-train", type=Path, default=None)
     parser.add_argument("--encoder-dev", type=Path, default=None)
-    parser.add_argument(
-        "--encoder-test",
-        type=Path,
-        default=None,
-        help="Optional token-classification-ready gold/test split",
-    )
     parser.add_argument("--repo-id", default="KRLabsOrg/acl-verbatim-spans")
     parser.add_argument("--max-shard-size", default="500MB")
     parser.add_argument(
@@ -162,15 +156,16 @@ def build_encoder_dataset(args) -> DatasetDict | None:
     if not args.encoder_train or not args.encoder_dev:
         return None
 
-    splits = {
-        "train": Dataset.from_list(load_jsonl(args.encoder_train), features=ENCODER_FEATURES),
-        "validation": Dataset.from_list(load_jsonl(args.encoder_dev), features=ENCODER_FEATURES),
-    }
-    if args.encoder_test:
-        splits["test"] = Dataset.from_list(
-            load_jsonl(args.encoder_test), features=ENCODER_FEATURES
-        )
-    return DatasetDict(splits)
+    return DatasetDict(
+        {
+            "train": Dataset.from_list(
+                load_jsonl(args.encoder_train), features=ENCODER_FEATURES
+            ),
+            "validation": Dataset.from_list(
+                load_jsonl(args.encoder_dev), features=ENCODER_FEATURES
+            ),
+        }
+    )
 
 
 def push_dataset_dict(ds: DatasetDict, repo_id: str, config_name: str, max_shard_size: str):
