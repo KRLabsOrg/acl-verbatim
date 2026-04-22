@@ -5,11 +5,10 @@ import logging
 from pathlib import Path
 from tqdm import tqdm
 
-from verbatim_rag import VerbatimIndex, VerbatimRAG
+from verbatim_rag import VerbatimIndex
 from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
 )
-from verbatim_rag.core import LLMClient
 from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.schema import DocumentSchema
 from verbatim_rag.chunker_providers import MarkdownChunkerProvider
@@ -147,7 +146,7 @@ def index_acl(args):
     logging.info(f"Found {len(documents)} new documents to index")
     if documents:
         if args.dry_run:
-            logging.info('stopping here because --dry-run is enabled')
+            logging.info("stopping here because --dry-run is enabled")
         else:
             logging.info("Chunking and indexing documents...")
             index.add_documents(documents)
@@ -200,19 +199,7 @@ def get_args():
 
 def main():
     args = get_args()
-    # Check dependencies
-    index = index_acl(args)
-
-    llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
-    )
-
-    rag = VerbatimRAG(index, llm_client=llm_client)
-    test_query = "What is 4lang?"
-    logging.info(f"asking: {test_query}")
-    response = rag.query(test_query)
-    logging.info(f"answer: {response.answer}")
+    index_acl(args)
 
 
 if __name__ == "__main__":

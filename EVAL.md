@@ -25,7 +25,7 @@
 | 50 | 75.83% | 59.93% | 
 | 100 | 80.24% | 64.90% | 
 
-### hybrid retrieval (0.3 dense, 0.7 full text)
+### hybrid retrieval (historical: 0.3 dense, 0.7 full text)
 
 | k | paper R @ k | chunk R @ k
 |---|---|---|
@@ -36,3 +36,7 @@
 | 20 | 71.41% | 57.28% | 
 | 50 | 76.93% | 62.03% | 
 | 100 | 82.23% | 68.32% | 
+
+Current code defaults to equal hybrid weights (`0.5` dense, `0.5` full text) in
+`acl_verbatim/retrieval/runtime.py`. The table above is preserved as a historical benchmark from
+the earlier weighting setup.

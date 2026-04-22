@@ -4,6 +4,7 @@ import os
 import random
 import traceback
 from pathlib import Path
+import os as _os
 
 from tqdm import tqdm
 
@@ -48,6 +49,22 @@ def get_args():
     parser.add_argument(
         "--n", type=int, help="optional number of chunks to sample per paper"
     )
+    parser.add_argument(
+        "--model",
+        default=_os.environ.get("OPENAI_MODEL", "moonshotai/kimi-k2-instruct-0905"),
+        help="OpenAI-compatible model name",
+    )
+    parser.add_argument(
+        "--api-base",
+        default=_os.environ.get("OPENAI_API_BASE", "https://api.groq.com/openai/v1/"),
+        help="OpenAI-compatible API base",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=_os.environ.get("OPENAI_API_KEY"),
+        help="Optional API key for the endpoint",
+    )
+    parser.add_argument("--temperature", type=float, default=0.0)
     return parser.parse_args()
 
 
@@ -55,12 +72,11 @@ def main():
     args = get_args()
 
     llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
+        model=args.model,
+        api_base=args.api_base,
+        api_key=args.api_key,
+        temperature=args.temperature,
     )
-    # llm_client = LLMClient(
-    #     model="gpt-5.2",
-    # )
 
     chunker = MarkdownChunkerProvider(
         min_chunk_size=500,
@@ -74,6 +90,7 @@ def main():
             to_keep = set(paper["url"].split("/")[-2] for paper in papers)
 
     output_path = Path(args.output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
     for file_path in tqdm(Path(args.input_dir).rglob("*.md")):
         paper_id = file_path.stem
         if to_keep and paper_id not in to_keep:
@@ -97,7 +114,23 @@ def main():
                     try:
                         response = llm_client.complete(prompt, json_mode=True)
                         out["q_types"] = []
-                        for item in json.loads(response):
+                        parsed = json.loads(response)
+                        if isinstance(parsed, dict):
+                            for key in ("question_types", "q_types", "types"):
+                                if isinstance(parsed.get(key), list):
+                                    parsed = parsed[key]
+                                    break
+                            else:
+                                parsed = list(parsed.values())
+                        for item in parsed:
+                            if isinstance(item, str):
+                                out["q_types"].append(item)
+                                continue
+                            if not isinstance(item, dict):
+                                print(
+                                    f"WARNING, unexpected response item: {item}, skipping"
+                                )
+                                continue
                             for key in ("type", "name"):
                                 if key in item:
                                     out["q_types"].append(item[key])

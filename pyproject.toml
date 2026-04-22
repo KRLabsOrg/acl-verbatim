@@ -8,26 +8,48 @@ version = "0.0.1"
 description = "Tools for deploying and evaluating verbatim-rag with papers from the ACL Anthology"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = {text = "Apache-2.0"}
 authors = [
     {name = "Gabor Recski", email = "recski@krlabs.eu"},
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
     # Core ML/AI dependencies
     "verbatim-rag>=0.1.9",
-    
+
     # Vector storage and search
     "pymilvus>=2.6.3",
     "pymilvus[milvus_lite]",
-    
+
     # Utilities
     "tqdm>=4.65.0",
     "rapidfuzz>=3.0.0",
+]
+
+[project.optional-dependencies]
+hf = [
+    "datasets>=2.14.0",
+    "huggingface_hub>=0.20.0",
+    "torch>=2.0.0",
+    "transformers>=4.36.0",
+    "accelerate>=0.24.0",
+]
+training = [
+    "datasets>=2.14.0",
+    "torch>=2.0.0",
+    "transformers>=4.36.0",
+    "peft>=0.7.0",
+    "accelerate>=0.24.0",
+]
+exit = [
+    "torch>=2.0.0",
+    "transformers>=4.36.0",
+    "peft>=0.7.0",
+    "accelerate>=0.24.0",
 ]
 
 

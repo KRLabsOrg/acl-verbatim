@@ -2,6 +2,7 @@ import argparse
 import json
 import traceback
 from pathlib import Path
+import os
 
 from tqdm import tqdm
 
@@ -12,6 +13,22 @@ def get_args():
     parser = argparse.ArgumentParser(description="Generate QA data")
     parser.add_argument("--input-dir", required=True, help="path to classified chunks")
     parser.add_argument("--output-dir", required=True, help="output path")
+    parser.add_argument(
+        "--model",
+        default=os.environ.get("OPENAI_MODEL", "moonshotai/kimi-k2-instruct-0905"),
+        help="OpenAI-compatible model name",
+    )
+    parser.add_argument(
+        "--api-base",
+        default=os.environ.get("OPENAI_API_BASE", "https://api.groq.com/openai/v1/"),
+        help="OpenAI-compatible API base",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=os.environ.get("OPENAI_API_KEY"),
+        help="Optional API key for the endpoint",
+    )
+    parser.add_argument("--temperature", type=float, default=0.0)
     return parser.parse_args()
 
 
@@ -35,14 +52,14 @@ def main():
     args = get_args()
 
     llm_client = LLMClient(
-        model="moonshotai/kimi-k2-instruct-0905",
-        api_base="https://api.groq.com/openai/v1/",
+        model=args.model,
+        api_base=args.api_base,
+        api_key=args.api_key,
+        temperature=args.temperature,
     )
-    # llm_client = LLMClient(
-    #     model="gpt-5.2",
-    # )
 
     output_path = Path(args.output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
     for file_path in tqdm(Path(args.input_dir).rglob("*")):
         paper_id = file_path.stem
         with open(output_path / f"{paper_id}.json", "w") as of:

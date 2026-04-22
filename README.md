@@ -1,163 +1,172 @@
 # acl-verbatim
 
-Trustworthy question answering on the ACL Anthology using VerbatimRAG.
+Trustworthy question answering on the ACL Anthology using retrieval plus verbatim evidence
+extraction.
 
-This README first describes all steps necessary to reproduce our published experimental results
-(downloading data, indexing, evaluation), then it also provides instructions for all other steps
-required to run our complete pipeline (extracting paper metadata from the ACL Anthology,
-downloading and preprocessing PDFs of papers, as well as the generation of synthetic queries for
-annotation).
+ACL-Verbatim is a research codebase for:
 
+- indexing ACL Anthology markdown in Milvus
+- generating synthetic queries and silver span labels
+- evaluating LLM extractors, semantic highlighters, and token classifiers with one shared span scorer
+- training a self-contained Hugging Face token-classification model for query-conditioned highlighting
 
-## Prerequisites
+## Datasets
 
-### Installation
+- Corpus: [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
+  - `metadata` config: bibliographic metadata
+  - `fulltext` config: docling-converted markdown
+- Local gold benchmark:
+  [333_20260206_dense_top5_20260305.json](333_20260206_dense_top5_20260305.json)
+  - 20 queries
+  - 100 retrieved chunks
+  - 47 relevant rows
+  - 78 gold spans
+- Planned span dataset release:
+  `KRLabsOrg/acl-verbatim-spans`
+  - draft card: [dataset_cards/acl-verbatim-spans/README.md](dataset_cards/acl-verbatim-spans/README.md)
 
-```bash
-pip install acl-verbatim
-```
+## Installation
 
-
-### Downloading benchmark data
-
-The benchmark dataset described in **TODO** can be downloaded from **TODO**. This dataset can be
-used to reproduce our experimental results and also to perform additional annotation. For
-instructions on generating more synthetic queries, see the section on [Generating synthetic evaluation data](#generating-synthetic-evaluation-data)
-
-### Downloading markdown data
-
-The markdown version of all papers as of **TODO** are available from **TODO**
-This data is sufficient to perform most experiments as well as benchmark generation. For instructions on generating this data, see the section [Obtaining and preprocessing PDFs](#obtaining-and-preprocessing-pdfs)
-
-
-### Obtaining paper metadata
-
-The paper metadata file necessary for experiments with the published benchmark data can be
-downloaded from **TODO**. For instructions on extracting up-to-date metadata from the ACL
-anthology, see the section on [Extracting paper metadata](#extracting-paper-metadata).
-
----
-
-## Indexing
-
-Chunk markdown files and build a Milvus vector index using the following command. DEVICE can be set to
-`cuda` for GPU and `cpu` for CPU. Indexing to a file using `LocalMilvusStore` is also possible, but the
-use of `CloudMilvusStore` (locally or remotely) is recommended. When creating a locally hosted index `CLOUD_URI` can be set to e.g. `http://localhost:19530`
-
-Indexing to file using `LocalMilvusStore`:
-```bash
-time python scripts/index_acl.py --input-dir PATH_TO_MARKDOWN_DATA --index-file acl.db --metadata-file paper_data.jsonl --collection-name acl --device DEVICE
-```
-
-Indexing to `CloudMilvusStore`:
-```bash
-python scripts/index_acl.py --input-dir acl_md/ --metadata-file paper_data.jsonl --collection-name acl --device cuda --use-cloud --cloud-uri http://localhost:19530
-```
-
----
-
-## Testing the index interactively
-
-Load a local index and try some queries interactively:
-```bash
-python acl_verbatim/eval/test_index.py --index-file acl.db --device DEVICE  --collection-name acl
-```
-
-Using cloud Milvus instance:
-```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI
-```
-
-Retrieval only:
-```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI -r
-```
-
----
-
-## Automatic evaluation
-
-Run queries against the index, store results, and calculate metrics. `SEARCH\_TYPE` can be `dense`,
-`sparse`, `hybrid`, `full_text`, or `auto` (default).
-**CAUTION: note that without the -r option the script would also run extraction on all retrieved chunks**
+Base install:
 
 ```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri CLOUD_URI -r -k 500 --questions-dir QUERIES_PATH -f query --output-file SEARCH_RESULTS_FILE -s SEARCH_TYPE | tee METRICS_FILE
+pip install -e .
 ```
 
-Compare two sets of search results at the chunk level for the top k results:
+For silver-label generation and token-classifier training:
 
 ```bash
-python acl_verbatim/eval/compare_results.py SEARCH_RESULTS_FILE_1 SEARCH_RESULTS_FILE_2 -k TOP_K_TO_COMPARE
+pip install -e ".[training]"
 ```
 
-## Additional steps
-
-### Extracting paper metadata
-
-An up-to-date version of the
-[acl-anthology](https://github.com/acl-org/acl-anthology)
-repository is necessary to obtain paper metadata. Since the script _get_anthology_metadata.py_ relies on Python code from `acl-anthology` that cannot
-be installed as part of a package, the path to the repository must be passed via `--anthology-path`:
+For Hugging Face dataset tooling and semantic-highlighting baselines:
 
 ```bash
-python scripts/get_anthology_metadata.py --anthology-path /path/to/acl-anthology --output-file paper_data.jsonl
+pip install -e ".[hf]"
 ```
 
-### Generating synthetic evaluation data
+## Quick Start
 
-**Step 1** — Sample random papers:
-```bash
-python acl_verbatim/qa_generation/sample_papers.py --input-file paper_data.jsonl --output-file SAMPLE_PAPERS_FILE --n NO_OF_PAPERS_TO_SAMPLE --seed RANDOM_SEED
-```
-
-**Step 2** — Chunk papers and choose one random chunk per paper, classified by question type:
-```bash
-python acl_verbatim/qa_generation/chunk_and_classify.py --input-dir ACL_MD_PATH --output-dir CHUNKS_DIR --papers-file SAMPLE_PAPERS_FILE --n 1
-```
-
-**Step 3** — Generate questions for these chunks:
-```bash
-python acl_verbatim/qa_generation/gen_qa.py --input-dir CHUNK_PATH --output-dir QUESTIONS_PATH
-```
-
-**Step 4** — Generate queries from questions:
-```bash
-python acl_verbatim/qa_generation/question_to_query.py --input-dir QUESTIONS_PATH --output-dir QUERIES_PATH
-
-```
-NOTE: the file generated by this final step will contain both questions and queries as well as the chunk
-contents and can therefore be used for all subsequent evaluation steps.
-
----
-
-### Obtaining and preprocessing PDFs
-
-PDFs of ACL Anthology papers can be downloaded via the [acl-anthology](https://github.com/acl-org/acl-anthology), which provides
-detailed instructions.
-
-**NOTE: the markdown version of all papers is sufficient to perform most experiments, downloading PDFs is only
-required if you need to rerun the conversion step. We kindly ask that you observe the ACL
-Anthology's request not to download large amounts of data unnecessarily. Without their permissive
-policies this project would not have been possible.**
-
-PDFs can be converted to markdown via docling using the following command (batch sizes for docling were tested on a single
-A100 GPU):
+Index a local markdown corpus:
 
 ```bash
-python scripts/preprocess_acl.py --input-dir ../acl-anthology/build/anthology-files/pdf --output-dir acl_md --metadata-file paper_data.jsonl --doc-batch-size 512 --page-batch-size 1024 &> acl_logs/20251103/202511030845.log
+python scripts/index_acl.py \
+  --input-dir acl_md \
+  --metadata-file paper_data.json \
+  --collection-name acl \
+  --device cuda \
+  --use-cloud \
+  --cloud-uri http://localhost:19530
 ```
+
+Run retrieval only:
+
+```bash
+python acl_verbatim/eval/test_index.py \
+  --collection-name acl \
+  --device cpu \
+  --use-cloud \
+  --cloud-uri CLOUD_URI \
+  -r
+```
+
+Evaluate a trained token classifier on the gold benchmark:
+
+```bash
+python acl_verbatim/span_training/evaluate_token_cls.py \
+  --gold-file 333_20260206_dense_top5_20260305.json \
+  --model-dir runs/models/modernbert_qwen_silver_binary
+```
+
+Run smoke tests:
+
+```bash
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+## Main Workflows
+
+- Full silver-data and training pipeline:
+  [docs/PIPELINE.md](docs/PIPELINE.md)
+- Evaluation commands and supported prediction formats:
+  [acl_verbatim/eval/README.md](acl_verbatim/eval/README.md)
+- Corpus dataset card:
+  [dataset_cards/acl-anthology-md/README.md](dataset_cards/acl-anthology-md/README.md)
+- Planned span dataset card:
+  [dataset_cards/acl-verbatim-spans/README.md](dataset_cards/acl-verbatim-spans/README.md)
+
+## Current Supported Pipeline
+
+The current supported path is:
+
+1. sample papers and generate synthetic questions
+2. retrieve top-k chunks from Milvus
+3. annotate silver spans with `annotate_spans_from_results_batched.py`
+4. filter to a caption-preserving `caption_ok` split
+5. prepare token-classification training data
+6. train a ModernBERT token classifier
+7. evaluate the trained model on the local gold benchmark with the shared span metrics
+
+The canonical silver-labeling command is:
+
+```bash
+python acl_verbatim/qa_generation/annotate_spans_from_results_batched.py \
+  --results-file runs/search_results_top5_hybrid.jsonl \
+  --output-file runs/span_pairs_top5_qwen_paragraph.jsonl \
+  --collection-name acl \
+  --milvus-uri MILVUS_URI \
+  --milvus-token MILVUS_TOKEN \
+  --batch-size 5 \
+  --workers 6 \
+  --resume \
+  --extraction-prompt-file acl_verbatim/prompts/extraction_paragraph.txt
+```
+
+## Local Data Preparation
+
+Extract fresh metadata from a local clone of `acl-org/acl-anthology`:
+
+```bash
+python scripts/get_anthology_metadata.py \
+  --anthology-path /path/to/acl-anthology \
+  --output-file paper_data.json
+```
+
+Convert PDFs to markdown locally:
+
+```bash
+python scripts/preprocess_acl.py \
+  --input-dir ../acl-anthology/build/anthology-files/pdf \
+  --output-dir acl_md \
+  --metadata-file paper_data.json \
+  --doc-batch-size 512 \
+  --page-batch-size 1024
+```
+
+For most work, the published Hugging Face corpus is easier than rebuilding the markdown locally.
+
+## Notes
+
+- `paper_data.json` is JSONL content stored under a `.json` filename for historical reasons. The
+  scripts in this repository now consistently expect that file shape.
+- `runs/` is intentionally ignored. Large silver datasets, checkpoints, and eval outputs should
+  live in Hugging Face or external storage, not Git.
+- Current code defaults to equal hybrid retrieval weights (`0.5` dense, `0.5` full text). Older
+  benchmark tables using different weights are kept in [EVAL.md](EVAL.md) and marked as historical.
 
 ## License
 
-Apache 2.0 -- see [LICENSE](LICENSE).
+Apache 2.0. See [LICENSE](LICENSE).
 
 ## Citation
 
-**TODO** paper
-**TODO** ACL Anthology
+An ACL/NAACL-style paper describing ACL-Verbatim is in preparation. Until then, please cite:
+
+- the ACL Anthology for the source corpus
+- VerbatimRAG for the underlying retrieval and extraction framework
 
 ## Acknowledgements
 
-**TODO** ACL Anthology
-**TODO** test users
+This project relies on the ACL Anthology, the maintainers of
+[`acl-org/acl-anthology`](https://github.com/acl-org/acl-anthology), and the maintainers of
+[VerbatimRAG](https://github.com/KRLabsOrg/verbatim-rag).

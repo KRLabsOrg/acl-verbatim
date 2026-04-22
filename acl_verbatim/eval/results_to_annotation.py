@@ -33,9 +33,9 @@ def _results2csv(results, k, client):
         chunk, title = get_chunk(res["url"], res["chunk_number"], client)
         for hl in res["extraction"]:
             i, j = hl["start"], hl["end"]
-            assert (
-                chunk[i:j].upper() == hl["text"].upper()
-            ), f"mismatch: {chunk[i:j]=}, {hl['text']=}"
+            assert chunk[i:j].upper() == hl["text"].upper(), (
+                f"mismatch: {chunk[i:j]=}, {hl['text']=}"
+            )
             chunk = chunk[:i] + chunk[i:j].upper() + chunk[j:]
 
         rows.append([query, f"{c + 1}", title, res["url"], res["chunk_number"], chunk])
