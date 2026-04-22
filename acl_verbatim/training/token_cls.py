@@ -160,6 +160,10 @@ def label_maps(label_scheme: str):
 def train_token_classifier(
     train_file: str,
     eval_file: str,
+    hf_dataset: str | None,
+    hf_config: str,
+    train_split: str,
+    eval_split: str,
     model_name: str,
     output_dir: str,
     batch_size: int,
@@ -178,8 +182,12 @@ def train_token_classifier(
         label2id=label2id,
     )
 
-    train_ds = load_dataset("json", data_files=train_file, split="train")
-    eval_ds = load_dataset("json", data_files=eval_file, split="train")
+    if hf_dataset:
+        train_ds = load_dataset(hf_dataset, hf_config, split=train_split)
+        eval_ds = load_dataset(hf_dataset, hf_config, split=eval_split)
+    else:
+        train_ds = load_dataset("json", data_files=train_file, split="train")
+        eval_ds = load_dataset("json", data_files=eval_file, split="train")
     collator = DataCollatorForTokenClassification(tokenizer, padding=True)
 
     out_dir = Path(output_dir)

@@ -7,8 +7,28 @@ def get_args():
     parser = argparse.ArgumentParser(
         description="Train a token classification model for span extraction"
     )
-    parser.add_argument("--train-file", required=True, help="Train JSONL")
-    parser.add_argument("--eval-file", required=True, help="Eval JSONL")
+    parser.add_argument("--train-file", default=None, help="Train JSONL")
+    parser.add_argument("--eval-file", default=None, help="Eval JSONL")
+    parser.add_argument(
+        "--hf-dataset",
+        default=None,
+        help="Optional HF dataset repo id, e.g. KRLabsOrg/acl-verbatim-spans",
+    )
+    parser.add_argument(
+        "--hf-config",
+        default="encoder",
+        help="HF dataset config to load when --hf-dataset is set",
+    )
+    parser.add_argument(
+        "--train-split",
+        default="train",
+        help="HF train split name when --hf-dataset is set",
+    )
+    parser.add_argument(
+        "--eval-split",
+        default="validation",
+        help="HF eval split name when --hf-dataset is set",
+    )
     parser.add_argument(
         "--model",
         default="answerdotai/ModernBERT-base",
@@ -30,9 +50,23 @@ def get_args():
 
 def main():
     args = get_args()
+    if args.hf_dataset:
+        if args.train_file or args.eval_file:
+            raise SystemExit(
+                "Use either --hf-dataset or --train-file/--eval-file, not both."
+            )
+    elif not (args.train_file and args.eval_file):
+        raise SystemExit(
+            "Provide --train-file and --eval-file, or use --hf-dataset with splits."
+        )
+
     train_token_classifier(
         train_file=args.train_file,
         eval_file=args.eval_file,
+        hf_dataset=args.hf_dataset,
+        hf_config=args.hf_config,
+        train_split=args.train_split,
+        eval_split=args.eval_split,
         model_name=args.model,
         output_dir=args.output_dir,
         batch_size=args.batch_size,

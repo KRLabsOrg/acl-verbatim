@@ -152,6 +152,16 @@ python acl_verbatim/span_training/evaluate_token_cls.py \
   --model-dir runs/models/modernbert_qwen_silver_binary
 ```
 
+Or evaluate directly against the published gold split on HF:
+
+```bash
+python acl_verbatim/span_training/evaluate_token_cls.py \
+  --hf-dataset KRLabsOrg/acl-verbatim-spans \
+  --hf-config canonical \
+  --gold-split test \
+  --model-dir runs/models/modernbert_acl_verbatim_encoder
+```
+
 Load the published span dataset:
 
 ```python
@@ -159,6 +169,22 @@ from datasets import load_dataset
 
 canonical = load_dataset("KRLabsOrg/acl-verbatim-spans", "canonical")
 encoder = load_dataset("KRLabsOrg/acl-verbatim-spans", "encoder")
+```
+
+Train directly from the published encoder split:
+
+```bash
+python acl_verbatim/span_training/train_token_cls.py \
+  --hf-dataset KRLabsOrg/acl-verbatim-spans \
+  --hf-config encoder \
+  --train-split train \
+  --eval-split validation \
+  --model answerdotai/ModernBERT-base \
+  --output-dir runs/models/modernbert_acl_verbatim_encoder \
+  --batch-size 8 \
+  --lr 5e-5 \
+  --epochs 3 \
+  --label-scheme binary
 ```
 
 Run smoke tests:
