@@ -3,10 +3,16 @@ import json
 from pathlib import Path
 
 from datasets import load_dataset
+from tqdm import tqdm
 
 from acl_verbatim.data.spans import Span, SpanRow, load_gold_rows
 from acl_verbatim.eval.span_metrics import evaluate_rows_against_predictions
-from acl_verbatim.training.token_cls import predict_token_records
+from acl_verbatim.training.token_cls import (
+    merge_char_spans,
+    predict_token_records,
+    spans_from_preds,
+    tokenize_row_to_windows,
+)
 
 
 def get_args():
@@ -54,7 +60,85 @@ def get_args():
         default=256,
         help="Stride for sliding windows over long chunks",
     )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help=(
+            "Positive-class probability threshold for token decisions. "
+            "If unset, uses argmax (standard). Lower values trade precision for recall."
+        ),
+    )
     return parser.parse_args()
+
+
+def predict_with_threshold(
+    rows: list[dict],
+    model_dir: str,
+    max_length: int,
+    batch_size: int,
+    doc_stride: int,
+    threshold: float,
+) -> list[dict]:
+    """Inference path that applies a configurable positive-probability threshold.
+
+    Kept local to the eval script — see project memory 'Keep eval-only knobs
+    out of the training library'.
+    """
+    import torch
+    from transformers import AutoModelForTokenClassification, AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=True)
+    model = AutoModelForTokenClassification.from_pretrained(model_dir)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device).eval()
+
+    predictions = []
+    for row in tqdm(rows):
+        question = row.get("question")
+        chunk = row.get("chunk")
+        if not question or chunk is None:
+            continue
+
+        enc = tokenize_row_to_windows(
+            tokenizer, question, chunk, max_length, doc_stride
+        )
+        num_windows = len(enc["input_ids"])
+        all_spans = []
+        for start in range(0, num_windows, batch_size):
+            end = min(num_windows, start + batch_size)
+            input_ids = torch.tensor(enc["input_ids"][start:end], device=device)
+            attention_mask = torch.tensor(
+                enc["attention_mask"][start:end], device=device
+            )
+            with torch.no_grad():
+                logits = model(
+                    input_ids=input_ids, attention_mask=attention_mask
+                ).logits
+            positive = torch.softmax(logits, dim=-1)[..., 1:].sum(dim=-1)
+            preds = (positive >= threshold).long().cpu().tolist()
+            for offset, pred in enumerate(preds):
+                window_idx = start + offset
+                seq_ids = enc.sequence_ids(window_idx)
+                offsets = enc["offset_mapping"][window_idx]
+                all_spans.extend(spans_from_preds(chunk, offsets, seq_ids, pred))
+        merged = merge_char_spans(all_spans)
+        predictions.append(
+            {
+                "question": question,
+                "paper_id": row.get("paper_id"),
+                "chunk_index": row.get("chunk_index"),
+                "pred_spans": [
+                    {
+                        "start": sp["start"],
+                        "end": sp["end"],
+                        "text": chunk[sp["start"] : sp["end"]],
+                    }
+                    for sp in merged
+                ],
+            }
+        )
+    return predictions
 
 
 def load_gold_rows_from_hf(repo_id: str, config: str, split: str) -> list[SpanRow]:
@@ -129,13 +213,23 @@ def main():
         for row in relevant_rows
     ]
 
-    predictions = predict_token_records(
-        rows=model_rows,
-        model_dir=args.model_dir,
-        max_length=args.max_length,
-        batch_size=args.batch_size,
-        doc_stride=args.doc_stride,
-    )
+    if args.threshold is None:
+        predictions = predict_token_records(
+            rows=model_rows,
+            model_dir=args.model_dir,
+            max_length=args.max_length,
+            batch_size=args.batch_size,
+            doc_stride=args.doc_stride,
+        )
+    else:
+        predictions = predict_with_threshold(
+            rows=model_rows,
+            model_dir=args.model_dir,
+            max_length=args.max_length,
+            batch_size=args.batch_size,
+            doc_stride=args.doc_stride,
+            threshold=args.threshold,
+        )
     pred_map = {
         (
             pred["question"],
