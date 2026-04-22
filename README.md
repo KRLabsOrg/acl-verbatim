@@ -15,15 +15,89 @@ ACL-Verbatim is a research codebase for:
 - Corpus: [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
   - `metadata` config: bibliographic metadata
   - `fulltext` config: docling-converted markdown
-- Local gold benchmark:
-  [333_20260206_dense_top5_20260305.json](333_20260206_dense_top5_20260305.json)
-  - 20 queries
-  - 100 retrieved chunks
-  - 47 relevant rows
-  - 78 gold spans
-- Planned span dataset release:
-  `KRLabsOrg/acl-verbatim-spans`
-  - draft card: [dataset_cards/acl-verbatim-spans/README.md](dataset_cards/acl-verbatim-spans/README.md)
+- Span dataset: [`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
+  - `canonical` config: silver train/dev rows plus gold test rows
+  - `encoder` config: token-classification-ready train/dev rows
+  - local gold file kept in-repo: [333_20260206_dense_top5_20260305.json](333_20260206_dense_top5_20260305.json)
+
+## Getting The Data
+
+There are two practical ways to get started.
+
+### Option 1: Use The Published Corpus
+
+Use the Hugging Face corpus dataset:
+
+- [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
+  - `metadata` config: paper metadata
+  - `fulltext` config: markdown corpus
+
+This is the easiest way to reproduce retrieval, silver generation, and training without rebuilding
+the anthology locally.
+
+If you want to use the existing local-file-based scripts (`scripts/index_acl.py`,
+`chunk_and_classify.py`, etc.) with the published corpus, export the HF dataset to the expected
+local layout:
+
+```bash
+python scripts/export_hf_corpus.py \
+  --output-metadata-file paper_data.json \
+  --output-md-dir acl_md
+```
+
+That materializes:
+
+- `paper_data.json` as JSONL metadata
+- `acl_md/*.md` as markdown files keyed by `anthology_id`
+
+The current gold extraction benchmark is the local file:
+
+- [333_20260206_dense_top5_20260305.json](333_20260206_dense_top5_20260305.json)
+
+The same gold and silver span data are also published as:
+
+- [`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
+  - `canonical/train`: silver training rows
+  - `canonical/validation`: silver dev rows
+  - `canonical/test`: gold benchmark rows
+  - `encoder/train` and `encoder/validation`: tokenized ModernBERT-ready rows
+
+### Option 2: Rebuild The Local Inputs
+
+If you want local metadata and markdown files instead of the published HF corpus:
+
+1. Extract metadata from a local clone of `acl-org/acl-anthology`:
+
+```bash
+python scripts/get_anthology_metadata.py \
+  --anthology-path /path/to/acl-anthology \
+  --output-file paper_data.json
+```
+
+2. Convert ACL Anthology PDFs to markdown:
+
+```bash
+python scripts/preprocess_acl.py \
+  --input-dir ../acl-anthology/build/anthology-files/pdf \
+  --output-dir acl_md \
+  --metadata-file paper_data.json \
+  --doc-batch-size 512 \
+  --page-batch-size 1024
+```
+
+3. Index that markdown with:
+
+```bash
+python scripts/index_acl.py \
+  --input-dir acl_md \
+  --metadata-file paper_data.json \
+  --collection-name acl \
+  --device cuda \
+  --use-cloud \
+  --cloud-uri http://localhost:19530
+```
+
+`paper_data.json` is JSONL content stored under a `.json` filename for historical reasons.
 
 ## Installation
 
@@ -78,6 +152,15 @@ python acl_verbatim/span_training/evaluate_token_cls.py \
   --model-dir runs/models/modernbert_qwen_silver_binary
 ```
 
+Load the published span dataset:
+
+```python
+from datasets import load_dataset
+
+canonical = load_dataset("KRLabsOrg/acl-verbatim-spans", "canonical")
+encoder = load_dataset("KRLabsOrg/acl-verbatim-spans", "encoder")
+```
+
 Run smoke tests:
 
 ```bash
@@ -92,7 +175,7 @@ python -m unittest discover -s tests -p 'test_*.py'
   [acl_verbatim/eval/README.md](acl_verbatim/eval/README.md)
 - Corpus dataset card:
   [dataset_cards/acl-anthology-md/README.md](dataset_cards/acl-anthology-md/README.md)
-- Planned span dataset card:
+- Span dataset card:
   [dataset_cards/acl-verbatim-spans/README.md](dataset_cards/acl-verbatim-spans/README.md)
 
 ## Current Supported Pipeline
@@ -106,6 +189,17 @@ The current supported path is:
 5. prepare token-classification training data
 6. train a ModernBERT token classifier
 7. evaluate the trained model on the local gold benchmark with the shared span metrics
+
+If you want the published rows instead of local files, use:
+
+```python
+from datasets import load_dataset
+
+canonical = load_dataset("KRLabsOrg/acl-verbatim-spans", "canonical")
+train_rows = canonical["train"]
+dev_rows = canonical["validation"]
+gold_rows = canonical["test"]
+```
 
 The canonical silver-labeling command is:
 
@@ -122,33 +216,8 @@ python acl_verbatim/qa_generation/annotate_spans_from_results_batched.py \
   --extraction-prompt-file acl_verbatim/prompts/extraction_paragraph.txt
 ```
 
-## Local Data Preparation
-
-Extract fresh metadata from a local clone of `acl-org/acl-anthology`:
-
-```bash
-python scripts/get_anthology_metadata.py \
-  --anthology-path /path/to/acl-anthology \
-  --output-file paper_data.json
-```
-
-Convert PDFs to markdown locally:
-
-```bash
-python scripts/preprocess_acl.py \
-  --input-dir ../acl-anthology/build/anthology-files/pdf \
-  --output-dir acl_md \
-  --metadata-file paper_data.json \
-  --doc-batch-size 512 \
-  --page-batch-size 1024
-```
-
-For most work, the published Hugging Face corpus is easier than rebuilding the markdown locally.
-
 ## Notes
 
-- `paper_data.json` is JSONL content stored under a `.json` filename for historical reasons. The
-  scripts in this repository now consistently expect that file shape.
 - `runs/` is intentionally ignored. Large silver datasets, checkpoints, and eval outputs should
   live in Hugging Face or external storage, not Git.
 - Current code defaults to equal hybrid retrieval weights (`0.5` dense, `0.5` full text). Older
@@ -160,13 +229,8 @@ Apache 2.0. See [LICENSE](LICENSE).
 
 ## Citation
 
-An ACL/NAACL-style paper describing ACL-Verbatim is in preparation. Until then, please cite:
-
-- the ACL Anthology for the source corpus
-- VerbatimRAG for the underlying retrieval and extraction framework
+TODO
 
 ## Acknowledgements
 
-This project relies on the ACL Anthology, the maintainers of
-[`acl-org/acl-anthology`](https://github.com/acl-org/acl-anthology), and the maintainers of
-[VerbatimRAG](https://github.com/KRLabsOrg/verbatim-rag).
+TODO

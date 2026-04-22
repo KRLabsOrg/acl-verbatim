@@ -31,6 +31,26 @@ For Hugging Face dataset tooling and semantic-highlighting baselines:
 pip install -e ".[hf]"
 ```
 
+## Recommended Data Path
+
+The simplest way to obtain the corpus is to use the published HF dataset:
+
+- [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
+
+Most operational scripts in this repository still expect local files. To materialize those from the
+HF dataset:
+
+```bash
+python scripts/export_hf_corpus.py \
+  --output-metadata-file paper_data.json \
+  --output-md-dir acl_md
+```
+
+This gives you the local layout expected by indexing and QA-generation scripts:
+
+- `paper_data.json` (JSONL metadata)
+- `acl_md/*.md` (markdown fulltext)
+
 ## Metadata Extraction
 
 To extract an up-to-date metadata snapshot from a local clone of
@@ -293,6 +313,28 @@ python acl_verbatim/span_training/evaluate_token_cls.py \
 For additional evaluation tooling, see:
 
 - [`acl_verbatim/eval/README.md`](../acl_verbatim/eval/README.md)
+
+## Publishing The Span Dataset
+
+To publish the current gold benchmark plus caption-preserving silver splits to Hugging Face:
+
+```bash
+python scripts/build_spans_dataset.py \
+  --silver-train runs/silver_qwen_2000_caption_ok/splits/train.jsonl \
+  --silver-dev runs/silver_qwen_2000_caption_ok/splits/dev.jsonl \
+  --gold-file 333_20260206_dense_top5_20260305.json \
+  --encoder-train runs/silver_qwen_2000_caption_ok/token_cls/train.modernbert.binary.jsonl \
+  --encoder-dev runs/silver_qwen_2000_caption_ok/token_cls/dev.modernbert.binary.jsonl \
+  --repo-id KRLabsOrg/acl-verbatim-spans
+```
+
+This produces:
+
+- `canonical/train`: silver training rows
+- `canonical/validation`: silver dev rows
+- `canonical/test`: gold benchmark rows
+- `encoder/train`: tokenized train rows
+- `encoder/validation`: tokenized dev rows
 
 ## Smoke Tests
 

@@ -13,35 +13,69 @@ tags:
   - evidence-selection
   - semantic-highlighting
   - silver-labels
+configs:
+  - config_name: canonical
+    data_files:
+      - split: train
+        path: canonical/train-*
+      - split: validation
+        path: canonical/validation-*
+      - split: test
+        path: canonical/test-*
+  - config_name: encoder
+    data_files:
+      - split: train
+        path: encoder/train-*
+      - split: validation
+        path: encoder/validation-*
 ---
 
 # ACL-Verbatim Span Dataset
 
-This document describes the intended Hugging Face release layout for the ACL-Verbatim span
-dataset, planned under `KRLabsOrg/acl-verbatim-spans`.
+[`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
+is a dataset for **query-conditioned extractive evidence selection** over papers from the
+[ACL Anthology](https://aclanthology.org/).
 
-The dataset is designed for training and evaluating query-conditioned extractive evidence
-selection over ACL Anthology chunks. It combines:
+The release combines:
 
-- a small manually annotated gold benchmark for evaluation
-- a larger silver training set generated from synthetic queries, Milvus retrieval, and batched
-  LLM span annotation
+- a **gold test benchmark** with manual span annotations
+- a larger **silver training set** produced from synthetic questions, retrieval, and LLM-based
+  span annotation
+- an **encoder-ready config** for training token-classification models directly
 
-## Release Status
+The underlying document collection is
+[`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md).
 
-The gold benchmark currently lives in this repository as:
+## What This Dataset Is For
 
-- `333_20260206_dense_top5_20260305.json`
+This dataset is intended for systems that, given a **question** and a **retrieved paper chunk**,
+must identify the supporting evidence **verbatim** in the chunk.
 
-Silver datasets are generated locally by the pipeline documented in the repository README and are
-not yet published as a stable Hub dataset release.
+Typical uses include:
 
-## Intended Configs
+- training token classifiers for semantic highlighting
+- evaluating span extractors and evidence selectors
+- comparing LLM teachers, token-level students, and sentence-selection baselines
+- studying paragraph-scale evidence extraction in scientific text
+
+## Configs
 
 ### `canonical`
 
-One row per `(question, chunk)` pair with human- or teacher-provided spans. This is the config
-meant for analysis and general downstream reuse.
+One row per `(question, chunk)` pair.
+
+- `train` and `validation` are **silver** supervision
+- `test` is the **manual gold benchmark**
+
+This is the main config for analysis, evaluation, and downstream reuse.
+
+Current split sizes:
+
+| split | rows | notes |
+|---|---:|---|
+| `train` | 20,916 | silver |
+| `validation` | 2,319 | silver dev |
+| `test` | 100 | gold benchmark |
 
 Expected fields:
 
@@ -54,18 +88,27 @@ Expected fields:
 | `label` | int | `1` if answer-bearing, `0` otherwise |
 | `answerable` | bool | Teacher answerability decision |
 | `spans` | list[struct] | `{start, end, text}` evidence spans |
-| `source` | string | `gold` or `retrieved` |
+| `source` | string | Where the candidate chunk came from in data generation: `gold` = the original chunk used to create the synthetic question, `retrieved` = a chunk retrieved for that question |
 | `retrieval_rank` | int or null | Rank among retrieved candidates |
-| `gold_paper` | string | Source paper for the synthetic benchmark query |
-| `gold_chunk` | int | Source chunk for the synthetic benchmark query |
+| `gold_paper` | string | Paper from which the synthetic question was derived |
+| `gold_chunk` | int | Chunk from which the synthetic question was derived |
 | `predicted_texts` | list[string] | Raw teacher outputs before alignment |
 | `latency_s` | float | Teacher latency metadata |
 | `err` | string or null | Teacher/extraction error, if any |
 
 ### `encoder`
 
-Token-classification-ready rows for encoder training. These are derived from `canonical` by
-tokenization and windowing with a specific tokenizer.
+Token-classification-ready rows derived from the silver `canonical` data by tokenization and
+windowing.
+
+This config is intended for direct encoder training with Hugging Face `transformers`.
+
+Current split sizes:
+
+| split | rows |
+|---|---:|
+| `train` | 21,099 |
+| `validation` | 2,343 |
 
 Expected fields:
 
@@ -75,20 +118,20 @@ Expected fields:
 | `attention_mask` | list[int] | Attention mask |
 | `labels` | list[int] | Binary or BIO token labels |
 
-### `generative`
-
-Optional question-conditioned generative training rows. This config is intended for future
-sequence-to-sequence or instruction-tuned extractors and is not yet the main supported path.
-
 ## Annotation Convention
 
-The benchmark uses paragraph-scale highlighting rather than minimal SQuAD-style spans. Relevant
-tables and captions are considered valid evidence. Bibliography/reference sections are generally
-out of scope as positives.
+The benchmark uses **paragraph-oriented evidence annotation** rather than minimal SQuAD-style
+answer spans.
+
+Important consequences:
+
+- broader supporting passages are often preferred over minimal snippets
+- tables, figure captions, and other structured evidence are considered valid positives
+- bibliography/reference sections are generally out of scope as positive evidence
 
 ## Gold Benchmark Summary
 
-Current local benchmark:
+The `canonical/test` split is the manually annotated benchmark used for extractor evaluation.
 
 | | |
 |---|---|
@@ -100,13 +143,14 @@ Current local benchmark:
 
 ## Silver Training Data
 
-The recommended silver training variant currently used in this repository is the
-caption-preserving `caption_ok` filter mode:
+The silver training data was produced by:
 
-- keep table / figure / caption evidence
-- keep all negatives
-- optionally cap positive retrieval rank
-- drop bibliography/reference positives and clearly pathological spans
+1. sampling papers from the ACL Anthology corpus
+2. generating synthetic questions from paper chunks
+3. rewriting those questions into retrieval-style queries
+4. retrieving top-ranked chunks
+5. annotating answer-bearing chunks with an LLM span extractor
+6. filtering noisy positives while **preserving table/caption evidence**
 
 ## Intended Uses
 
@@ -123,14 +167,48 @@ caption-preserving `caption_ok` filter mode:
 - The benchmark reflects a paragraph-oriented annotation convention rather than a strict minimal
   answer-span convention
 
-## Source Pipeline
+## How To Load The Dataset
 
-The end-to-end generation pipeline is documented in the repository README. The key stages are:
+Load the canonical config:
 
-1. sample papers from ACL metadata
-2. chunk markdown papers and generate synthetic questions
-3. rewrite questions into retrieval queries
-4. retrieve top-`k` chunks from Milvus
-5. annotate spans with a batched LLM extractor
-6. filter silver rows and split by query
-7. prepare token-classification windows for encoder training
+```python
+from datasets import load_dataset
+
+ds = load_dataset("KRLabsOrg/acl-verbatim-spans", "canonical")
+train = ds["train"]
+dev = ds["validation"]
+test = ds["test"]
+```
+
+Load encoder-ready training rows:
+
+```python
+from datasets import load_dataset
+
+encoder = load_dataset("KRLabsOrg/acl-verbatim-spans", "encoder")
+train = encoder["train"]
+dev = encoder["validation"]
+```
+
+## Example: inspect gold vs silver splits
+
+```python
+from datasets import load_dataset
+
+canonical = load_dataset("KRLabsOrg/acl-verbatim-spans", "canonical")
+
+silver_train = canonical["train"]
+silver_dev = canonical["validation"]
+gold_test = canonical["test"]
+```
+
+## Related Resources
+
+- Raw ACL Anthology markdown corpus:
+  [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
+- Codebase:
+  [`KRLabsOrg/acl-verbatim`](https://github.com/KRLabsOrg/acl-verbatim)
+
+## Citation
+
+TODO
