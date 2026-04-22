@@ -180,6 +180,7 @@ def train_token_classifier(
         num_labels=num_labels,
         id2label=id2label,
         label2id=label2id,
+        ignore_mismatched_sizes=True,
     )
 
     if hf_dataset:
