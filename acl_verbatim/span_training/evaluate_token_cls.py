@@ -69,7 +69,39 @@ def get_args():
             "If unset, uses argmax (standard). Lower values trade precision for recall."
         ),
     )
+    parser.add_argument(
+        "--min-span-chars",
+        type=int,
+        default=0,
+        help="Drop predicted spans shorter than this many characters (post-processing).",
+    )
+    parser.add_argument(
+        "--merge-gap-chars",
+        type=int,
+        default=0,
+        help="Merge adjacent predicted spans separated by <= this many characters.",
+    )
     return parser.parse_args()
+
+
+def postprocess_spans(
+    spans: list[dict], min_span_chars: int, merge_gap_chars: int
+) -> list[dict]:
+    """Drop tiny noise spans, then merge neighbours within a gap threshold."""
+    if not spans:
+        return spans
+    kept = [s for s in spans if s["end"] - s["start"] >= min_span_chars]
+    if not kept:
+        return kept
+    kept.sort(key=lambda s: (s["start"], s["end"]))
+    merged = [dict(kept[0])]
+    for sp in kept[1:]:
+        last = merged[-1]
+        if sp["start"] - last["end"] <= merge_gap_chars:
+            last["end"] = max(last["end"], sp["end"])
+        else:
+            merged.append(dict(sp))
+    return merged
 
 
 def predict_with_threshold(
@@ -79,6 +111,8 @@ def predict_with_threshold(
     batch_size: int,
     doc_stride: int,
     threshold: float,
+    min_span_chars: int = 0,
+    merge_gap_chars: int = 0,
 ) -> list[dict]:
     """Inference path that applies a configurable positive-probability threshold.
 
@@ -90,7 +124,12 @@ def predict_with_threshold(
 
     tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=True)
     model = AutoModelForTokenClassification.from_pretrained(model_dir)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     model.to(device).eval()
 
     predictions = []
@@ -123,6 +162,7 @@ def predict_with_threshold(
                 offsets = enc["offset_mapping"][window_idx]
                 all_spans.extend(spans_from_preds(chunk, offsets, seq_ids, pred))
         merged = merge_char_spans(all_spans)
+        merged = postprocess_spans(merged, min_span_chars, merge_gap_chars)
         predictions.append(
             {
                 "question": question,
@@ -213,7 +253,7 @@ def main():
         for row in relevant_rows
     ]
 
-    if args.threshold is None:
+    if args.threshold is None and args.min_span_chars == 0 and args.merge_gap_chars == 0:
         predictions = predict_token_records(
             rows=model_rows,
             model_dir=args.model_dir,
@@ -228,7 +268,9 @@ def main():
             max_length=args.max_length,
             batch_size=args.batch_size,
             doc_stride=args.doc_stride,
-            threshold=args.threshold,
+            threshold=args.threshold if args.threshold is not None else 0.5,
+            min_span_chars=args.min_span_chars,
+            merge_gap_chars=args.merge_gap_chars,
         )
     pred_map = {
         (

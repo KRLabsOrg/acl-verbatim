@@ -84,6 +84,15 @@ def main():
         folder_path=str(model_dir),
         repo_id=args.repo_id,
         repo_type="model",
+        ignore_patterns=[
+            "checkpoint-*/**",
+            "runs/**",
+            "training_args.bin",
+            "optimizer.pt",
+            "scheduler.pt",
+            "rng_state*.pth",
+            "trainer_state.json",
+        ],
     )
     print(f"uploaded to https://huggingface.co/{args.repo_id}")
 

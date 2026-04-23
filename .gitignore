@@ -219,4 +219,5 @@ test.json
 output.json
 
 # Extractor-eval per-row dumps (regenerable via evaluate_extractor.py)
-runs/
+runs/*
+models/

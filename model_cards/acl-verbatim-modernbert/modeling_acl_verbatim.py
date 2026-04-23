@@ -44,9 +44,11 @@ class AclVerbatimHighlighter(ModernBertForTokenClassification):
         self,
         question: str,
         context: str,
-        threshold: float = 0.5,
+        threshold: float = 0.2,
         max_length: int = 8192,
         doc_stride: int = 256,
+        min_span_chars: int = 10,
+        merge_gap_chars: int = 20,
         return_sentence_metrics: bool = False,
     ) -> dict:
         tokenizer = self._get_tokenizer()
@@ -89,11 +91,12 @@ class AclVerbatimHighlighter(ModernBertForTokenClassification):
         raw.sort()
         merged: list[list] = []
         for s, e, p in raw:
-            if merged and s <= merged[-1][1]:
+            if merged and s - merged[-1][1] <= merge_gap_chars:
                 merged[-1][1] = max(merged[-1][1], e)
                 merged[-1][2] = max(merged[-1][2], p)
             else:
                 merged.append([s, e, p])
+        merged = [sp for sp in merged if sp[1] - sp[0] >= min_span_chars]
 
         result: dict = {
             "spans": [
