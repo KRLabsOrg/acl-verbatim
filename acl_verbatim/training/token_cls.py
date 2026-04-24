@@ -5,6 +5,7 @@ import numpy as np
 from datasets import load_dataset
 from tqdm import tqdm
 from transformers import (
+    AutoConfig,
     AutoModelForTokenClassification,
     AutoTokenizer,
     DataCollatorForTokenClassification,
@@ -175,11 +176,19 @@ def train_token_classifier(
     id2label, label2id = label_maps(label_scheme)
     num_labels = len(id2label)
     tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
-    model = AutoModelForTokenClassification.from_pretrained(
+    config = AutoConfig.from_pretrained(
         model_name,
         num_labels=num_labels,
         id2label=id2label,
         label2id=label2id,
+    )
+    if hasattr(config, "reference_compile"):
+        # ModernBERT may auto-enable torch.compile when Triton is available.
+        # That can conflict with Trainer/FX tracing paths during eval/checkpointing.
+        config.reference_compile = False
+    model = AutoModelForTokenClassification.from_pretrained(
+        model_name,
+        config=config,
         ignore_mismatched_sizes=True,
     )
 
