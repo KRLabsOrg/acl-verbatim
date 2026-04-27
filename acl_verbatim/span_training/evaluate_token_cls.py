@@ -146,10 +146,16 @@ def predict_with_threshold(
         all_spans = []
         for start in range(0, num_windows, batch_size):
             end = min(num_windows, start + batch_size)
-            input_ids = torch.tensor(enc["input_ids"][start:end], device=device)
-            attention_mask = torch.tensor(
-                enc["attention_mask"][start:end], device=device
+            batch = tokenizer.pad(
+                {
+                    "input_ids": enc["input_ids"][start:end],
+                    "attention_mask": enc["attention_mask"][start:end],
+                },
+                padding=True,
+                return_tensors="pt",
             )
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
             with torch.no_grad():
                 logits = model(
                     input_ids=input_ids, attention_mask=attention_mask
