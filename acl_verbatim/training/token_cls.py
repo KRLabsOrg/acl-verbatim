@@ -303,10 +303,16 @@ def predict_token_records(
 
         for start_idx in range(0, num_windows, batch_size):
             end_idx = min(num_windows, start_idx + batch_size)
-            input_ids = torch.tensor(enc["input_ids"][start_idx:end_idx], device=device)
-            attention_mask = torch.tensor(
-                enc["attention_mask"][start_idx:end_idx], device=device
+            batch = tokenizer.pad(
+                {
+                    "input_ids": enc["input_ids"][start_idx:end_idx],
+                    "attention_mask": enc["attention_mask"][start_idx:end_idx],
+                },
+                padding=True,
+                return_tensors="pt",
             )
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
             with torch.no_grad():
                 logits = model(
                     input_ids=input_ids,
