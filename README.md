@@ -10,11 +10,15 @@ All reproducible artifacts are on Hugging Face:
 - Corpus: [`KRLabsOrg/acl-anthology-md`](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
   - `metadata` config: paper metadata
   - `fulltext` config: docling-converted markdown
-- Span dataset: [`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
+- ACL span dataset: [`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
   - `canonical` config: silver train/dev rows plus the gold test benchmark
   - `encoder` config: pretokenized ModernBERT rows for direct token-classification training
-- Trained model: [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert)
-  - Loads via `AutoModel.from_pretrained(..., trust_remote_code=True)` and exposes a `.process()` API
+- Multi-domain span dataset: [`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans)
+  - ACL silver + RAGBench + Squeez mix used to train the generic v2 model
+- ACL-specialized model: [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert)
+  - Best on ACL Anthology paper chunks; loads via `AutoModel.from_pretrained(..., trust_remote_code=True)` with a `.process()` API
+- Generic model: [`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2)
+  - v2 of `verbatim-rag-modern-bert-v1`; multi-domain training, same `.process()` API. Strongest off-domain (RAGBench, tool outputs); see [`docs/GENERIC_EVAL.md`](docs/GENERIC_EVAL.md) for the per-domain comparison
 
 
 ## Using the trained model

@@ -21,10 +21,7 @@ from pathlib import Path
 from huggingface_hub import HfApi
 
 
-CUSTOM_CODE_DIR = Path("model_cards/acl-verbatim-modernbert")
-MODELING_FILE = "modeling_acl_verbatim.py"
 README_FILE = "README.md"
-CUSTOM_CLASS = "modeling_acl_verbatim.AclVerbatimHighlighter"
 
 
 def get_args():
@@ -36,23 +33,33 @@ def get_args():
     parser.add_argument(
         "--custom-code-dir",
         type=Path,
-        default=CUSTOM_CODE_DIR,
-        help="Where to find modeling_acl_verbatim.py and README.md",
+        required=True,
+        help="Directory containing the modeling .py and README.md to upload",
+    )
+    parser.add_argument(
+        "--modeling-file",
+        required=True,
+        help="Modeling .py filename inside --custom-code-dir (e.g. modeling_verbatim_rag.py)",
+    )
+    parser.add_argument(
+        "--custom-class",
+        required=True,
+        help="Dotted module.Class for auto_map (e.g. modeling_verbatim_rag.VerbatimRagHighlighter)",
     )
     return parser.parse_args()
 
 
-def inject_auto_map(config_path: Path) -> None:
+def inject_auto_map(config_path: Path, custom_class: str) -> None:
     config = json.loads(config_path.read_text())
     auto_map = config.get("auto_map") or {}
-    auto_map["AutoModel"] = CUSTOM_CLASS
-    auto_map["AutoModelForTokenClassification"] = CUSTOM_CLASS
+    auto_map["AutoModel"] = custom_class
+    auto_map["AutoModelForTokenClassification"] = custom_class
     config["auto_map"] = auto_map
     config_path.write_text(json.dumps(config, indent=2) + "\n")
 
 
-def copy_custom_files(model_dir: Path, custom_code_dir: Path) -> None:
-    for name in (MODELING_FILE, README_FILE):
+def copy_custom_files(model_dir: Path, custom_code_dir: Path, modeling_file: str) -> None:
+    for name in (modeling_file, README_FILE):
         src = custom_code_dir / name
         if not src.exists():
             raise SystemExit(f"missing custom file: {src}")
@@ -66,8 +73,8 @@ def main():
     if not config_path.exists():
         raise SystemExit(f"no config.json in {model_dir}")
 
-    inject_auto_map(config_path)
-    copy_custom_files(model_dir, args.custom_code_dir)
+    inject_auto_map(config_path, args.custom_class)
+    copy_custom_files(model_dir, args.custom_code_dir, args.modeling_file)
     print(f"prepared {model_dir} for upload to {args.repo_id}")
 
     if args.dry_run:

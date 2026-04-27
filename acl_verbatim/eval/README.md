@@ -88,9 +88,30 @@ Evaluate a trained token-classification model on the gold benchmark with:
 ```bash
 python acl_verbatim/span_training/evaluate_token_cls.py \
   --gold-file 333_20260206_dense_top5_20260305.json \
-  --model-dir runs/models/modernbert_qwen_silver_binary \
-  --pred-file runs/eval/modernbert_qwen_silver_binary.gold_preds.jsonl \
-  --output-file runs/eval/modernbert_qwen_silver_binary.gold_eval.json
+  --model-dir KRLabsOrg/acl-verbatim-modernbert \
+  --threshold 0.2 \
+  --min-span-chars 10 \
+  --merge-gap-chars 20 \
+  --pred-file runs/eval/acl-verbatim-modernbert.gold_preds.jsonl \
+  --output-file runs/eval/acl-verbatim-modernbert.gold_eval.json
+```
+
+`--threshold` switches from argmax decoding to a positive-class probability
+cutoff (lower = more recall). `--min-span-chars` drops tiny noise spans and
+`--merge-gap-chars` joins adjacent predictions — together they clean up the
+token-level fragmentation that hurts span IoU. The defaults shown reproduce
+the headline numbers in the model card.
+
+You can also evaluate against an HF dataset split directly:
+
+```bash
+python acl_verbatim/span_training/evaluate_token_cls.py \
+  --hf-dataset KRLabsOrg/acl-verbatim-spans \
+  --hf-config canonical \
+  --gold-split test \
+  --model-dir KRLabsOrg/acl-verbatim-modernbert \
+  --threshold 0.2 --min-span-chars 10 --merge-gap-chars 20 \
+  --output-file runs/eval/acl-verbatim-modernbert.gold_eval.json
 ```
 
 This uses the same span metrics as the LLM teacher evaluation, so comparisons are directly

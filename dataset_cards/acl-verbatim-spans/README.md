@@ -75,7 +75,7 @@ Current split sizes:
 |---|---:|---|
 | `train` | 20,916 | silver |
 | `validation` | 2,319 | silver dev |
-| `test` | 100 | gold benchmark |
+| `test` | 100 | gold benchmark — 20 queries × 5 retrieved chunks; **47** are marked relevant and carry 78 manual gold spans |
 
 Expected fields:
 

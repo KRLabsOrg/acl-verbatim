@@ -1,6 +1,13 @@
 # Pipeline
 
-This document covers the current end-to-end ACL-Verbatim workflow:
+This document covers the **ACL-only silver-supervision pipeline** that
+produced [`KRLabsOrg/acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
+and the ACL-specialized model. For the **multi-domain generic model**
+(`verbatim-rag-modern-bert-v2`) — including RAGBench / Squeez data prep,
+combined dataset publishing, and the per-domain evaluation against Provence
+and Zilliz baselines — see [`GENERIC_EVAL.md`](GENERIC_EVAL.md).
+
+End-to-end workflow covered here:
 
 1. build or download the corpus
 2. index markdown into Milvus
