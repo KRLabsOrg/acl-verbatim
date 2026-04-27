@@ -21,37 +21,60 @@ tags:
 [![ChiliGround Logo](https://github.com/KRLabsOrg/verbatim-rag/raw/main/assets/chiliground.png?raw=true)](https://github.com/KRLabsOrg/verbatim-rag)
 _Chill, I Ground! 🌶️_
 
-A query-conditioned token classifier that highlights supporting evidence spans
-in arbitrary passages — research papers, retrieved web text, tool outputs,
-multi-span QA contexts. The encoder companion to
+A query-conditioned token classifier that highlights the verbatim spans of a
+passage that answer a question. The encoder companion to
 [VerbatimRAG](https://github.com/KRLabsOrg/verbatim-rag), and successor to
 [`KRLabsOrg/verbatim-rag-modern-bert-v1`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v1).
-
-Fine-tuned from
-[`Alibaba-NLP/gte-reranker-modernbert-base`](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base)
-on the multi-domain
-[`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans)
-mix.
-
-For an **ACL-Anthology-specialized** variant (slightly stronger on academic
-papers, weaker elsewhere), see
-[`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert).
 
 Input: `(question, context)` — output: character spans in `context` that
 support the answer, with confidence scores. 8192-token context window. ~50 ms
 per `(question, context)` pair on a single GPU.
 
-## What's new in v2
+For an **ACL-Anthology-specialized** variant (stronger on academic papers,
+weaker elsewhere), see
+[`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert).
+
+## What makes v2 different
+
+Most public evidence-extraction models (Provence, Zilliz, OpenSearch
+semantic-highlight, MultiSpanQA-trained baselines) are trained on
+Wikipedia-style QA: clean prose, noun-phrase answers, sentence-grain
+evidence. They do that well — and they struggle the moment your RAG context
+contains anything *else*.
+
+v2 was deliberately trained on a mix that covers the content shapes that
+modern RAG and agent applications actually retrieve:
+
+| content shape | source in training mix | what it teaches the model |
+|---|---|---|
+| scientific paragraphs with citations | ACL silver | long evidence spans, Author (Year) chains, mixed prose+formula |
+| Wikipedia / general QA | RAGBench (HotpotQA, MS MARCO, ExpertQA, ...) | sentence-grain evidence, multi-hop |
+| **financial tables** | RAGBench (TAT-QA, FinQA) | markdown table rows as evidence units |
+| **medical literature** | RAGBench (PubMedQA, CovidQA) | dense technical prose |
+| **legal contracts** | RAGBench (CUAD) | clause-grain extraction |
+| **product manuals** | RAGBench (eManual, TechQA) | instructional prose, numbered steps |
+| **code / tool output / stack traces / logs** | Squeez (SWE-bench tool outputs) | file paths, line numbers, error messages, log-line evidence |
+
+The Squeez slice especially is novel — no other public evidence extractor we
+know of trains on coding-agent tool output. That's why v2 hits 0.769 word-F1
+on Squeez test vs ~0.49 for Provence and 0.42 for Zilliz: those models
+literally have not seen evidence selection over `pytest` failures, `git diff`
+hunks, or stack traces during training.
+
+The result is a single 150M-parameter encoder you can drop into a RAG or
+agent pipeline regardless of what the retrieval layer surfaces — markdown
+articles, paper PDFs, CSV exports, log files, GitHub READMEs, JSON tool
+responses. See [Evaluation](#evaluation) for the per-domain numbers.
+
+## What's new vs v1
 
 | | v1 | v2 |
 |---|---|---|
 | backbone | ModernBERT | gte-reranker-modernbert (query-conditioned prior) |
 | training data | single-source | multi-domain (ACL silver + RAGBench + Squeez) |
+| content shapes | prose only | prose + tables + code + logs + structured docs |
 | context window | 2048 | 8192 |
 | API | `.process()` returning sentences | `.process()` returning char spans + optional sentences |
-
-v2 is meaningfully stronger on cross-domain QA and tool-output extraction,
-while remaining competitive on the academic-paper benchmark v1 was tuned for.
 
 ## Quick Start
 
