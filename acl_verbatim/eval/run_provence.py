@@ -55,9 +55,14 @@ def normalize_text(text: str) -> str:
 
 class ProvenceSentenceExtractor:
     def __init__(self, model_name: str, threshold: float, always_select_title: bool):
+        import torch
         from transformers import AutoModel
 
         self.model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+        if torch.cuda.is_available():
+            self.model.to("cuda")
+        elif torch.backends.mps.is_available():
+            self.model.to("mps")
         self.threshold = threshold
         self.always_select_title = always_select_title
 
