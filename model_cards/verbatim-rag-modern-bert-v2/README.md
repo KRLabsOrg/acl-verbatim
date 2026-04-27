@@ -156,6 +156,17 @@ match the larger generative models.
 
 ## Citing
 
-```
-TODO
+```bibtex
+@inproceedings{kovacs-etal-2025-kr,
+    title = "{KR} Labs at {A}rch{EHR}-{QA} 2025: A Verbatim Approach for Evidence-Based Question Answering",
+    author = "Kovacs, Adam and Schmitt, Paul and Recski, Gabor",
+    editor = "Soni, Sarvesh and Demner-Fushman, Dina",
+    booktitle = "Proceedings of the 24th Workshop on Biomedical Language Processing (Shared Tasks)",
+    month = aug,
+    year = "2025",
+    address = "Vienna, Austria",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.bionlp-share.8/",
+    pages = "69--74"
+}
 ```
