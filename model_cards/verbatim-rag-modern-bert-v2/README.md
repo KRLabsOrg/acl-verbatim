@@ -12,71 +12,74 @@ tags:
   - extractive-qa
   - evidence-selection
   - modernbert
-  - multi-domain
   - verbatim-rag
 ---
 
-# Verbatim-RAG ModernBERT v2
+# Verbatim-RAG Extractor
 
 [![ChiliGround Logo](https://github.com/KRLabsOrg/verbatim-rag/raw/main/assets/chiliground.png?raw=true)](https://github.com/KRLabsOrg/verbatim-rag)
 _Chill, I Ground! 🌶️_
 
-A query-conditioned token classifier that highlights the verbatim spans of a
-passage that answer a question. The encoder companion to
-[VerbatimRAG](https://github.com/KRLabsOrg/verbatim-rag), and successor to
-[`KRLabsOrg/verbatim-rag-modern-bert-v1`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v1).
+**Model Name:** verbatim-rag-modern-bert-v2
+**Organization:** KRLabsOrg
+**Github:** [https://github.com/KRLabsOrg/verbatim-rag](https://github.com/KRLabsOrg/verbatim-rag)
 
-Input: `(question, context)` — output: character spans in `context` that
-support the answer, with confidence scores. 8192-token context window. ~50 ms
-per `(question, context)` pair on a single GPU.
+## Overview
 
-For an **ACL-Anthology-specialized** variant (stronger on academic papers,
-weaker elsewhere), see
+The Verbatim-RAG Extractor is a query-conditioned token classifier that
+highlights the verbatim spans of a passage that answer a question. It is the
+encoder companion to [VerbatimRAG](https://github.com/KRLabsOrg/verbatim-rag)
+and the successor to
+[`verbatim-rag-modern-bert-v1`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v1).
+Built on
+[`Alibaba-NLP/gte-reranker-modernbert-base`](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base),
+which provides the long ModernBERT context (up to 8192 tokens) and a
+query-conditioned reranking prior on top of which span extraction is fine-tuned.
+
+Most public evidence extractors (Provence, Zilliz Semantic-Highlight,
+MultiSpanQA-trained models) are trained on Wikipedia-style prose QA only.
+This model is trained on
+[`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans),
+which adds financial tables, legal contracts, medical literature, product
+manuals, and — uniquely among public extractors — coding-agent tool output
+(`pytest` failures, `git diff` hunks, stack traces). The result is a single
+150M-parameter encoder usable across the content shapes a real RAG or agent
+pipeline tends to retrieve, not just article paragraphs.
+
+For an ACL-Anthology-specialized variant, see
 [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert).
 
-## What makes v2 different
+## Model Details
 
-Most public evidence-extraction models (Provence, Zilliz, OpenSearch
-semantic-highlight, MultiSpanQA-trained baselines) are trained on
-Wikipedia-style QA: clean prose, noun-phrase answers, sentence-grain
-evidence. They do that well — and they struggle the moment your RAG context
-contains anything *else*.
+* **Architecture:** ModernBERT (gte-reranker-modernbert-base) with 8192-token context
+* **Task:** Token classification — binary evidence labels mapped to character spans
+* **Training Dataset:** [`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans) (multi-domain)
+* **Language:** English
+* **Parameters:** 150M
 
-v2 was deliberately trained on a mix that covers the content shapes that
-modern RAG and agent applications actually retrieve:
+### Training data composition
 
-| content shape | source in training mix | what it teaches the model |
-|---|---|---|
-| scientific paragraphs with citations | ACL silver | long evidence spans, Author (Year) chains, mixed prose+formula |
-| Wikipedia / general QA | RAGBench (HotpotQA, MS MARCO, ExpertQA, ...) | sentence-grain evidence, multi-hop |
-| **financial tables** | RAGBench (TAT-QA, FinQA) | markdown table rows as evidence units |
-| **medical literature** | RAGBench (PubMedQA, CovidQA) | dense technical prose |
-| **legal contracts** | RAGBench (CUAD) | clause-grain extraction |
-| **product manuals** | RAGBench (eManual, TechQA) | instructional prose, numbered steps |
-| **code / tool output / stack traces / logs** | Squeez (SWE-bench tool outputs) | file paths, line numbers, error messages, log-line evidence |
+| content shape | source |
+|---|---|
+| scientific paragraphs with citations | ACL silver |
+| Wikipedia / general QA, multi-hop | RAGBench (HotpotQA, MS MARCO, ExpertQA, ...) |
+| financial tables | RAGBench (TAT-QA, FinQA) |
+| medical literature | RAGBench (PubMedQA, CovidQA) |
+| legal contracts | RAGBench (CUAD) |
+| product manuals | RAGBench (eManual, TechQA) |
+| code, tool output, stack traces, logs | Squeez (SWE-bench tool outputs) |
 
-The Squeez slice especially is novel — no other public evidence extractor we
-know of trains on coding-agent tool output. That's why v2 hits 0.769 word-F1
-on Squeez test vs ~0.49 for Provence and 0.42 for Zilliz: those models
-literally have not seen evidence selection over `pytest` failures, `git diff`
-hunks, or stack traces during training.
+## How It Works
 
-The result is a single 150M-parameter encoder you can drop into a RAG or
-agent pipeline regardless of what the retrieval layer surfaces — markdown
-articles, paper PDFs, CSV exports, log files, GitHub READMEs, JSON tool
-responses. See [Evaluation](#evaluation) for the per-domain numbers.
+A `(question, context)` pair is encoded as a single sequence; the model
+predicts a per-token positive-class probability over the context tokens. Above
+a threshold, contiguous positive runs are merged into character spans, with
+post-processing (`min_span_chars`, `merge_gap_chars`) that removes
+fragmentation artifacts. Long contexts are handled with sliding windows of
+`max_length` tokens stepped by `doc_stride`, and spans are merged across
+windows.
 
-## What's new vs v1
-
-| | v1 | v2 |
-|---|---|---|
-| backbone | ModernBERT | gte-reranker-modernbert (query-conditioned prior) |
-| training data | single-source | multi-domain (ACL silver + RAGBench + Squeez) |
-| content shapes | prose only | prose + tables + code + logs + structured docs |
-| context window | 2048 | 8192 |
-| API | `.process()` returning sentences | `.process()` returning char spans + optional sentences |
-
-## Quick Start
+## Usage
 
 ```python
 from transformers import AutoModel
@@ -100,146 +103,59 @@ for span in result["spans"]:
     print(f"[{span['score']:.2f}] {span['text']}")
 ```
 
-### Parameters
+`.process()` accepts: `question`, `context`, `threshold` (default `0.2`),
+`max_length` (default `8192`), `doc_stride` (default `256`), `min_span_chars`
+(default `30`), `merge_gap_chars` (default `20`), `return_sentence_metrics`
+(default `False`). For short-answer benchmarks (file paths, table cells,
+numbers), `threshold=0.1` and `min_span_chars=10` is the recall-tuned config
+documented in Performance below.
 
-| arg | default | notes |
-|---|---|---|
-| `question` | — | Query string |
-| `context` | — | Passage to search for supporting spans |
-| `threshold` | `0.2` | Probability cutoff for marking a token as evidence. Lower for higher recall |
-| `max_length` | `8192` | Max tokens per window |
-| `doc_stride` | `256` | Overlap between sliding windows for long contexts |
-| `min_span_chars` | `30` | Drop predicted spans shorter than this many characters |
-| `merge_gap_chars` | `20` | Merge adjacent predicted spans separated by ≤ this many characters |
-| `return_sentence_metrics` | `False` | Also return per-sentence mean evidence score |
+The return shape is `{"spans": [{"start": int, "end": int, "text": str,
+"score": float}, ...]}`, with `"sentences"` added when
+`return_sentence_metrics=True`. Spans are character offsets into the input
+`context` and are merged across sliding windows.
 
-`min_span_chars=30` is tuned for the multi-domain mix. RAGBench and Squeez
-training data contains many short structured spans (table cells, log lines)
-that produce noisy fragmentation without a higher minimum. Lower it for
-short-answer benchmarks like MultiSpanQA.
+## Performance
 
-### Return shape
+Evaluated on the test splits of the three training sources, with the same
+harness applied to baseline span extractors
+([Provence](https://huggingface.co/naver/provence-reranker-debertav3-v1),
+[Zilliz Semantic-Highlight](https://huggingface.co/zilliz/semantic-highlight-bilingual-v1))
+and to the ACL-specialized variant. Word-level micro F1.
 
-```python
-{
-    "spans": [
-        {"start": int, "end": int, "text": str, "score": float},
-        ...
-    ],
-    "sentences": [...]  # only when return_sentence_metrics=True
-}
-```
-
-Spans are character offsets into the input `context` and are merged across
-sliding windows.
-
-## Evaluation
-
-Evaluated on the test splits of all three training sources, plus a baseline
-comparison against [Provence](https://huggingface.co/naver/provence-reranker-debertav3-v1)
-and [Zilliz Semantic-Highlight](https://huggingface.co/zilliz/semantic-highlight-bilingual-v1).
-Same harness for every system; word-level micro F1 is the headline.
-
-### Per-domain test results
-
-| domain | rows | this model (v2) | acl-specialized | provence | zilliz |
+| domain | rows | this model | acl-specialized | provence | zilliz |
 |---|---:|---:|---:|---:|---:|
 | ACL Anthology gold | 47 | 0.495 | **0.562** | 0.480 | 0.322 |
 | RAGBench (12 configs) | ~17k | **0.759** | 0.598 | 0.615 | 0.511 |
 | Squeez tool-output | ~1k | **0.769** | 0.493 | 0.491 | 0.418 |
 
-Word-F1 (micro). The ACL-specialized model wins on its home turf; v2 wins
-everywhere else by 14–28 points and is only 6.7 points behind the specialist
-on ACL.
+The ACL-specialized model wins on its home turf; the multi-domain extractor
+wins everywhere else by 14–28 points and is 6.7 points behind on ACL. With
+the recall-tuned config (`threshold=0.1`, `min_span_chars=10`), word-F1 on
+ACL gold rises from 0.495 to 0.523, narrowing the gap to ~4 points.
 
-### Detailed numbers (this model)
+### Squeez tool-output benchmark
 
-| domain | word-P | word-R | word-F1 | IoU@0.5 F1 | recall@any-overlap | over-pred ratio |
+Scored through the Squeez line-level harness (618 samples). Squeez and the
+generative baselines emit text in line units, so they get full credit on
+strict Span F1 by construction; the Verbatim-RAG Extractor emits character
+spans that are mapped to lines, so Fuzzy F1 (≥50% character overlap) is the
+metric where both model families are evaluated on the same footing.
+
+| model | params | Fuzzy F1 | Span F1 | Partial Overlap | Empty Acc | Compression |
 |---|---:|---:|---:|---:|---:|---:|
-| ACL gold | 0.728 | 0.375 | 0.495 | 0.382 | 0.449 | 0.679 |
-| RAGBench test | 0.744 | 0.775 | 0.759 | 0.359 | 0.762 | 0.484 |
-| Squeez test | 0.845 | 0.705 | 0.769 | 0.700 | 0.823 | 0.900 |
+| Squeez-2B (fine-tuned) | 2B | 0.804 | 0.790 | 0.919 | 0.968 | 0.915 |
+| Qwen 3.5 35B A3B (zero-shot) | 35B | 0.725 | 0.700 | 0.835 | 0.916 | 0.918 |
+| Kimi K2 (zero-shot) | huge | 0.683 | 0.534 | 0.746 | 0.924 | 0.943 |
+| **Verbatim-RAG Extractor** | **150M** | 0.646 | 0.515 | 0.820 | 0.898 | 0.917 |
+| Qwen 3.5 2B (zero-shot) | 2B | 0.548 | 0.408 | 0.768 | 0.916 | 0.820 |
 
-### How to read these numbers
+A 150M-parameter encoder lands within 4 Fuzzy-F1 points of zero-shot Kimi K2
+and 16 of fine-tuned Squeez-2B. Compression and empty-prediction accuracy
+match the larger generative models.
 
-- The model is **strongest on its in-distribution domains** (RAGBench and
-  Squeez are part of the training mix; ACL is silver-only). These results
-  are not a zero-shot generalization claim — they are "fits its training
-  distribution well."
-- **Provence and Zilliz were not trained on Squeez-style structured tool
-  output.** Their numbers on the Squeez slice should be read as a scope
-  comment rather than a capability comparison.
-- The over-prediction ratio of 0.9 on Squeez means the model emits
-  ~90% as many spans as there are gold spans — slightly aggressive on
-  log-line text. Raise `threshold` or `min_span_chars` if you need higher
-  precision in tool-output applications.
+## Citing
 
-### Recall-tuned config for ACL-style academic text
-
-Lowering `threshold` from 0.2 to 0.1 (and dropping `min_span_chars` to 10 to
-keep short spans) trades 5pt of precision for 5pt of recall on ACL gold:
-
-| config | word-P | word-R | word-F1 | recall@any-overlap |
-|---|---:|---:|---:|---:|
-| default (`threshold=0.2`, `min_span_chars=30`) | 0.728 | 0.375 | 0.495 | 0.449 |
-| **recall-tuned** (`threshold=0.1`, `min_span_chars=10`) | 0.688 | 0.421 | **0.523** | 0.474 |
-
-This narrows the gap to the ACL-specialized model (0.562 word-F1) to ~4pt.
-Use the recall-tuned config when answering questions over scientific papers;
-keep the default for tool-output and short-span QA where extra firings cost
-more than they help.
-
-Reproduce with the eval scripts in the
-[acl-verbatim repo](https://github.com/KRLabsOrg/acl-verbatim) — see
-[`docs/GENERIC_EVAL.md`](https://github.com/KRLabsOrg/acl-verbatim/blob/main/docs/GENERIC_EVAL.md)
-for the full sweep.
-
-## Training
-
-| item | value |
-|---|---|
-| base model | `Alibaba-NLP/gte-reranker-modernbert-base` |
-| dataset | `KRLabsOrg/verbatim-spans` (`encoder` config) |
-| label scheme | binary (`0` outside, `1` evidence) |
-| max_length | 8192 |
-| doc_stride | 256 |
-
-Reproduce with:
-
-```bash
-python acl_verbatim/span_training/train_token_cls.py \
-  --hf-dataset KRLabsOrg/verbatim-spans \
-  --hf-config encoder \
-  --train-split train \
-  --eval-split validation \
-  --model Alibaba-NLP/gte-reranker-modernbert-base \
-  --output-dir runs/models/verbatim-rag-modern-bert-v2 \
-  --batch-size 8 \
-  --lr 2e-5 \
-  --epochs 5 \
-  --label-scheme binary
 ```
-
-## Intended Use
-
-- Query-conditioned evidence highlighting over arbitrary passages
-- Drop-in extractor for `verbatim-rag` outside the academic domain
-- Re-ranking or filtering of retrieval outputs
-- Evidence selection for tool-output pruning
-
-## Limitations
-
-- Test results on RAGBench and Squeez reflect in-distribution performance,
-  not zero-shot generalization to unseen domains.
-- Multi-domain training comes with a ~6.7-point F1 cost on ACL papers vs
-  the ACL-specialized variant — pick the right model for your domain.
-- Recall ceiling on ACL gold (~0.45 any-overlap) means the model sometimes
-  predicts nothing on chunks that contain relevant evidence. For
-  high-recall applications, lower `threshold` or combine with an LLM
-  fallback.
-- Tables, figures, and structured content are handled through their text
-  representation; no structural awareness of tabular data.
-
-## Citation
-
 TODO
+```
