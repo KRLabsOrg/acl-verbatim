@@ -259,7 +259,11 @@ def main():
         for row in relevant_rows
     ]
 
-    if args.threshold is None and args.min_span_chars == 0 and args.merge_gap_chars == 0:
+    if (
+        args.threshold is None
+        and args.min_span_chars == 0
+        and args.merge_gap_chars == 0
+    ):
         predictions = predict_token_records(
             rows=model_rows,
             model_dir=args.model_dir,

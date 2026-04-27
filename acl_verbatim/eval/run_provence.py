@@ -13,7 +13,6 @@ from tqdm import tqdm
 
 from acl_verbatim.data.spans import load_gold_rows
 
-
 SENTENCE_RE = re.compile(r".+?(?:[.!?]+(?:\s+|$)|\n{2,}|$)", re.DOTALL)
 
 
@@ -66,7 +65,9 @@ class ProvenceSentenceExtractor:
         self.threshold = threshold
         self.always_select_title = always_select_title
 
-    def extract_spans(self, query: str, context: str) -> tuple[str, list[tuple[int, int]]]:
+    def extract_spans(
+        self, query: str, context: str
+    ) -> tuple[str, list[tuple[int, int]]]:
         result = self.model.process(
             query,
             context,
@@ -92,9 +93,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gold-file", type=Path, required=True)
     parser.add_argument("--output-file", type=Path, required=True)
-    parser.add_argument(
-        "--model-name", default="naver/provence-reranker-debertav3-v1"
-    )
+    parser.add_argument("--model-name", default="naver/provence-reranker-debertav3-v1")
     parser.add_argument("--threshold", type=float, default=0.1)
     parser.add_argument("--always-select-title", action="store_true")
     args = parser.parse_args()
@@ -111,7 +110,9 @@ def main():
         for row in tqdm(rows, desc="provence"):
             t0 = time.perf_counter()
             try:
-                pruned_context, pred_spans = extractor.extract_spans(row.query, row.chunk)
+                pruned_context, pred_spans = extractor.extract_spans(
+                    row.query, row.chunk
+                )
                 predicted_texts = [row.chunk[start:end] for start, end in pred_spans]
                 error = None
             except Exception as exc:

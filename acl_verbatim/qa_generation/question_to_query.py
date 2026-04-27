@@ -1,11 +1,10 @@
 import argparse
 import json
+import os
 import traceback
 from pathlib import Path
-import os
 
 from tqdm import tqdm
-
 from verbatim_rag.llm_client import LLMClient
 
 

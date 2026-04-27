@@ -5,7 +5,6 @@ from types import SimpleNamespace
 from pymilvus import MilvusClient
 from rapidfuzz import fuzz
 from tqdm import tqdm
-
 from verbatim_rag.extractors import LLMSpanExtractor
 
 from acl_verbatim.eval.utils import get_chunk

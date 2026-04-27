@@ -9,7 +9,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from tqdm import tqdm
-
 from verbatim_rag.extractors import SemanticHighlightExtractor
 
 from acl_verbatim.data.spans import load_gold_rows

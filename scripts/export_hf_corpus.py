@@ -70,7 +70,9 @@ def get_args():
     return parser.parse_args()
 
 
-def export_metadata(repo_id: str, config_name: str, output_file: Path, limit: int | None):
+def export_metadata(
+    repo_id: str, config_name: str, output_file: Path, limit: int | None
+):
     ds = load_dataset(repo_id, config_name, split="train", streaming=True)
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with output_file.open("w", encoding="utf-8") as f:
@@ -80,7 +82,9 @@ def export_metadata(repo_id: str, config_name: str, output_file: Path, limit: in
             f.write(json.dumps(dict(row), ensure_ascii=False) + "\n")
 
 
-def export_fulltext(repo_id: str, config_name: str, output_dir: Path, limit: int | None):
+def export_fulltext(
+    repo_id: str, config_name: str, output_dir: Path, limit: int | None
+):
     ds = load_dataset(repo_id, config_name, split="train", streaming=True)
     output_dir.mkdir(parents=True, exist_ok=True)
     for idx, row in enumerate(tqdm(ds, desc="fulltext")):

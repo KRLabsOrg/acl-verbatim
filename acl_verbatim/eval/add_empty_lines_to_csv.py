@@ -1,7 +1,6 @@
 import csv
 import sys
 
-
 infile, outfile = sys.argv[1:3]
 k = int(sys.argv[3])
 

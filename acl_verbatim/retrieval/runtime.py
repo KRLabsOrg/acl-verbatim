@@ -5,14 +5,12 @@ from pathlib import Path
 from typing import Optional
 
 from tqdm import tqdm
-
-from verbatim_rag import VerbatimIndex, VerbatimRAG, BaseReranker
+from verbatim_rag import BaseReranker, VerbatimIndex, VerbatimRAG
+from verbatim_rag.core import LLMClient
 from verbatim_rag.embedding_providers import SentenceTransformersProvider
 from verbatim_rag.extractors import SemanticHighlightExtractor
+from verbatim_rag.vector_stores import CloudMilvusStore, LocalMilvusStore
 from verbatim_rag.vector_stores.base import SearchResult
-from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
-from verbatim_rag.core import LLMClient
-
 
 HYBRID_WEIGHTS = {"dense": 0.5, "full_text": 0.5}
 

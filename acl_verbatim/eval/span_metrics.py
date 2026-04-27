@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 import re
+from collections.abc import Iterable
 
 from acl_verbatim.data.spans import SpanRow
-
 
 IOU_THRESHOLDS = (0.3, 0.5, 0.7)
 CONTAINMENT_THRESHOLDS = (0.5, 0.8, 1.0)

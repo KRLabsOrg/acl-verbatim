@@ -4,6 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 from transformers import AutoTokenizer
+
 from acl_verbatim.core.jsonl import iter_jsonl
 from acl_verbatim.core.rows import span_prediction_key
 

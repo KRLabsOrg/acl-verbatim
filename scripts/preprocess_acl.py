@@ -1,14 +1,12 @@
 import argparse
+import concurrent.futures
 import json
 import logging
 import os
 from collections import Counter
 
-import concurrent.futures
-
 from docling.datamodel.base_models import ConversionStatus
 from docling.document_converter import DocumentConverter
-
 
 logging.basicConfig(
     level=logging.DEBUG,

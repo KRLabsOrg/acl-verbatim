@@ -1,7 +1,7 @@
 import json
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
-from collections.abc import Iterator
 
 
 def load_results(results_file: Path) -> list[dict[str, Any]]:

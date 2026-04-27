@@ -8,7 +8,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from tqdm import tqdm
-
 from verbatim_core.extractors import LLMSpanExtractor
 from verbatim_core.llm_client import LLMClient
 

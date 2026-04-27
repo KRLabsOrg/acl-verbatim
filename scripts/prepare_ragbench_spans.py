@@ -15,6 +15,7 @@ Example:
         --configs covidqa hotpotqa msmarco finqa pubmedqa \\
         --split train
 """
+
 from __future__ import annotations
 
 import argparse
@@ -25,10 +26,19 @@ from pathlib import Path
 
 from datasets import load_dataset
 
-
 ALL_CONFIGS = (
-    "covidqa", "cuad", "delucionqa", "emanual", "expertqa", "finqa",
-    "hagrid", "hotpotqa", "msmarco", "pubmedqa", "tatqa", "techqa",
+    "covidqa",
+    "cuad",
+    "delucionqa",
+    "emanual",
+    "expertqa",
+    "finqa",
+    "hagrid",
+    "hotpotqa",
+    "msmarco",
+    "pubmedqa",
+    "tatqa",
+    "techqa",
 )
 SENTENCE_KEY_RE = re.compile(r"^(\d+)([a-z]+)$")
 
@@ -40,7 +50,9 @@ def parse_key(key: str) -> tuple[int, str] | None:
     return int(match.group(1)), match.group(2)
 
 
-def sentence_offsets(chunk: str, sentences: list[list[str]]) -> dict[str, tuple[int, int]]:
+def sentence_offsets(
+    chunk: str, sentences: list[list[str]]
+) -> dict[str, tuple[int, int]]:
     """Map each sentence key to its character span in the original chunk."""
     offsets: dict[str, tuple[int, int]] = {}
     cursor = 0
@@ -110,7 +122,9 @@ def iter_rows(configs, split, limit_per_config):
             question = row.get("question") or ""
             gold_paper = str(row.get("id", ""))
             seen = set()
-            for doc_idx, (doc, doc_sents) in enumerate(zip(documents, doc_sentences_list)):
+            for doc_idx, (doc, doc_sents) in enumerate(
+                zip(documents, doc_sentences_list)
+            ):
                 if doc in seen:
                     continue
                 seen.add(doc)
@@ -133,11 +147,14 @@ def main():
     parser.add_argument("--configs", nargs="*", default=list(ALL_CONFIGS))
     parser.add_argument("--split", default="train")
     parser.add_argument(
-        "--limit-per-config", type=int, default=None,
+        "--limit-per-config",
+        type=int,
+        default=None,
         help="Cap rows per config for smoke testing",
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="Print stats without writing",
     )
     args = parser.parse_args()
@@ -160,8 +177,12 @@ def main():
     for c in args.configs:
         total = stats[c]
         pos = positive_stats[c]
-        print(f"  {c:<12} rows={total:>6} positive={pos:>6} ({100*pos/max(1,total):5.1f}%)")
-    print(f"  {'TOTAL':<12} rows={sum(stats.values()):>6} positive={sum(positive_stats.values()):>6}")
+        print(
+            f"  {c:<12} rows={total:>6} positive={pos:>6} ({100 * pos / max(1, total):5.1f}%)"
+        )
+    print(
+        f"  {'TOTAL':<12} rows={sum(stats.values()):>6} positive={sum(positive_stats.values()):>6}"
+    )
 
     if args.dry_run:
         return

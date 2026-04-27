@@ -15,6 +15,7 @@ chunk, and locate each RELEVANT entity via substring search.
 Example:
     python scripts/prepare_squeez_spans.py --output-file runs/squeez/train.jsonl --split train
 """
+
 from __future__ import annotations
 
 import argparse
@@ -22,7 +23,6 @@ import json
 from pathlib import Path
 
 from datasets import load_dataset
-
 
 TOOL_OUTPUT_MARKER = "\n\nTool output:\n"
 
@@ -43,7 +43,9 @@ def build_row(example: dict) -> dict | None:
     if not question:
         return None
 
-    entities = ((example.get("output") or {}).get("entities") or {}).get("RELEVANT") or []
+    entities = ((example.get("output") or {}).get("entities") or {}).get(
+        "RELEVANT"
+    ) or []
 
     spans: list[dict] = []
     cursor = 0
@@ -86,11 +88,14 @@ def main():
     parser.add_argument("--output-file", type=Path, required=True)
     parser.add_argument("--split", default="train")
     parser.add_argument(
-        "--limit", type=int, default=None,
+        "--limit",
+        type=int,
+        default=None,
         help="Cap rows for smoke testing",
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="Print stats without writing",
     )
     args = parser.parse_args()
@@ -111,7 +116,9 @@ def main():
         if row["label"] == 1:
             positive += 1
 
-    print(f"total rows: {len(rows)}  positive: {positive} ({100*positive/max(1,len(rows)):.1f}%)")
+    print(
+        f"total rows: {len(rows)}  positive: {positive} ({100 * positive / max(1, len(rows)):.1f}%)"
+    )
 
     if args.dry_run:
         return

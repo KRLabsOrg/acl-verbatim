@@ -3,7 +3,6 @@ import re
 from collections import Counter
 from dataclasses import asdict, dataclass
 
-
 REFERENCE_HEADER_RE = re.compile(r"(?im)^\s{0,3}(#+\s*)?(references|bibliography)\s*$")
 CAPTION_RE = re.compile(r"(?i)\b(table|figure|fig\.?)\s+\d+")
 CITATION_RE = re.compile(

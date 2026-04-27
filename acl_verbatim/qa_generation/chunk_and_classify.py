@@ -1,13 +1,12 @@
 import argparse
 import json
 import os
+import os as _os
 import random
 import traceback
 from pathlib import Path
-import os as _os
 
 from tqdm import tqdm
-
 from verbatim_rag.chunker_providers import MarkdownChunkerProvider
 from verbatim_rag.llm_client import LLMClient
 

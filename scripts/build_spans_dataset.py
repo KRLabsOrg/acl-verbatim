@@ -35,7 +35,6 @@ from huggingface_hub import HfApi
 from acl_verbatim.core.jsonl import load_jsonl
 from acl_verbatim.data.spans import load_gold_rows
 
-
 SPAN_FEATURES = {
     "start": Value("int32"),
     "end": Value("int32"),
@@ -168,7 +167,9 @@ def build_encoder_dataset(args) -> DatasetDict | None:
     )
 
 
-def push_dataset_dict(ds: DatasetDict, repo_id: str, config_name: str, max_shard_size: str):
+def push_dataset_dict(
+    ds: DatasetDict, repo_id: str, config_name: str, max_shard_size: str
+):
     ds.push_to_hub(
         repo_id,
         config_name=config_name,

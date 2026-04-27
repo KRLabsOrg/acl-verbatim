@@ -1,20 +1,18 @@
 import argparse
 import json
 import logging
-
 from pathlib import Path
-from tqdm import tqdm
 
+from tqdm import tqdm
 from verbatim_rag import VerbatimIndex
+from verbatim_rag.chunker_providers import MarkdownChunkerProvider
 from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
 )
-from verbatim_rag.vector_stores import LocalMilvusStore, CloudMilvusStore
 from verbatim_rag.schema import DocumentSchema
-from verbatim_rag.chunker_providers import MarkdownChunkerProvider
+from verbatim_rag.vector_stores import CloudMilvusStore, LocalMilvusStore
 
 from acl_verbatim.utils.preprocess import preprocess_markdown
-
 
 logging.basicConfig(
     level=logging.INFO,

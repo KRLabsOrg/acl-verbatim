@@ -1,10 +1,9 @@
 import argparse
 import json
-from pathlib import Path
 import os
+from pathlib import Path
 
 from tqdm import tqdm
-
 from verbatim_rag.llm_client import LLMClient
 
 BASE = Path(__file__).parent

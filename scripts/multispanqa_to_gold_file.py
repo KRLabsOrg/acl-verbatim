@@ -13,6 +13,7 @@ Example:
         /Users/adamkovacs/Downloads/MultiSpanQA_data/valid.json \\
         --output runs/eval/test_slices/multispanqa.gold.jsonl
 """
+
 from __future__ import annotations
 
 import argparse
@@ -45,16 +46,30 @@ def bio_to_spans(
     for label, (s, e) in zip(labels, offsets):
         if label == "B":
             if cur_start is not None:
-                spans.append({"start": cur_start, "end": cur_end, "text": text[cur_start:cur_end]})
+                spans.append(
+                    {
+                        "start": cur_start,
+                        "end": cur_end,
+                        "text": text[cur_start:cur_end],
+                    }
+                )
             cur_start, cur_end = s, e
         elif label == "I" and cur_start is not None:
             cur_end = e
         else:
             if cur_start is not None:
-                spans.append({"start": cur_start, "end": cur_end, "text": text[cur_start:cur_end]})
+                spans.append(
+                    {
+                        "start": cur_start,
+                        "end": cur_end,
+                        "text": text[cur_start:cur_end],
+                    }
+                )
                 cur_start = cur_end = None
     if cur_start is not None:
-        spans.append({"start": cur_start, "end": cur_end, "text": text[cur_start:cur_end]})
+        spans.append(
+            {"start": cur_start, "end": cur_end, "text": text[cur_start:cur_end]}
+        )
     return spans
 
 
@@ -92,7 +107,9 @@ def main():
     args = p.parse_args()
 
     payload = json.loads(args.input.read_text())
-    examples = payload["data"] if isinstance(payload, dict) and "data" in payload else payload
+    examples = (
+        payload["data"] if isinstance(payload, dict) and "data" in payload else payload
+    )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     n_in = n_out = n_rel = n_spans = 0

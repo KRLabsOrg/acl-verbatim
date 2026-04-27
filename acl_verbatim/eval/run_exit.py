@@ -12,7 +12,6 @@ from tqdm import tqdm
 
 from acl_verbatim.data.spans import load_gold_rows
 
-
 SENTENCE_RE = re.compile(r".+?(?:[.!?]+(?:\s+|$)|\n{2,}|$)", re.DOTALL)
 
 

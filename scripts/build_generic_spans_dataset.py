@@ -16,6 +16,7 @@ Usage:
     # Push
     python scripts/build_generic_spans_dataset.py --repo-id KRLabsOrg/verbatim-spans
 """
+
 from __future__ import annotations
 
 import argparse
@@ -26,11 +27,14 @@ from huggingface_hub import HfApi
 
 from acl_verbatim.core.jsonl import iter_jsonl
 
-
 ACL_TRAIN = Path("runs/silver_qwen_2000_caption_ok/splits/train.jsonl")
 ACL_DEV = Path("runs/silver_qwen_2000_caption_ok/splits/dev.jsonl")
-ACL_ENC_TRAIN = Path("runs/silver_qwen_2000_caption_ok/token_cls/train.modernbert.binary.8k.jsonl")
-ACL_ENC_DEV = Path("runs/silver_qwen_2000_caption_ok/token_cls/dev.modernbert.binary.8k.jsonl")
+ACL_ENC_TRAIN = Path(
+    "runs/silver_qwen_2000_caption_ok/token_cls/train.modernbert.binary.8k.jsonl"
+)
+ACL_ENC_DEV = Path(
+    "runs/silver_qwen_2000_caption_ok/token_cls/dev.modernbert.binary.8k.jsonl"
+)
 
 RAGBENCH_TRAIN = Path("runs/ragbench/train.capped.jsonl")
 RAGBENCH_DEV = Path("runs/ragbench/val.capped.jsonl")

@@ -12,6 +12,7 @@ Example:
         runs/eval_data/ragbench_test.spans.jsonl \\
         --output runs/eval/test_slices/ragbench.gold.jsonl
 """
+
 from __future__ import annotations
 
 import argparse
@@ -34,9 +35,7 @@ def convert_row(row: dict) -> dict:
                 "chunk_number": chunk_index,
                 "chunk": row["chunk"],
                 "relevance_label": "r" if is_relevant else "n",
-                "gold_extraction": (
-                    [s["text"] for s in spans] if is_relevant else []
-                ),
+                "gold_extraction": ([s["text"] for s in spans] if is_relevant else []),
             }
         ],
     }

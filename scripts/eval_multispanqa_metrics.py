@@ -23,12 +23,12 @@ Example:
         --pred-file runs/eval/generic.multispanqa.preds.jsonl \\
         --output-file runs/eval/generic.multispanqa.official_metrics.json
 """
+
 from __future__ import annotations
 
 import argparse
 import difflib
 import json
-import os
 import re
 import string
 import warnings
@@ -36,39 +36,40 @@ from pathlib import Path
 
 import numpy as np
 
-
 # --------------------------------------------------------------------------- #
 # BEGIN vendored verbatim from MultiSpanQA/eval_script.py
 # Source: https://github.com/haonan-li/MultiSpanQA  (Li et al. 2022, NAACL)
 # --------------------------------------------------------------------------- #
 
+
 def get_entities(label, token):
     def _validate_chunk(chunk):
-        if chunk in ['O', 'B', 'I']:
+        if chunk in ["O", "B", "I"]:
             return
         else:
-            warnings.warn('{} seems not to be IOB tag.'.format(chunk))
-    prev_tag = 'O'
-    prev_type = ''
+            warnings.warn("{} seems not to be IOB tag.".format(chunk))
+
+    prev_tag = "O"
+    prev_type = ""
     begin_offset = 0
     chunks = []
 
     # check no ent
     if isinstance(label[0], list):
-        for i,s in enumerate(label):
+        for i, s in enumerate(label):
             if len(set(s)) == 1:
-                chunks.append(('O', -i, -i))
+                chunks.append(("O", -i, -i))
     # for nested list
     if any(isinstance(s, list) for s in label):
-        label = [item for sublist in label for item in sublist + ['O']]
+        label = [item for sublist in label for item in sublist + ["O"]]
     if any(isinstance(s, list) for s in token):
-        token = [item for sublist in token for item in sublist + ['O']]
+        token = [item for sublist in token for item in sublist + ["O"]]
 
-    for i, chunk in enumerate(label + ['O']):
+    for i, chunk in enumerate(label + ["O"]):
         _validate_chunk(chunk)
         tag = chunk[0]
         if end_of_chunk(prev_tag, tag):
-            chunks.append((' '.join(token[begin_offset:i]), begin_offset, i - 1))
+            chunks.append((" ".join(token[begin_offset:i]), begin_offset, i - 1))
         if start_of_chunk(prev_tag, tag):
             begin_offset = i
         prev_tag = tag
@@ -77,41 +78,47 @@ def get_entities(label, token):
 
 def end_of_chunk(prev_tag, tag):
     chunk_end = False
-    if prev_tag == 'B' and tag == 'B':
+    if prev_tag == "B" and tag == "B":
         chunk_end = True
-    if prev_tag == 'B' and tag == 'O':
+    if prev_tag == "B" and tag == "O":
         chunk_end = True
-    if prev_tag == 'I' and tag == 'B':
+    if prev_tag == "I" and tag == "B":
         chunk_end = True
-    if prev_tag == 'I' and tag == 'O':
+    if prev_tag == "I" and tag == "O":
         chunk_end = True
     return chunk_end
 
+
 def start_of_chunk(prev_tag, tag):
     chunk_start = False
-    if tag == 'B':
+    if tag == "B":
         chunk_start = True
-    if prev_tag == 'O' and tag == 'I':
+    if prev_tag == "O" and tag == "I":
         chunk_start = True
     return chunk_start
 
 
 def normalize_answer(s):
     """Lower text and remove punctuation, articles and extra whitespace."""
+
     def remove_articles(text):
-        regex = re.compile(r'\b(a|an|the)\b', re.UNICODE)
-        return re.sub(regex, ' ', text)
+        regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
+        return re.sub(regex, " ", text)
+
     def white_space_fix(text):
-        return ' '.join(text.split())
+        return " ".join(text.split())
+
     def remove_punc(text):
         exclude = set(string.punctuation)
-        return ''.join(ch for ch in text if ch not in exclude)
+        return "".join(ch for ch in text if ch not in exclude)
+
     def lower(text):
         return text.lower()
+
     return white_space_fix(remove_articles(remove_punc(lower(s))))
 
 
-def compute_scores(golds, preds, eval_type='em',average='micro'):
+def compute_scores(golds, preds, eval_type="em", average="micro"):
 
     nb_gold = 0
     nb_pred = 0
@@ -123,7 +130,7 @@ def compute_scores(golds, preds, eval_type='em',average='micro'):
         pred = preds[k]
         nb_gold += max(len(gold), 1)
         nb_pred += max(len(pred), 1)
-        if eval_type=='em':
+        if eval_type == "em":
             if len(gold) == 0 and len(pred) == 0:
                 nb_correct += 1
             else:
@@ -133,7 +140,7 @@ def compute_scores(golds, preds, eval_type='em',average='micro'):
             nb_correct_p += p_score
             nb_correct_r += r_score
 
-    if eval_type == 'em':
+    if eval_type == "em":
         p = nb_correct / nb_pred if nb_pred > 0 else 0
         r = nb_correct / nb_gold if nb_gold > 0 else 0
     else:
@@ -142,35 +149,37 @@ def compute_scores(golds, preds, eval_type='em',average='micro'):
 
     f = 2 * p * r / (p + r) if p + r > 0 else 0
 
-    return p,r,f
+    return p, r, f
 
 
 def count_overlap(gold, pred):
     if len(gold) == 0 and (len(pred) == 0 or pred == {""}):
-        return 1,1
+        return 1, 1
     elif len(gold) == 0 or (len(pred) == 0 or pred == {""}):
-        return 0,0
-    p_scores = np.zeros((len(gold),len(pred)))
-    r_scores = np.zeros((len(gold),len(pred)))
-    for i,s1 in enumerate(gold):
-        for j,s2 in enumerate(pred):
+        return 0, 0
+    p_scores = np.zeros((len(gold), len(pred)))
+    r_scores = np.zeros((len(gold), len(pred)))
+    for i, s1 in enumerate(gold):
+        for j, s2 in enumerate(pred):
             s = difflib.SequenceMatcher(None, s1, s2)
-            _,_,longest = s.find_longest_match(0, len(s1), 0, len(s2))
-            p_scores[i][j] = longest/len(s2) if longest>0 else 0
-            r_scores[i][j] = longest/len(s1) if longest>0 else 0
+            _, _, longest = s.find_longest_match(0, len(s1), 0, len(s2))
+            p_scores[i][j] = longest / len(s2) if longest > 0 else 0
+            r_scores[i][j] = longest / len(s1) if longest > 0 else 0
 
-    p_score = sum(np.max(p_scores,axis=0))
-    r_score = sum(np.max(r_scores,axis=1))
+    p_score = sum(np.max(p_scores, axis=0))
+    r_score = sum(np.max(r_scores, axis=1))
 
     return p_score, r_score
 
 
 def read_gold(gold_file):
     with open(gold_file) as f:
-        data = json.load(f)['data']
+        data = json.load(f)["data"]
         golds = {}
         for piece in data:
-            golds[piece['id']] = set(map(lambda x: x[0], get_entities(piece['label'],piece['context'])))
+            golds[piece["id"]] = set(
+                map(lambda x: x[0], get_entities(piece["label"], piece["context"]))
+            )
     return golds
 
 
@@ -191,20 +200,23 @@ def multi_span_evaluate(preds, golds):
     assert len(preds) == len(golds)
     assert preds.keys() == golds.keys()
     # Normalize the answer
-    for k,v in golds.items():
+    for k, v in golds.items():
         golds[k] = set(map(lambda x: normalize_answer(x), v))
-    for k,v in preds.items():
+    for k, v in preds.items():
         preds[k] = set(map(lambda x: normalize_answer(x), v))
     # Evaluate
-    em_p,em_r,em_f = compute_scores(golds, preds, eval_type='em')
-    overlap_p,overlap_r,overlap_f = compute_scores(golds, preds, eval_type='overlap')
-    result = {'em_precision': 100*em_p,
-              'em_recall': 100*em_r,
-              'em_f1': 100*em_f,
-              'overlap_precision': 100*overlap_p,
-              'overlap_recall': 100*overlap_r,
-              'overlap_f1': 100*overlap_f}
+    em_p, em_r, em_f = compute_scores(golds, preds, eval_type="em")
+    overlap_p, overlap_r, overlap_f = compute_scores(golds, preds, eval_type="overlap")
+    result = {
+        "em_precision": 100 * em_p,
+        "em_recall": 100 * em_r,
+        "em_f1": 100 * em_f,
+        "overlap_precision": 100 * overlap_p,
+        "overlap_recall": 100 * overlap_r,
+        "overlap_f1": 100 * overlap_f,
+    }
     return result
+
 
 # --------------------------------------------------------------------------- #
 # END vendored
@@ -234,10 +246,15 @@ def load_predictions(pred_jsonl: Path, gold_ids: set[str]) -> dict[str, list[str
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--multispanqa-file", type=Path, required=True,
-                    help="Original MultiSpanQA valid.json")
-    ap.add_argument("--pred-file", type=Path, required=True,
-                    help="Our standard pred-file (JSONL)")
+    ap.add_argument(
+        "--multispanqa-file",
+        type=Path,
+        required=True,
+        help="Original MultiSpanQA valid.json",
+    )
+    ap.add_argument(
+        "--pred-file", type=Path, required=True, help="Our standard pred-file (JSONL)"
+    )
     ap.add_argument("--output-file", type=Path, default=None)
     args = ap.parse_args()
 

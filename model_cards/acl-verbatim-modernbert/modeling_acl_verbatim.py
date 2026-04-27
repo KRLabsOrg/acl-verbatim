@@ -11,6 +11,7 @@ Loaded via:
 
 Returns character-aligned evidence spans in ``context`` that answer ``question``.
 """
+
 from __future__ import annotations
 
 import re
@@ -20,7 +21,6 @@ from transformers import AutoTokenizer
 from transformers.models.modernbert.modeling_modernbert import (
     ModernBertForTokenClassification,
 )
-
 
 _SENTENCE_RE = re.compile(r".+?(?:[.!?]+(?:\s+|$)|\n{2,}|$)", re.DOTALL)
 

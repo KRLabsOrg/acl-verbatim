@@ -24,6 +24,7 @@ Example:
         --pred-file runs/eval/generic.squeez_test.preds.jsonl \\
         --output-file runs/eval/generic.squeez_test.squeez_metrics.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -104,7 +105,11 @@ def main():
             for r in rec.get("results", []):
                 if r.get("relevance_label") != "r":
                     continue
-                key = (rec["query"], r.get("document_id", ""), int(r.get("chunk_number", 0)))
+                key = (
+                    rec["query"],
+                    r.get("document_id", ""),
+                    int(r.get("chunk_number", 0)),
+                )
                 gold_by_key[key] = {
                     "chunk": r["chunk"],
                     "gold_extraction": r.get("gold_extraction") or [],
@@ -159,9 +164,17 @@ def main():
         )
 
     keys = [
-        "span_precision", "span_recall", "span_f1", "exact_match",
-        "fuzzy_span_precision", "fuzzy_span_recall", "fuzzy_span_f1",
-        "partial_overlap", "empty_accuracy", "rouge_l", "compression",
+        "span_precision",
+        "span_recall",
+        "span_f1",
+        "exact_match",
+        "fuzzy_span_precision",
+        "fuzzy_span_recall",
+        "fuzzy_span_f1",
+        "partial_overlap",
+        "empty_accuracy",
+        "rouge_l",
+        "compression",
     ]
     summary = {
         k: {

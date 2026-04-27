@@ -11,6 +11,7 @@ Usage:
         --model-dir runs/models/acl-verbatim-modernbert \\
         --repo-id KRLabsOrg/acl-verbatim-modernbert
 """
+
 from __future__ import annotations
 
 import argparse
@@ -19,7 +20,6 @@ import shutil
 from pathlib import Path
 
 from huggingface_hub import HfApi
-
 
 README_FILE = "README.md"
 
@@ -58,7 +58,9 @@ def inject_auto_map(config_path: Path, custom_class: str) -> None:
     config_path.write_text(json.dumps(config, indent=2) + "\n")
 
 
-def copy_custom_files(model_dir: Path, custom_code_dir: Path, modeling_file: str) -> None:
+def copy_custom_files(
+    model_dir: Path, custom_code_dir: Path, modeling_file: str
+) -> None:
     for name in (modeling_file, README_FILE):
         src = custom_code_dir / name
         if not src.exists():

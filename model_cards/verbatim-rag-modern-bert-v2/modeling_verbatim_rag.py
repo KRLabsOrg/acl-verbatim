@@ -13,6 +13,7 @@ Returns character-aligned evidence spans in ``context`` that answer ``question``
 v2 is trained on a multi-domain mix (ACL silver + RAGBench + Squeez) to improve
 performance outside the academic domain that v1 focused on.
 """
+
 from __future__ import annotations
 
 import re
@@ -22,7 +23,6 @@ from transformers import AutoTokenizer
 from transformers.models.modernbert.modeling_modernbert import (
     ModernBertForTokenClassification,
 )
-
 
 _SENTENCE_RE = re.compile(r".+?(?:[.!?]+(?:\s+|$)|\n{2,}|$)", re.DOTALL)
 
