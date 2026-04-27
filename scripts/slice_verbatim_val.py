@@ -33,7 +33,9 @@ def normalize_spans(raw):
 
 def row_to_query_record(row, fallback_index: int):
     spans = normalize_spans(row.get("spans"))
-    paper_id = row.get("paper_id") or f"{row.get('source_dataset', 'src')}-{fallback_index}"
+    paper_id = (
+        row.get("paper_id") or f"{row.get('source_dataset', 'src')}-{fallback_index}"
+    )
     chunk_index = row.get("chunk_index")
     if chunk_index is None:
         chunk_index = 0
@@ -98,15 +100,10 @@ def main():
             for rec in records:
                 f.write(json.dumps(rec) + "\n")
         n_rel = sum(
-            1
-            for rec in records
-            for r in rec["results"]
-            if r["relevance_label"] == "r"
+            1 for rec in records for r in rec["results"] if r["relevance_label"] == "r"
         )
         n_spans = sum(
-            len(r["gold_extraction"])
-            for rec in records
-            for r in rec["results"]
+            len(r["gold_extraction"]) for rec in records for r in rec["results"]
         )
         print(
             f"{src}: {len(records)} rows ({n_rel} relevant, {n_spans} gold spans) "
