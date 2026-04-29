@@ -5,12 +5,12 @@ This script materializes:
   - acl_md/*.md      (markdown files expected by indexing and QA-generation scripts)
 
 Usage:
-    python scripts/export_hf_corpus.py \
+    python scripts/corpus/export_hf_corpus.py \
         --output-metadata-file paper_data.json \
         --output-md-dir acl_md
 
     # Smoke test on a small sample
-    python scripts/export_hf_corpus.py \
+    python scripts/corpus/export_hf_corpus.py \
         --output-metadata-file paper_data.json \
         --output-md-dir acl_md \
         --limit 100

@@ -13,7 +13,7 @@ We drop the "Query: ... Tool output:\\n" prefix, treat the remainder as the
 chunk, and locate each RELEVANT entity via substring search.
 
 Example:
-    python scripts/prepare_squeez_spans.py --output-file runs/squeez/train.jsonl --split train
+    python scripts/experiments/prepare_squeez_spans.py --output-file runs/squeez/train.jsonl --split train
 """
 
 from __future__ import annotations

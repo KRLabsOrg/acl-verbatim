@@ -12,13 +12,13 @@ Example:
     # 1. Run the model with --pred-file
     python acl_verbatim/span_training/evaluate_token_cls.py \\
         --gold-file runs/eval/test_slices/multispanqa.gold.jsonl \\
-        --model-dir runs/models/verbatim-generic-modernbert/ \\
+        --model-dir KRLabsOrg/verbatim-rag-modern-bert-v2 \\
         --threshold 0.2 --min-span-chars 30 --merge-gap-chars 20 \\
         --pred-file runs/eval/generic.multispanqa.preds.jsonl \\
         --output-file runs/eval/generic.multispanqa_test.json
 
     # 2. Score with the official MultiSpanQA metric
-    python scripts/eval_multispanqa_metrics.py \\
+    python scripts/experiments/eval_multispanqa_metrics.py \\
         --multispanqa-file /Users/adamkovacs/Downloads/MultiSpanQA_data/valid.json \\
         --pred-file runs/eval/generic.multispanqa.preds.jsonl \\
         --output-file runs/eval/generic.multispanqa.official_metrics.json

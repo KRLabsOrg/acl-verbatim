@@ -9,7 +9,7 @@ Used in: Zilliz semantic-highlight blog post; Provence; many evidence-selection
 papers — direct comparison point for the model card.
 
 Example:
-    python scripts/multispanqa_to_gold_file.py \\
+    python scripts/experiments/multispanqa_to_gold_file.py \\
         /Users/adamkovacs/Downloads/MultiSpanQA_data/valid.json \\
         --output runs/eval/test_slices/multispanqa.gold.jsonl
 """

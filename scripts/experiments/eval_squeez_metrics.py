@@ -13,13 +13,13 @@ Example:
     # 1. Generate our predictions in the standard way
     python acl_verbatim/span_training/evaluate_token_cls.py \\
         --gold-file runs/eval/test_slices/squeez.gold.jsonl \\
-        --model-dir runs/models/verbatim-generic-modernbert/ \\
+        --model-dir KRLabsOrg/verbatim-rag-modern-bert-v2 \\
         --threshold 0.2 --min-span-chars 30 --merge-gap-chars 20 \\
         --pred-file runs/eval/generic.squeez_test.preds.jsonl \\
         --output-file runs/eval/generic.squeez_test.json
 
     # 2. Score those predictions with Squeez's metrics
-    python scripts/eval_squeez_metrics.py \\
+    python scripts/experiments/eval_squeez_metrics.py \\
         --gold-file runs/eval/test_slices/squeez.gold.jsonl \\
         --pred-file runs/eval/generic.squeez_test.preds.jsonl \\
         --output-file runs/eval/generic.squeez_test.squeez_metrics.json

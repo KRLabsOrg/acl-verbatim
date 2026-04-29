@@ -48,7 +48,7 @@ Most operational scripts in this repository still expect local files. To materia
 HF dataset:
 
 ```bash
-python scripts/export_hf_corpus.py \
+python scripts/corpus/export_hf_corpus.py \
   --output-metadata-file paper_data.json \
   --output-md-dir acl_md
 ```
@@ -64,7 +64,7 @@ To extract an up-to-date metadata snapshot from a local clone of
 [`acl-org/acl-anthology`](https://github.com/acl-org/acl-anthology):
 
 ```bash
-python scripts/get_anthology_metadata.py \
+python scripts/corpus/get_anthology_metadata.py \
   --anthology-path /path/to/acl-anthology \
   --output-file paper_data.json
 ```
@@ -76,7 +76,7 @@ The repository expects `paper_data.json` to be a JSONL file.
 If you need to rebuild the markdown corpus locally:
 
 ```bash
-python scripts/preprocess_acl.py \
+python scripts/corpus/preprocess_acl.py \
   --input-dir ../acl-anthology/build/anthology-files/pdf \
   --output-dir acl_md \
   --metadata-file paper_data.json \
@@ -92,7 +92,7 @@ For most work you can use the published markdown corpus instead of regenerating 
 Index into a local Milvus DB:
 
 ```bash
-python scripts/index_acl.py \
+python scripts/corpus/index_acl.py \
   --input-dir PATH_TO_MARKDOWN_DATA \
   --index-file acl.db \
   --metadata-file paper_data.json \
@@ -103,7 +103,7 @@ python scripts/index_acl.py \
 Index into a cloud or server Milvus instance:
 
 ```bash
-python scripts/index_acl.py \
+python scripts/corpus/index_acl.py \
   --input-dir acl_md \
   --metadata-file paper_data.json \
   --collection-name acl \
@@ -326,7 +326,7 @@ For additional evaluation tooling, see:
 To publish the current gold benchmark plus caption-preserving silver splits to Hugging Face:
 
 ```bash
-python scripts/build_spans_dataset.py \
+python scripts/publish/build_spans_dataset.py \
   --silver-train runs/silver_qwen_2000_caption_ok/splits/train.jsonl \
   --silver-dev runs/silver_qwen_2000_caption_ok/splits/dev.jsonl \
   --gold-file 333_20260206_dense_top5_20260305.json \

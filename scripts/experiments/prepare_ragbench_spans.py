@@ -10,7 +10,7 @@ so the downstream pipeline (`filter_silver_dataset.py` →
 `prepare_token_cls_dataset.py` → `train_token_cls.py`) works unchanged.
 
 Example:
-    python scripts/prepare_ragbench_spans.py \\
+    python scripts/experiments/prepare_ragbench_spans.py \\
         --output-file runs/ragbench/spans.jsonl \\
         --configs covidqa hotpotqa msmarco finqa pubmedqa \\
         --split train

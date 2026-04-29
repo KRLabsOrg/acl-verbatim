@@ -170,9 +170,9 @@ Apache 2.0. All three source datasets are Apache 2.0:
 All preparation scripts live in
 [`KRLabsOrg/acl-verbatim`](https://github.com/KRLabsOrg/acl-verbatim):
 
-- `scripts/prepare_ragbench_spans.py` — RAGBench → canonical spans
-- `scripts/prepare_squeez_spans.py` — Squeez GLiNER format → canonical spans
-- `scripts/build_generic_spans_dataset.py` — caps + merges + pushes to HF
+- `scripts/experiments/prepare_ragbench_spans.py` — RAGBench → canonical spans
+- `scripts/experiments/prepare_squeez_spans.py` — Squeez GLiNER format → canonical spans
+- `scripts/publish/build_generic_spans_dataset.py` — caps + merges + pushes to HF
   (random seed 1337 for the RAGBench cap)
 
 ## Citation

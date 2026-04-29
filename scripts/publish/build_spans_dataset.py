@@ -6,7 +6,7 @@ Configs currently supported:
 
 Usage:
     # Dry run
-    python scripts/build_spans_dataset.py \
+    python scripts/publish/build_spans_dataset.py \
         --silver-train runs/silver_qwen_2000_caption_ok/splits/train.jsonl \
         --silver-dev runs/silver_qwen_2000_caption_ok/splits/dev.jsonl \
         --gold-file 333_20260206_dense_top5_20260305.json \
@@ -15,7 +15,7 @@ Usage:
         --dry-run
 
     # Push
-    python scripts/build_spans_dataset.py \
+    python scripts/publish/build_spans_dataset.py \
         --silver-train runs/silver_qwen_2000_caption_ok/splits/train.jsonl \
         --silver-dev runs/silver_qwen_2000_caption_ok/splits/dev.jsonl \
         --gold-file 333_20260206_dense_top5_20260305.json \

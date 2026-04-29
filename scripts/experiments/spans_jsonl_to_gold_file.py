@@ -6,9 +6,9 @@ Each input row {question, paper_id, chunk_index, chunk, label, spans, ...}
 becomes one query_record with a single nested result.
 
 Example:
-    python scripts/prepare_ragbench_spans.py --split test \\
+    python scripts/experiments/prepare_ragbench_spans.py --split test \\
         --output-file runs/eval_data/ragbench_test.spans.jsonl
-    python scripts/spans_jsonl_to_gold_file.py \\
+    python scripts/experiments/spans_jsonl_to_gold_file.py \\
         runs/eval_data/ragbench_test.spans.jsonl \\
         --output runs/eval/test_slices/ragbench.gold.jsonl
 """

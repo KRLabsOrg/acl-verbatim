@@ -96,13 +96,13 @@ All 120,034 papers from the ACL Anthology, including frontmatter and abstract-on
 
 ## How the corpus was built
 
-1. **Metadata extraction.** Run against a local checkout of [`acl-org/acl-anthology`](https://github.com/acl-org/acl-anthology) using its `Anthology` Python API plus the repository's own `create_hugo_data.paper_to_dict` to flatten each paper to a JSON record. One JSONL row per paper. See `scripts/get_anthology_metadata.py` in the [acl-verbatim](https://github.com/krlabsorg/acl-verbatim) repository.
+1. **Metadata extraction.** Run against a local checkout of [`acl-org/acl-anthology`](https://github.com/acl-org/acl-anthology) using its `Anthology` Python API plus the repository's own `create_hugo_data.paper_to_dict` to flatten each paper to a JSON record. One JSONL row per paper. See `scripts/corpus/get_anthology_metadata.py` in the [acl-verbatim](https://github.com/krlabsorg/acl-verbatim) repository.
 
 2. **PDF download.** PDFs are obtained via the `acl-anthology` repository's standard download tooling. Per the Anthology's request, we did not redistribute PDFs — only the docling-converted markdown is included here.
 
-3. **PDF → markdown conversion.** Each PDF is converted with [docling](https://github.com/DS4SD/docling)'s `DocumentConverter` in batched mode (`doc_batch_size=512`, `page_batch_size=1024`), exporting via `document.export_to_markdown()`. Conversion was run on a single A100 GPU. A small allow-list of papers is skipped because they segfault docling or hang during conversion — these papers are present in `metadata` with `has_markdown=False`. See `scripts/preprocess_acl.py`.
+3. **PDF → markdown conversion.** Each PDF is converted with [docling](https://github.com/DS4SD/docling)'s `DocumentConverter` in batched mode (`doc_batch_size=512`, `page_batch_size=1024`), exporting via `document.export_to_markdown()`. Conversion was run on a single A100 GPU. A small allow-list of papers is skipped because they segfault docling or hang during conversion — these papers are present in `metadata` with `has_markdown=False`. See `scripts/corpus/preprocess_acl.py`.
 
-4. **Dataset assembly.** `scripts/build_corpus_dataset.py` walks the markdown directory, joins each file to its metadata record by `anthology_id` (derived from the paper URL), normalizes the metadata schema, and writes both configs.
+4. **Dataset assembly.** `scripts/corpus/build_corpus_dataset.py` walks the markdown directory, joins each file to its metadata record by `anthology_id` (derived from the paper URL), normalizes the metadata schema, and writes both configs.
 
 The conversion is automated and not manually validated — markdown quality varies with the underlying PDF (older scanned papers, complex tables, math-heavy papers may convert imperfectly). Treat the output as a strong starting point for chunking and retrieval, not as a verbatim transcription.
 

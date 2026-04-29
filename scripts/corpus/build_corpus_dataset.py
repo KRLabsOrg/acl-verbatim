@@ -9,11 +9,11 @@ and from the markdown filename stem.
 
 Usage:
     # Smoke test locally (no upload):
-    python scripts/build_corpus_dataset.py \
+    python scripts/corpus/build_corpus_dataset.py \
         --paper-data paper_data.json --md-dir acl_md --limit 100 --dry-run
 
     # Real push:
-    python scripts/build_corpus_dataset.py \
+    python scripts/corpus/build_corpus_dataset.py \
         --paper-data paper_data.json --md-dir acl_md \
         --repo-id KRLabsOrg/acl-anthology-md
 """

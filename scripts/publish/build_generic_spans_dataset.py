@@ -11,10 +11,10 @@ Configs pushed:
 
 Usage:
     # Dry-run (prints split sizes, skips upload)
-    python scripts/build_generic_spans_dataset.py --dry-run
+    python scripts/publish/build_generic_spans_dataset.py --dry-run
 
     # Push
-    python scripts/build_generic_spans_dataset.py --repo-id KRLabsOrg/verbatim-spans
+    python scripts/publish/build_generic_spans_dataset.py --repo-id KRLabsOrg/verbatim-spans
 """
 
 from __future__ import annotations

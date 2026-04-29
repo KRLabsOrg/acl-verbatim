@@ -21,6 +21,20 @@ All reproducible artifacts are on Hugging Face:
   - v2 of `verbatim-rag-modern-bert-v1`; multi-domain training, same `.process()` API. Strongest off-domain (RAGBench, tool outputs); see [`docs/GENERIC_EVAL.md`](docs/GENERIC_EVAL.md) for the per-domain comparison
 
 
+## Repository map
+
+- `acl_verbatim/eval/`: retrieval and span-extraction evaluation entrypoints.
+- `acl_verbatim/qa_generation/`: synthetic query generation and silver span annotation.
+- `acl_verbatim/span_training/`: token-classification data prep, training, and evaluation.
+- `scripts/corpus/`: corpus materialization, metadata extraction, PDF conversion, and indexing.
+- `scripts/publish/`: Hugging Face dataset/model publishing utilities.
+- `scripts/experiments/`: adapters for RAGBench, Squeez, MultiSpanQA, and exploratory evals.
+- `scripts/maintenance/`: operational/admin utilities for external services.
+- [scripts/README.md](scripts/README.md): complete script inventory grouped by workflow.
+- `docs/PIPELINE.md`: full ACL silver-data and ACL model training pipeline.
+- `docs/GENERIC_EVAL.md`: generic multi-domain model and baseline evaluation.
+
+
 ## Using the trained model
 
 [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert)
@@ -83,7 +97,7 @@ The markdown version of all papers is published as
 Materialize it as the local file layout the scripts expect:
 
 ```bash
-python scripts/export_hf_corpus.py --output-metadata-file paper_data.jsonl --output-md-dir acl_md
+python scripts/corpus/export_hf_corpus.py --output-metadata-file paper_data.jsonl --output-md-dir acl_md
 ```
 
 This gives you `paper_data.jsonl` (JSONL metadata) and `acl_md/*.md` (markdown fulltext), sufficient
@@ -103,13 +117,13 @@ Chunk markdown files and build a Milvus vector index. `DEVICE` can be set to `cu
 Indexing to `CloudMilvusStore`:
 
 ```bash
-python scripts/index_acl.py --input-dir acl_md --metadata-file paper_data.jsonl --collection-name acl --device cuda --use-cloud --cloud-uri CLOUD_URI
+python scripts/corpus/index_acl.py --input-dir acl_md --metadata-file paper_data.jsonl --collection-name acl --device cuda --use-cloud --cloud-uri CLOUD_URI
 ```
 
 Indexing to file using `LocalMilvusStore`:
 
 ```bash
-python scripts/index_acl.py --input-dir acl_md --index-file acl.db --metadata-file paper_data.jsonl --collection-name acl --device DEVICE
+python scripts/corpus/index_acl.py --input-dir acl_md --index-file acl.db --metadata-file paper_data.jsonl --collection-name acl --device DEVICE
 ```
 
 ---
@@ -230,7 +244,7 @@ Publish a fine-tune of your own with the same `AutoModel.from_pretrained(..., tr
 API as our release:
 
 ```bash
-python scripts/push_model.py --model-dir acl-verbatim-modernbert --repo-id <your-namespace>/acl-verbatim-modernbert
+python scripts/publish/push_model.py --model-dir acl-verbatim-modernbert --repo-id <your-namespace>/acl-verbatim-modernbert
 ```
 
 ---
@@ -245,7 +259,7 @@ Since `get_anthology_metadata.py` relies on Python code from `acl-anthology` tha
 installed as part of a package, the path to the repository must be passed via `--anthology-path`:
 
 ```bash
-python scripts/get_anthology_metadata.py --anthology-path /path/to/acl-anthology --output-file paper_data.jsonl
+python scripts/corpus/get_anthology_metadata.py --anthology-path /path/to/acl-anthology --output-file paper_data.jsonl
 ```
 
 ### Obtaining and preprocessing PDFs
@@ -262,7 +276,7 @@ their permissive policies this project would not have been possible.
 PDFs can be converted to markdown via docling (batch sizes tested on a single A100 GPU):
 
 ```bash
-python scripts/preprocess_acl.py --input-dir ../acl-anthology/build/anthology-files/pdf --output-dir acl_md --metadata-file paper_data.jsonl --doc-batch-size 512 --page-batch-size 1024
+python scripts/corpus/preprocess_acl.py --input-dir ../acl-anthology/build/anthology-files/pdf --output-dir acl_md --metadata-file paper_data.jsonl --doc-batch-size 512 --page-batch-size 1024
 ```
 
 ### Generating synthetic evaluation data

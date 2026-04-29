@@ -7,7 +7,7 @@ makes `AutoModel.from_pretrained(..., trust_remote_code=True)` return the
 card into the dir, and uploads the whole thing to the hub.
 
 Usage:
-    python scripts/push_model.py \\
+    python scripts/publish/push_model.py \\
         --model-dir runs/models/acl-verbatim-modernbert \\
         --repo-id KRLabsOrg/acl-verbatim-modernbert
 """

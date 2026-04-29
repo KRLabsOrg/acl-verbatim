@@ -1,7 +1,7 @@
 # Generic span-extractor evaluation
 
 This document describes the multi-domain evaluation of
-[`KRLabsOrg/verbatim-generic-modernbert`](https://huggingface.co/KRLabsOrg/verbatim-generic-modernbert),
+[`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2),
 the generic counterpart of [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert).
 
 The ACL model is fine-tuned only on ACL silver labels and reported in the
@@ -31,23 +31,23 @@ that already live in canonical places.
 mkdir -p runs/eval_data runs/eval/test_slices
 
 # RAGBench native test (all 12 configs)
-python scripts/prepare_ragbench_spans.py \
+python scripts/experiments/prepare_ragbench_spans.py \
     --split test \
     --output-file runs/eval_data/ragbench_test.spans.jsonl
-python scripts/spans_jsonl_to_gold_file.py \
+python scripts/experiments/spans_jsonl_to_gold_file.py \
     runs/eval_data/ragbench_test.spans.jsonl \
     --output runs/eval/test_slices/ragbench.gold.jsonl
 
 # Squeez native test
-python scripts/prepare_squeez_spans.py \
+python scripts/experiments/prepare_squeez_spans.py \
     --split test \
     --output-file runs/eval_data/squeez_test.spans.jsonl
-python scripts/spans_jsonl_to_gold_file.py \
+python scripts/experiments/spans_jsonl_to_gold_file.py \
     runs/eval_data/squeez_test.spans.jsonl \
     --output runs/eval/test_slices/squeez.gold.jsonl
 
 # MultiSpanQA valid (download valid.json from https://multi-span.github.io/)
-python scripts/multispanqa_to_gold_file.py \
+python scripts/experiments/multispanqa_to_gold_file.py \
     /path/to/MultiSpanQA_data/valid.json \
     --output runs/eval/test_slices/multispanqa.gold.jsonl
 
@@ -72,7 +72,7 @@ SLICES=(acl ragbench squeez multispanqa)
 for S in "${SLICES[@]}"; do
   python acl_verbatim/span_training/evaluate_token_cls.py \
     --gold-file runs/eval/test_slices/${S}.gold.jsonl \
-    --model-dir runs/models/verbatim-generic-modernbert/ \
+    --model-dir KRLabsOrg/verbatim-rag-modern-bert-v2 \
     --threshold 0.2 --min-span-chars 30 --merge-gap-chars 20 \
     --output-file runs/eval/generic.${S}_test.json
 done
@@ -125,7 +125,7 @@ done
 ```
 
 The four printed tables are the spine of the
-[`KRLabsOrg/verbatim-generic-modernbert`](https://huggingface.co/KRLabsOrg/verbatim-generic-modernbert)
+[`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2)
 model card.
 
 ## Caveats
