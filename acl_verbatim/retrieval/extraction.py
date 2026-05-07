@@ -48,7 +48,7 @@ def iter_extraction_results(args):
     extractor = get_extractor(args)
     if extractor is None:
         extractor = LLMSpanExtractor(
-            llm_client=get_llm_client(args.llm_response_log),
+            llm_client=get_llm_client(),
             extraction_mode="auto",
             max_display_spans=5,
             verify_spans=False,
