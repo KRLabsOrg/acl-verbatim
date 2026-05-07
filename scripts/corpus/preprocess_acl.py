@@ -1,14 +1,12 @@
 import argparse
+import concurrent.futures
 import json
 import logging
 import os
 from collections import Counter
 
-import concurrent.futures
-
 from docling.datamodel.base_models import ConversionStatus
 from docling.document_converter import DocumentConverter
-
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -39,10 +37,11 @@ TO_SKIP = {
 
 
 class AnthologyPreprocessor:
-    def __init__(self, input_dir, output_dir, metadata_file):
+    def __init__(self, input_dir, output_dir, metadata_file, max_papers=None):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.metadata_file = metadata_file
+        self.max_papers = max_papers
         self._load_metadata()
         self.converter = DocumentConverter()
 
@@ -50,10 +49,13 @@ class AnthologyPreprocessor:
         papers = {}
         logging.info(f"loading metadata from {self.metadata_file}")
         with open(self.metadata_file) as f:
-            metadata = json.load(f)
-        for paper in metadata:
-            fn = paper["url"].split("/")[-2]
-            papers[fn] = paper
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                paper = json.loads(line)
+                fn = paper["url"].rstrip("/").split("/")[-1]
+                papers[fn] = paper
 
         self.papers = papers
         logging.info(f"loaded metadata for {len(papers)} papers")
@@ -98,9 +100,9 @@ class AnthologyPreprocessor:
                     stats["failure"] += 1
 
         logging.info(
-            f"finished parallel processing, {stats['success']} papers processed, {stats['failed']} failed"
+            f"finished parallel processing, {stats['success']} papers processed, {stats['failure']} failed"
         )
-        return success
+        return stats["success"]
 
     def _process_all(self, input_dir, output_dir, max_workers, dry_run):
         print(f"processing {input_dir=} to {output_dir=}")
@@ -134,6 +136,14 @@ class AnthologyPreprocessor:
                 "output_fn": output_fn,
                 "metadata": paper_metadata,
             }
+
+        if self.max_papers is not None and len(to_process) > self.max_papers:
+            limited = {}
+            for i, (fn, payload) in enumerate(to_process.items()):
+                if i >= self.max_papers:
+                    break
+                limited[fn] = payload
+            to_process = limited
 
         print(
             f"will process {len(to_process)} files and then recurse in {len(subdirs_and_paths)} subdirectories"
@@ -232,6 +242,7 @@ def main():
         input_dir=args.input_dir,
         output_dir=args.output_dir,
         metadata_file=args.metadata_file,
+        max_papers=args.max_papers,
     )
     preprocessor.process_all(args.max_workers, args.dry_run)
 

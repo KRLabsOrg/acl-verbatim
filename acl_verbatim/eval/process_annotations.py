@@ -169,12 +169,14 @@ def map_gold_extractions(json_data, client):
                         f"  original: {gold!r}\n"
                         f"  matched:  {matched_text!r}"
                     )
-                mapped.append({
-                    "text": matched_text,
-                    "start": alignment.dest_start,
-                    "end": alignment.dest_end,
-                    "score": score,
-                })
+                mapped.append(
+                    {
+                        "text": matched_text,
+                        "start": alignment.dest_start,
+                        "end": alignment.dest_end,
+                        "score": score,
+                    }
+                )
             result["gold_extraction_mapped"] = mapped
     return json_data
 

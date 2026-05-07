@@ -1,17 +1,17 @@
-import streamlit as st
 import logging
-from typing import List
 import os
+from typing import List
+
+import streamlit as st
 from dotenv import load_dotenv
 from sentence_transformers import CrossEncoder
-
 from verbatim_rag import VerbatimIndex, VerbatimRAG
+from verbatim_rag.core import LLMClient
 from verbatim_rag.embedding_providers import (
     SentenceTransformersProvider,
     SpladeProvider,
 )
 from verbatim_rag.vector_stores import CloudMilvusStore, SearchResult
-from verbatim_rag.core import LLMClient
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

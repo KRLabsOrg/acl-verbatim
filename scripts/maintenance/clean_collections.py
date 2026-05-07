@@ -4,9 +4,7 @@ from pymilvus import MilvusClient
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Clean (drop) Milvus collections"
-    )
+    parser = argparse.ArgumentParser(description="Clean (drop) Milvus collections")
     parser.add_argument(
         "--uri",
         default="http://localhost:19530",

@@ -206,3 +206,18 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 sample_data/
+acl_md/
+paper_data.json
+paper_data.jsonl
+
+# Retrieval-eval result files (regenerable via test_index.py)
+dense.json
+dense_ft.json
+dense_semantic.json
+ft_semantic.json
+test.json
+output.json
+
+# Extractor-eval per-row dumps (regenerable via evaluate_extractor.py)
+runs/*
+models/
