@@ -37,7 +37,6 @@ class TestIndexArgs:
     log_level: str
     partial_matches_file: Optional[Path]
     milvus_token: Optional[str]
-    llm_response_log: Optional[Path]
     hybrid_weights: dict
 
 
@@ -134,12 +133,6 @@ def _build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="File to store partial matches (score < 1.0) in CSV format",
     )
-    extraction_group.add_argument(
-        "--llm-response-log",
-        type=Path,
-        help="File to log raw LLM responses (JSON Lines format)",
-    )
-
     logging_group = parser.add_argument_group("Logging")
     logging_group.add_argument(
         "--log-level",
@@ -196,7 +189,6 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> TestIndexArgs:
         log_level=ns.log_level,
         partial_matches_file=ns.partial_matches_file,
         milvus_token=ns.milvus_token,
-        llm_response_log=ns.llm_response_log,
         hybrid_weights=HYBRID_WEIGHTS,
     )
 

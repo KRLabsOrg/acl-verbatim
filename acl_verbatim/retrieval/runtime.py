@@ -193,12 +193,11 @@ def get_index(args) -> VerbatimIndex:
     )
 
 
-def get_llm_client(response_log_file: Optional[Path] = None):
+def get_llm_client():
     return LLMClient(
         model=os.environ.get("OPENAI_MODEL", "moonshotai/kimi-k2-instruct-0905"),
         api_base=os.environ.get("OPENAI_API_BASE", "https://api.groq.com/openai/v1/"),
         api_key=os.environ.get("OPENAI_API_KEY"),
-        response_log_file=str(response_log_file) if response_log_file else None,
     )
 
 
@@ -215,7 +214,7 @@ def get_rag(
 ) -> VerbatimRAG:
     print("initializing RAG...")
     extractor = get_extractor(args)
-    llm_client = get_llm_client(args.llm_response_log)
+    llm_client = get_llm_client()
     return VerbatimRAG(
         index,
         extractor=extractor,
