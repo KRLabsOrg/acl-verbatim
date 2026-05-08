@@ -47,6 +47,7 @@ def query_index(
         k=retrieve_k,
         rrf_k=60,
         hybrid_weights=hybrid_weights,
+        search_type=search_type,
         search_params=search_params,
         filter=None,
     )
@@ -194,6 +195,10 @@ def get_index(args) -> VerbatimIndex:
 
 
 def get_llm_client():
+    print(os.environ.get("OPENAI_MODEL", "moonshotai/kimi-k2-instruct-0905"))
+    print(os.environ.get("OPENAI_API_BASE", "https://api.groq.com/openai/v1/"))
+    print(os.environ.get("OPENAI_API_KEY") )
+    
     return LLMClient(
         model=os.environ.get("OPENAI_MODEL", "moonshotai/kimi-k2-instruct-0905"),
         api_base=os.environ.get("OPENAI_API_BASE", "https://api.groq.com/openai/v1/"),

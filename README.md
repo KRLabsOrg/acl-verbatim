@@ -81,6 +81,12 @@ For Hugging Face dataset tooling and semantic-highlighting baselines:
 pip install -e ".[hf]"
 ```
 
+For extracting paper metadata:
+
+```bash
+pip install -e ".[papermeta]"
+```
+
 ### Downloading benchmark data
 
 The gold extraction benchmark is kept in the repo as
@@ -120,6 +126,8 @@ Indexing to `CloudMilvusStore`:
 python scripts/corpus/index_acl.py --input-dir acl_md --metadata-file paper_data.jsonl --collection-name acl --device cuda --use-cloud --cloud-uri CLOUD_URI
 ```
 
+> **Note:** For non-localhost Milvus instances (e.g. Zilliz Cloud), authentication is typically required. Pass `--milvus-token YOUR_TOKEN` to authenticate.
+
 Indexing to file using `LocalMilvusStore`:
 
 ```bash
@@ -139,14 +147,16 @@ python acl_verbatim/eval/test_index.py --index-file acl.db --device DEVICE --col
 Using a cloud Milvus instance:
 
 ```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI
+python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI --milvus-token MILVUS_TOKEN
 ```
 
-Retrieval only (no LLM answer generation on every query):
-
-```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device DEVICE --use-cloud --cloud-uri CLOUD_URI -r
-```
+> **Note:** LLM answer generation requires the following environment variables:
+> ```bash
+> export OPENAI_API_BASE=https://api.openai.com/v1   # or any compatible endpoint
+> export OPENAI_API_KEY=sk-...
+> export OPENAI_MODEL=gpt-4o-mini
+> ```
+> Use the `-r` flag to skip LLM calls and do retrieval only.
 
 ---
 
@@ -159,7 +169,7 @@ Run queries against the index, store results, and print retrieval metrics. `SEAR
 which is slow and LLM-costly.
 
 ```bash
-python acl_verbatim/eval/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri CLOUD_URI -r -k 500 --questions-dir QUERIES_PATH --query-field query --output-file SEARCH_RESULTS_FILE -s SEARCH_TYPE | tee METRICS_FILE
+python acl_verbatim/eval/test_index.py --collection-name acl --device cpu --use-cloud --cloud-uri CLOUD_URI --milvus-token $MILVUS_API_KEY -r -k 500 --questions-dir QUERIES_PATH --query-field query --output-file SEARCH_RESULTS_FILE -s SEARCH_TYPE | tee METRICS_FILE
 ```
 
 Compare two sets of search results at the chunk level for the top-k results:
