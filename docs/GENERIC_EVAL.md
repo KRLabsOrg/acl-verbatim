@@ -74,8 +74,7 @@ wc -l runs/eval/test_slices/*.gold.jsonl
 The same four-system grid as the main paper (generic student, ACL-specialized
 student, Zilliz semantic-highlight, Provence) on each slice. Best decoding
 config per model was selected on the dataset's validation split, not the test
-split — see the [main paper](../paper.tex) §4.4 for the threshold-selection
-protocol.
+split.
 
 ```bash
 SLICES=(acl ragbench squeez multispanqa qasper)
