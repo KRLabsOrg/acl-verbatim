@@ -36,6 +36,18 @@ Built on
 which provides the long ModernBERT context (up to 8192 tokens) and a
 query-conditioned reranking prior on top of which span extraction is fine-tuned.
 
+The goal is a lightweight extractor that can replace many LLM-based evidence
+highlighting calls in production RAG systems: local, deterministic, cheap to
+serve, and still competitive on span-overlap quality. In our ACL-Verbatim gold
+benchmark, the ACL-specialized sibling model is on par with strong LLM
+extractors by word-level F1, while this generic multi-domain model beats public
+extractive baselines across ACL gold, RAGBench, Squeez, and QASPER.
+
+You can use it as the extraction stage inside VerbatimRAG, or drop it into your
+own RAG pipeline after retrieval/reranking to turn retrieved chunks into
+grounded evidence spans before displaying them to users or passing them to a
+generator.
+
 Most public evidence extractors (Provence, Zilliz Semantic-Highlight,
 MultiSpanQA-trained models) are trained on Wikipedia-style prose QA only.
 This model is trained on
@@ -103,6 +115,83 @@ for span in result["spans"]:
     print(f"[{span['score']:.2f}] {span['text']}")
 ```
 
+### Use inside VerbatimRAG
+
+```python
+from verbatim_rag.core import VerbatimRAG
+from verbatim_rag.index import VerbatimIndex
+from verbatim_rag.extractors import ModelSpanExtractor
+from verbatim_rag.vector_stores import LocalMilvusStore
+from verbatim_rag.embedding_providers import SpladeProvider
+
+# v2 is the default ModelSpanExtractor model, but passing it explicitly makes
+# the dependency clear.
+extractor = ModelSpanExtractor(
+    model_path="KRLabsOrg/verbatim-rag-modern-bert-v2",
+    threshold=0.2,
+    min_span_chars=30,
+    merge_gap_chars=20,
+    device=None,  # auto-detects cuda, then mps, then cpu
+)
+
+sparse_provider = SpladeProvider(
+    model_name="opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill",
+    device="cuda",  # use "cpu" if no GPU is available
+)
+
+vector_store = LocalMilvusStore(
+    db_path="./index.db",
+    collection_name="verbatim_rag",
+    enable_dense=False,
+    enable_sparse=True,
+)
+
+# Assumes the index has already been populated with your documents.
+index = VerbatimIndex(
+    vector_store=vector_store,
+    sparse_provider=sparse_provider,
+)
+
+rag = VerbatimRAG(
+    index=index,
+    extractor=extractor,
+    k=5,
+)
+
+response = rag.query("Main findings of the paper?")
+print(response.answer)
+```
+
+You can also use the model directly after your own retriever/reranker:
+
+```python
+from transformers import AutoModel
+
+extractor = AutoModel.from_pretrained(
+    "KRLabsOrg/verbatim-rag-modern-bert-v2",
+    trust_remote_code=True,
+)
+
+question = "What evidence supports using DINOv2 as the visual backbone?"
+context = (
+    "We investigate different visual backbones for feature extraction. "
+    "The results demonstrate DINOv2's effectiveness as a feature extractor "
+    "for sign language translation."
+)
+
+result = extractor.process(question=question, context=context)
+
+for span in result["spans"]:
+    print(
+        {
+            "start": span["start"],
+            "end": span["end"],
+            "text": span["text"],
+            "score": span["score"],
+        }
+        )
+```
+
 `.process()` accepts: `question`, `context`, `threshold` (default `0.2`),
 `max_length` (default `8192`), `doc_stride` (default `256`), `min_span_chars`
 (default `30`), `merge_gap_chars` (default `20`), `return_sentence_metrics`
@@ -117,42 +206,45 @@ The return shape is `{"spans": [{"start": int, "end": int, "text": str,
 
 ## Performance
 
-Evaluated on the test splits of the three training sources, with the same
-harness applied to baseline span extractors
-([Provence](https://huggingface.co/naver/provence-reranker-debertav3-v1),
-[Zilliz Semantic-Highlight](https://huggingface.co/zilliz/semantic-highlight-bilingual-v1))
-and to the ACL-specialized variant. Word-level micro F1.
+Evaluated with the shared span-extraction harness used by
+[`acl-verbatim`](https://github.com/KRLabsOrg/acl-verbatim). The current
+metric protocol scores every row in a slice: rows without gold spans are
+negative examples, and false-positive extracted text lowers precision.
 
-| domain | rows | this model | acl-specialized | provence | zilliz |
-|---|---:|---:|---:|---:|---:|
-| ACL Anthology gold | 47 | 0.495 | **0.562** | 0.480 | 0.322 |
-| RAGBench (12 configs) | ~17k | **0.759** | 0.598 | 0.615 | 0.511 |
-| Squeez tool-output | ~1k | **0.769** | 0.493 | 0.491 | 0.418 |
+The table below compares this generic model to two public extractive baselines:
+Zilliz Semantic Highlight and Provence. All systems are evaluated with the
+same all-row scorer. Latency is intentionally omitted because runtime depends
+on device, batching, and serving setup.
 
-The ACL-specialized model wins on its home turf; the multi-domain extractor
-wins everywhere else by 14–28 points and is 6.7 points behind on ACL. With
-the recall-tuned config (`threshold=0.1`, `min_span_chars=10`), word-F1 on
-ACL gold rises from 0.495 to 0.523, narrowing the gap to ~4 points.
+| dataset | system | Word-P | Word-R | Word-F1 | IoU@0.5 | AnyOverlap | OverPred |
+|---|---|---:|---:|---:|---:|---:|---:|
+| ACL gold | **verbatim-rag-modern-bert-v2** | **0.625** | 0.368 | **0.463** | **0.366** | 0.449 | 0.679 |
+| ACL gold | Zilliz semantic-highlight | 0.470 | 0.221 | 0.301 | 0.113 | 0.513 | 1.500 |
+| ACL gold | Provence | 0.276 | **0.457** | 0.344 | 0.153 | **0.718** | 3.013 |
+| RAGBench | **verbatim-rag-modern-bert-v2** | 0.516 | **0.770** | **0.618** | 0.309 | **0.753** | 0.732 |
+| RAGBench | Zilliz semantic-highlight | **0.573** | 0.362 | 0.443 | 0.316 | 0.358 | 0.581 |
+| RAGBench | Provence | 0.430 | 0.547 | 0.481 | **0.317** | 0.547 | 0.922 |
+| Squeez | **verbatim-rag-modern-bert-v2** | **0.506** | **0.700** | **0.588** | **0.511** | **0.809** | 1.572 |
+| Squeez | Zilliz semantic-highlight | 0.184 | 0.352 | 0.242 | 0.098 | 0.658 | 3.866 |
+| Squeez | Provence | 0.107 | 0.576 | 0.180 | 0.103 | 0.756 | 3.951 |
+| QASPER | **verbatim-rag-modern-bert-v2** | **0.688** | 0.409 | **0.513** | **0.366** | 0.515 | 0.848 |
+| QASPER | Zilliz semantic-highlight | 0.622 | 0.191 | 0.293 | 0.122 | 0.479 | 0.793 |
+| QASPER | Provence | 0.522 | **0.435** | 0.474 | 0.285 | **0.737** | 1.413 |
 
-### Squeez tool-output benchmark
+The generic model achieves the best Word-F1 on all four evaluated slices
+against the public extractor baselines, including QASPER, which is not part of
+the training mix. This is the main result: a 150M-parameter local encoder can
+act as a strong general-purpose evidence highlighter across scientific papers,
+RAGBench QA domains, coding-agent tool output, and QASPER scientific QA. The
+advantage is strongest on RAGBench and Squeez, matching the multi-domain
+training mix. On ACL gold, the generic model is also stronger than the public
+pruning/highlighting baselines, though the ACL-specialized model remains best
+on its home domain. Provence is often stronger on recall-oriented metrics such
+as AnyOverlap, but tends to over-predict substantially more; Zilliz is generally
+more conservative and lower recall.
 
-Scored through the Squeez line-level harness (618 samples). Squeez and the
-generative baselines emit text in line units, so they get full credit on
-strict Span F1 by construction; the Verbatim-RAG Extractor emits character
-spans that are mapped to lines, so Fuzzy F1 (≥50% character overlap) is the
-metric where both model families are evaluated on the same footing.
-
-| model | params | Fuzzy F1 | Span F1 | Partial Overlap | Empty Acc | Compression |
-|---|---:|---:|---:|---:|---:|---:|
-| Squeez-2B (fine-tuned) | 2B | 0.804 | 0.790 | 0.919 | 0.968 | 0.915 |
-| Qwen 3.5 35B A3B (zero-shot) | 35B | 0.725 | 0.700 | 0.835 | 0.916 | 0.918 |
-| Kimi K2 (zero-shot) | huge | 0.683 | 0.534 | 0.746 | 0.924 | 0.943 |
-| **Verbatim-RAG Extractor** | **150M** | 0.646 | 0.515 | 0.820 | 0.898 | 0.917 |
-| Qwen 3.5 2B (zero-shot) | 2B | 0.548 | 0.408 | 0.768 | 0.916 | 0.820 |
-
-A 150M-parameter encoder lands within 4 Fuzzy-F1 points of zero-shot Kimi K2
-and 16 of fine-tuned Squeez-2B. Compression and empty-prediction accuracy
-match the larger generative models.
+Evaluation commands and slice construction are documented in
+[`docs/GENERIC_EVAL.md`](https://github.com/KRLabsOrg/acl-verbatim/blob/main/docs/GENERIC_EVAL.md).
 
 ## Citing
 
