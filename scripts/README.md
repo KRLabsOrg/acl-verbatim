@@ -31,8 +31,9 @@ Adapters and helpers for non-ACL evaluation sets and exploratory runs.
 
 - `prepare_ragbench_spans.py` and `prepare_squeez_spans.py` convert external
   datasets to the common span format.
-- `spans_jsonl_to_gold_file.py` and `multispanqa_to_gold_file.py` convert span
-  rows to the evaluator gold-file format.
+- `qasper_to_gold_file.py`, `spans_jsonl_to_gold_file.py`, and
+  `multispanqa_to_gold_file.py` convert public evaluation data to the evaluator
+  gold-file format.
 - `eval_multispanqa_metrics.py` and `eval_squeez_metrics.py` are dataset-specific
   metric helpers.
 - `slice_verbatim_val.py` and `search_index.py` are small experiment helpers.

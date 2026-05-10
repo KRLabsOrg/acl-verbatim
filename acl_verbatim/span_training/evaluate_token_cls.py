@@ -1,5 +1,6 @@
 import argparse
 import json
+import time
 from pathlib import Path
 
 from datasets import load_dataset
@@ -134,6 +135,7 @@ def predict_with_threshold(
 
     predictions = []
     for row in tqdm(rows):
+        row_start = time.perf_counter()
         question = row.get("question")
         chunk = row.get("chunk")
         if not question or chunk is None:
@@ -174,6 +176,7 @@ def predict_with_threshold(
                 "question": question,
                 "paper_id": row.get("paper_id"),
                 "chunk_index": row.get("chunk_index"),
+                "latency_s": time.perf_counter() - row_start,
                 "pred_spans": [
                     {
                         "start": sp["start"],
@@ -248,7 +251,6 @@ def main():
     else:
         raise SystemExit("Provide --gold-file or use --hf-dataset with a gold split.")
 
-    relevant_rows = [row for row in gold_rows if row.is_relevant]
     model_rows = [
         {
             "question": row.query,
@@ -256,7 +258,7 @@ def main():
             "chunk_index": row.chunk_index,
             "chunk": row.chunk,
         }
-        for row in relevant_rows
+        for row in gold_rows
     ]
 
     if (

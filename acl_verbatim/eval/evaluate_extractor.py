@@ -10,10 +10,11 @@ standard trio of env vars:
 Switch provider by exporting different values; the script doesn't care. CLI
 flags are thin overrides for one-off runs.
 
-Metrics (all computed against the relevant chunks in the gold file):
+Metrics (computed over every row in the gold file):
   * Word-F1 (micro/macro) — token-set F1 on the union of predicted and gold
-    spans at whitespace-word granularity. Headline metric, matches SQuAD /
-    QuAC / LettuceDetect conventions.
+    spans at whitespace-word granularity. Rows without gold spans are negative
+    examples: false-positive predictions lower precision, while correct empty
+    predictions do not inflate the score.
   * Word-Recall (micro) — recall only; gold spans in this dataset are
     intentionally generous (see NOTES.md 2026.01.23), so recall is the axis
     that matters most for the downstream use case.
@@ -83,14 +84,14 @@ def evaluate(
     extractor: LLMSpanExtractor,
     limit: int | None = None,
 ) -> dict:
-    relevant = [r for r in rows if r.is_relevant]
+    eval_rows = rows
     if limit is not None:
-        relevant = relevant[:limit]
+        eval_rows = eval_rows[:limit]
 
     # Group by query so each batched extractor call covers one question's chunks.
     # This preserves the original row order for the output records.
     by_query: dict[str, list[SpanRow]] = {}
-    for row in relevant:
+    for row in eval_rows:
         by_query.setdefault(row.query, []).append(row)
 
     pred_map: dict[tuple[str, str, int], dict] = {}
@@ -122,7 +123,7 @@ def evaluate(
                 "error": error,
             }
 
-    return evaluate_rows_against_predictions(relevant, pred_map)
+    return evaluate_rows_against_predictions(eval_rows, pred_map)
 
 
 def main():
@@ -145,7 +146,7 @@ def main():
         "--limit",
         type=int,
         default=None,
-        help="Cap to first N relevant rows (smoke test)",
+        help="Cap to first N evaluated rows (smoke test)",
     )
     p.add_argument(
         "--output-file", type=Path, default=None, help="Write per-row records here"

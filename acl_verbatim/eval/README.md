@@ -68,7 +68,7 @@ The LLM extractor harness runs the same shared scorer directly:
 ```bash
 python acl_verbatim/eval/evaluate_extractor.py \
   --gold-file 333_20260206_dense_top5_20260305.json \
-  --output-file runs/qwen_paragraph_gold.json \
+  --output-file runs/model_paragraph_gold.json \
   --extraction-prompt-file acl_verbatim/prompts/extraction_paragraph.txt
 ```
 
@@ -102,6 +102,10 @@ cutoff (lower = more recall). `--min-span-chars` drops tiny noise spans and
 token-level fragmentation that hurts span IoU. The defaults shown reproduce
 the headline numbers in the model card.
 
+Evaluation runs on every row in the gold file. Rows without gold spans penalize
+false-positive extracted text, while correct empty predictions on negatives do
+not inflate token-overlap scores.
+
 You can also evaluate against an HF dataset split directly:
 
 ```bash
@@ -124,9 +128,10 @@ Use `compare_span_runs.py` to print one table for multiple systems:
 ```bash
 python acl_verbatim/eval/compare_span_runs.py \
   --gold-file 333_20260206_dense_top5_20260305.json \
-  --run qwen=runs/qwen_paragraph_gold.json \
-  --run zilliz=runs/zilliz_gold.jsonl \
-  --run modernbert=runs/eval/modernbert_qwen_silver_binary.gold_eval.json
+  --run modernbert=artifacts/eval/gold_extraction/gte-reranker.thr_0.2_merged.json \
+  --run glm=artifacts/eval/gold_extraction/glm-5.json \
+  --run qwen=artifacts/eval/gold_extraction/qwen_paragraph_gold.json \
+  --run zilliz=artifacts/eval/gold_extraction/zilliz_spans_03_gold.jsonl
 ```
 
 Each `--run` path may be either:

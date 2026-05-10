@@ -1,50 +1,52 @@
 {
   "summary": {
-    "n_examples": 47,
+    "n_examples": 100,
+    "n_relevant": 47,
+    "n_irrelevant": 53,
     "word_level": {
-      "micro_precision": 0.7384159482758621,
+      "micro_precision": 0.6543327763189305,
       "micro_recall": 0.454334493618432,
-      "micro_f1": 0.5625448948178553,
-      "macro_f1": 0.45030579455230046
+      "micro_f1": 0.5362942672666797,
+      "macro_f1": 0.2116437234395812
     },
     "span_level_iou": {
       "0.3": {
-        "micro_p": 0.5849056603773585,
+        "micro_p": 0.4696969696969697,
         "micro_r": 0.3974358974358974,
-        "micro_f1": 0.47328244274809156,
-        "macro_f1": 0.4457953394123606
+        "micro_f1": 0.4305555555555556,
+        "macro_f1": 0.6495238095238094
       },
       "0.5": {
-        "micro_p": 0.5283018867924528,
+        "micro_p": 0.42424242424242425,
         "micro_r": 0.358974358974359,
-        "micro_f1": 0.4274809160305344,
-        "macro_f1": 0.39260385005065856
+        "micro_f1": 0.3888888888888889,
+        "macro_f1": 0.6245238095238094
       },
       "0.7": {
-        "micro_p": 0.24528301886792453,
+        "micro_p": 0.19696969696969696,
         "micro_r": 0.16666666666666666,
-        "micro_f1": 0.19847328244274806,
-        "macro_f1": 0.1546099290780142
+        "micro_f1": 0.18055555555555552,
+        "macro_f1": 0.5126666666666666
       }
     },
     "containment": {
       "0.5": {
-        "micro_p": 0.6981132075471698,
+        "micro_p": 0.5606060606060606,
         "micro_r": 0.4230769230769231,
-        "micro_f1": 0.5268608414239482,
-        "macro_f1": 0.4630192502532929
+        "micro_f1": 0.48222748815165867,
+        "macro_f1": 0.6576190476190473
       },
       "0.8": {
-        "micro_p": 0.4716981132075472,
+        "micro_p": 0.3787878787878788,
         "micro_r": 0.2692307692307692,
-        "micro_f1": 0.3428011753183154,
-        "macro_f1": 0.2630192502532928
+        "micro_f1": 0.31474820143884885,
+        "macro_f1": 0.5636190476190474
       },
       "1.0": {
-        "micro_p": 0.41509433962264153,
+        "micro_p": 0.3333333333333333,
         "micro_r": 0.23076923076923078,
-        "micro_f1": 0.29662921348314614,
-        "macro_f1": 0.2261398176291793
+        "micro_f1": 0.27272727272727276,
+        "macro_f1": 0.546285714285714
       }
     },
     "gold_coverage_recall": {
@@ -53,11 +55,316 @@
       "1.0": 0.358974358974359
     },
     "recall_any_overlap": 0.5,
-    "over_prediction_ratio": 0.6794871794871795,
-    "mean_latency_s": 0.0,
+    "over_prediction_ratio": 0.8461538461538461,
+    "mean_latency_s": 0.46802583415061233,
     "errors": 0
   },
   "records": [
+    {
+      "paper_id": "W06-3917",
+      "chunk_index": 4,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.4697595410980284,
+      "error": null
+    },
+    {
+      "paper_id": "W11-0100",
+      "chunk_index": 80,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        "\nSome of the axioms obtained are:\n\nTable 5 shows the eight inference axioms obtained after following the steps depicted in Section 4.1. Note that the matrix is symmetric as stated by the property R 1 \u25e6 R 2 = (R 2 -1 \u25e6 R 1 -1 ) -1 .\n\n- MCAU \u25e6 MLOC -1 \u2192 MLOC -1 , the location of a cause is the same than the location of its effect .\n- MPNC \u25e6 MMNR -1 \u2192 MMNR -1 , the manner of an action is inherited by its purpose .\n- MPNC \u25e6 ARG0 -1 \u2192 ARG0 -1 , the agent of an action is inherited by its purpose ."
+      ],
+      "predicted_spans": [
+        {
+          "start": 457,
+          "end": 953
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 113,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.21312491595745087,
+      "error": null
+    },
+    {
+      "paper_id": "2024.dlnld-1.4",
+      "chunk_index": 6,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.1361073330044746,
+      "error": null
+    },
+    {
+      "paper_id": "E93-1009",
+      "chunk_index": 6,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        " quantified dynamic",
+        "The following axiom schemata can be used to compute these conditions as formulas of FOL.",
+        " universal schema for t assignment (item 14).",
+        " so the axiom schema is sound, as are the other axiom schemata.\n\nThe axiom schemata can be used to calculate the truth, falsity and error conditions of DPL programs as formulas of FOL. If we represent a first order model as a database, then evaluation of DPL in a model reduces to evaluation of first order formulas in the database."
+      ],
+      "predicted_spans": [
+        {
+          "start": 174,
+          "end": 193
+        },
+        {
+          "start": 1296,
+          "end": 1384
+        },
+        {
+          "start": 1891,
+          "end": 1936
+        },
+        {
+          "start": 2489,
+          "end": 2821
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 84,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 4,
+      "latency_s": 1.2092886660248041,
+      "error": null
+    },
     {
       "paper_id": "W06-1805",
       "chunk_index": 14,
@@ -137,7 +444,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.11268583266064525,
       "error": null
     },
     {
@@ -222,7 +529,221 @@
       "any_overlap_hits": 0,
       "gold_count": 3,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.6156902918592095,
+      "error": null
+    },
+    {
+      "paper_id": "W11-0100",
+      "chunk_index": 82,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Because of the low accuracy of axioms 1 and 5, an error analysis was performed. We found that unlike other axioms, these axioms often yield a relation type that is already present in the semantic representation. Specifically, axioms 1 and 5 often yield R( x , z ) when R( x' , z ) is already known.\n\nAn example can be found in Figure 4, where axiom 5 yields ARG1("
+      ],
+      "predicted_spans": [
+        {
+          "start": 23,
+          "end": 386
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 70,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.1984282499179244,
+      "error": null
+    },
+    {
+      "paper_id": "W06-3917",
+      "chunk_index": 4,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.4536310830153525,
+      "error": null
+    },
+    {
+      "paper_id": "H05-1047",
+      "chunk_index": 11,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.38130254205316305,
       "error": null
     },
     {
@@ -302,7 +823,352 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.6299187908880413,
+      "error": null
+    },
+    {
+      "paper_id": "W04-3242",
+      "chunk_index": 8,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.3653374998830259,
+      "error": null
+    },
+    {
+      "paper_id": "2025.findings-acl.361",
+      "chunk_index": 7,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.2684166659601033,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.125",
+      "chunk_index": 3,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.16478624986484647,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.550",
+      "chunk_index": 29,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.4113313751295209,
+      "error": null
+    },
+    {
+      "paper_id": "2025.naacl-long.158",
+      "chunk_index": 24,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.16138483257964253,
       "error": null
     },
     {
@@ -404,7 +1270,7 @@
       "any_overlap_hits": 3,
       "gold_count": 3,
       "pred_count": 3,
-      "latency_s": 0.0,
+      "latency_s": 0.9287556656636298,
       "error": null
     },
     {
@@ -501,7 +1367,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 4,
-      "latency_s": 0.0,
+      "latency_s": 0.3223282094113529,
       "error": null
     },
     {
@@ -583,7 +1449,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.15049999998882413,
       "error": null
     },
     {
@@ -665,7 +1531,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.8333572498522699,
       "error": null
     },
     {
@@ -747,7 +1613,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.734659958165139,
       "error": null
     },
     {
@@ -822,7 +1688,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.598037333227694,
       "error": null
     },
     {
@@ -924,7 +1790,7 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 4,
-      "latency_s": 0.0,
+      "latency_s": 0.40005033276975155,
       "error": null
     },
     {
@@ -999,7 +1865,76 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.2262600832618773,
+      "error": null
+    },
+    {
+      "paper_id": "2023.paclic-1.77",
+      "chunk_index": 7,
+      "query": "hate speech detection downsampled training examples number",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.46320195822045207,
       "error": null
     },
     {
@@ -1074,7 +2009,76 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.12737545790150762,
+      "error": null
+    },
+    {
+      "paper_id": "2022.case-1.1",
+      "chunk_index": 5,
+      "query": "multi-label hate speech dataset multiple annotators features",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.8004315001890063,
       "error": null
     },
     {
@@ -1154,7 +2158,7 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.32671804213896394,
       "error": null
     },
     {
@@ -1256,7 +2260,7 @@
       "any_overlap_hits": 1,
       "gold_count": 4,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.8321977499872446,
       "error": null
     },
     {
@@ -1348,7 +2352,83 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.9035393330268562,
+      "error": null
+    },
+    {
+      "paper_id": "D19-1474",
+      "chunk_index": 14,
+      "query": "multi-label hate speech dataset multiple annotators features",
+      "gold_spans": [],
+      "predicted_texts": [
+        " Multilingual multitask learning also helped tasks where each label had less annotated data associated with it."
+      ],
+      "predicted_spans": [
+        {
+          "start": 414,
+          "end": 525
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 16,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.16947583388537169,
       "error": null
     },
     {
@@ -1435,7 +2515,7 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.17891624988988042,
       "error": null
     },
     {
@@ -1517,7 +2597,647 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.23905029194429517,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 11,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [
+        " observed that MSIT significantly outperforms all baseline methods in both Similar Match and Exact Match metrics across both datasets. On the WOAM dataset, MSIT achieves the highest Similar Match precision of 66.90%, compared to the next best model, GPT-4, which achieves 52.03%. MSIT also excels in recall, with a score of 66.99%, far surpassing the second-best score of 65.35% by GPT-4. In terms of Exact Match, MSIT shows a substantial improvement with a precision of 35.34% and a recall of 52.50%, compared to GPT-4's precision of 15.51% and recall of 41.60%.\n"
+      ],
+      "predicted_spans": [
+        {
+          "start": 359,
+          "end": 923
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 91,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.3381248330697417,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 23,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.13941395794972777,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 25,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1738085406832397,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 21,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7186877089552581,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 6,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7403188748285174,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.44",
+      "chunk_index": 10,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [
+        " indicate that our generated data, \u02dc D , exhibits a significantly",
+        " as well as the dataset enhanced by G"
+      ],
+      "predicted_spans": [
+        {
+          "start": 860,
+          "end": 925
+        },
+        {
+          "start": 975,
+          "end": 1012
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 19,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 2,
+      "latency_s": 0.24611366726458073,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.44",
+      "chunk_index": 28,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.8770438325591385,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 30,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.4632079591974616,
+      "error": null
+    },
+    {
+      "paper_id": "2023.acl-industry.29",
+      "chunk_index": 1,
+      "query": "multimodal attribute extraction input types performance",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.727190958801657,
       "error": null
     },
     {
@@ -1592,7 +3312,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.15904224989935756,
       "error": null
     },
     {
@@ -1679,7 +3399,7 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.1457710829563439,
       "error": null
     },
     {
@@ -1759,7 +3479,214 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.6516457498073578,
+      "error": null
+    },
+    {
+      "paper_id": "2023.acl-industry.29",
+      "chunk_index": 3,
+      "query": "multimodal attribute extraction input types performance",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.21089687524363399,
+      "error": null
+    },
+    {
+      "paper_id": "C00-2099",
+      "chunk_index": 8,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.802075874991715,
+      "error": null
+    },
+    {
+      "paper_id": "C00-1080",
+      "chunk_index": 7,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.22068670811131597,
       "error": null
     },
     {
@@ -1834,7 +3761,76 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.23070633271709085,
+      "error": null
+    },
+    {
+      "paper_id": "U07-1012",
+      "chunk_index": 11,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.13582204189151525,
       "error": null
     },
     {
@@ -1916,7 +3912,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.14873287500813603,
       "error": null
     },
     {
@@ -1991,7 +3987,152 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 1.4133230838924646,
+      "error": null
+    },
+    {
+      "paper_id": "P85-1014",
+      "chunk_index": 10,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Then the predicate findcquivalencos is simply defined ;t~ (fig. 18) :-\n\n```\nfindequivalences(X and Y in S1 and $2) if findcandidates(X and Y in S1 and $2) and not redundant(X Y)\n```\n\nwl.,re redundant implements the two restrictions described.\n\nFig.18: Logic definition of Findeq,ivalences"
+      ],
+      "predicted_spans": [
+        {
+          "start": 2642,
+          "end": 2930
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 44,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.7912164577282965,
+      "error": null
+    },
+    {
+      "paper_id": "C82-2021",
+      "chunk_index": 2,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1377803748473525,
       "error": null
     },
     {
@@ -2071,7 +4212,421 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.2964482922106981,
+      "error": null
+    },
+    {
+      "paper_id": "E89-1002",
+      "chunk_index": 9,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.5726740839891136,
+      "error": null
+    },
+    {
+      "paper_id": "W16-2603",
+      "chunk_index": 10,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.18520249985158443,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 7,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7625015419907868,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 6,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.5585991246625781,
+      "error": null
+    },
+    {
+      "paper_id": "1993.iwpt-1.22",
+      "chunk_index": 16,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1378617500886321,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 16,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1891376250423491,
       "error": null
     },
     {
@@ -2168,7 +4723,7 @@
       "any_overlap_hits": 3,
       "gold_count": 3,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.5340348328463733,
       "error": null
     },
     {
@@ -2255,7 +4810,145 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.8163722921162844,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-demo.19",
+      "chunk_index": 2,
+      "query": "sign language translation video backbone architecture",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.16334199998527765,
+      "error": null
+    },
+    {
+      "paper_id": "2022.emnlp-main.427",
+      "chunk_index": 17,
+      "query": "sign language translation video backbone architecture",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.8201842093840241,
       "error": null
     },
     {
@@ -2342,7 +5035,76 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.1461713328026235,
+      "error": null
+    },
+    {
+      "paper_id": "D16-1047",
+      "chunk_index": 11,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.18046762514859438,
       "error": null
     },
     {
@@ -2422,7 +5184,7 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.39654620876535773,
       "error": null
     },
     {
@@ -2497,7 +5259,145 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.21433970890939236,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.351",
+      "chunk_index": 22,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.2495056251063943,
+      "error": null
+    },
+    {
+      "paper_id": "2025.naacl-long.476",
+      "chunk_index": 19,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.34744820883497596,
       "error": null
     },
     {
@@ -2579,7 +5479,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.28904658323153853,
       "error": null
     },
     {
@@ -2661,7 +5561,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.34265412483364344,
       "error": null
     },
     {
@@ -2748,7 +5648,7 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.71997454110533,
       "error": null
     },
     {
@@ -2835,7 +5735,7 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.23068012529984117,
       "error": null
     },
     {
@@ -2920,7 +5820,7 @@
       "any_overlap_hits": 0,
       "gold_count": 3,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.28270737500861287,
       "error": null
     },
     {
@@ -3002,7 +5902,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.29521691612899303,
       "error": null
     },
     {
@@ -3077,7 +5977,228 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.6301603340543807,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-naacl.136",
+      "chunk_index": 10,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [
+        " handling GC"
+      ],
+      "predicted_spans": [
+        {
+          "start": 1519,
+          "end": 1531
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 2,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.29872008319944143,
+      "error": null
+    },
+    {
+      "paper_id": "2023.findings-acl.740",
+      "chunk_index": 9,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [
+        ". Compared to the lightweight slot-filling classifiers in sketchbased models, recent sequence-to-sequence model decoders rely heavily on grammar-guided decoding processes which requires navigating through a huge search space and requires an even longer inference time than the encoders."
+      ],
+      "predicted_spans": [
+        {
+          "start": 146,
+          "end": 432
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 38,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.16770654171705246,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-naacl.136",
+      "chunk_index": 11,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.3945422079414129,
       "error": null
     },
     {
@@ -3184,7 +6305,7 @@
       "any_overlap_hits": 2,
       "gold_count": 5,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.4584116251207888,
       "error": null
     },
     {
@@ -3281,7 +6402,7 @@
       "any_overlap_hits": 1,
       "gold_count": 4,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.3771417080424726,
       "error": null
     },
     {
@@ -3368,7 +6489,7 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.2205774593167007,
       "error": null
     },
     {
@@ -3450,7 +6571,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.193379542324692,
       "error": null
     },
     {
@@ -3532,7 +6653,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.19149029161781073,
       "error": null
     },
     {
@@ -3619,7 +6740,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 2,
-      "latency_s": 0.0,
+      "latency_s": 0.8915935419499874,
       "error": null
     },
     {
@@ -3694,7 +6815,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.0,
+      "latency_s": 0.9214813751168549,
       "error": null
     },
     {
@@ -3776,7 +6897,421 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.0,
+      "latency_s": 0.5103494999930263,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.27",
+      "chunk_index": 10,
+      "query": "interactive Q&A 5 rounds vs static lesson learning accuracy",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.3878065422177315,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 20,
+      "query": "interactive Q&A 5 rounds vs static lesson learning accuracy",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.42581641720607877,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.120",
+      "chunk_index": 17,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7671147501096129,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-emnlp.433",
+      "chunk_index": 13,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.3961904579773545,
+      "error": null
+    },
+    {
+      "paper_id": "W17-2802",
+      "chunk_index": 14,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.4526466252282262,
+      "error": null
+    },
+    {
+      "paper_id": "W17-2802",
+      "chunk_index": 11,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.39962345780804753,
       "error": null
     },
     {
@@ -3868,7 +7403,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 3,
-      "latency_s": 0.0,
+      "latency_s": 0.8654267909005284,
       "error": null
     },
     {
@@ -3965,7 +7500,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 4,
-      "latency_s": 0.0,
+      "latency_s": 0.7991500836797059,
       "error": null
     },
     {
@@ -4062,7 +7597,214 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 4,
-      "latency_s": 0.0,
+      "latency_s": 0.5921477917581797,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 9,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.9274114589206874,
+      "error": null
+    },
+    {
+      "paper_id": "2022.inlg-main.14",
+      "chunk_index": 10,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.15235320897772908,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 8,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.15256583271548152,
       "error": null
     }
   ]

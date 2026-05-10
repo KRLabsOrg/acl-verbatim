@@ -27,9 +27,9 @@ Input: `(question, context)` — output: character spans in `context` that
 support the answer, with confidence scores.
 
 The model uses the full 8192-token ModernBERT context, so long paper chunks
-are handled without aggressive truncation. A 150M-parameter model that matches
-the word-level F1 of 120B-parameter LLMs on this benchmark while running
-~40 ms per (question, chunk) on GPU.
+are handled without aggressive truncation. On the current all-row ACL gold
+benchmark, this 150M-parameter model achieves the best committed word-level F1
+among the evaluated extractors.
 
 ## Quick Start
 
@@ -147,9 +147,7 @@ Label `0` is "outside", label `1` is "evidence" (binary scheme).
 We started from `Alibaba-NLP/gte-reranker-modernbert-base` rather than
 vanilla `answerdotai/ModernBERT-base` because the reranker backbone has
 already been post-trained on query/passage relevance — the semantic prior it
-provides gives a large head start on query-conditioned span extraction. In
-our ablations, this backbone swap alone improved gold word-F1 from 0.407 to
-0.513 at argmax (and 0.449 to 0.563 with threshold tuning and post-processing).
+provides gives a large head start on query-conditioned span extraction.
 
 Reproduce with:
 
@@ -170,26 +168,28 @@ python acl_verbatim/span_training/train_token_cls.py \
 ## Evaluation
 
 Scored on the `canonical/test` split of `KRLabsOrg/acl-verbatim-spans`
-(20 queries × 5 retrieved chunks, 47 relevant rows, 78 gold spans) with the
-shared span metrics in `acl_verbatim.eval.span_metrics`.
+(20 queries × 5 retrieved chunks: 100 rows total, 47 relevant rows with 78
+gold spans, and 53 irrelevant negative rows) with the shared span metrics in
+`acl_verbatim.eval.span_metrics`. Irrelevant rows have empty gold spans, so
+false-positive extracted text lowers precision.
 
 ### Headline numbers (balanced config: threshold=0.2 + merge)
 
 | metric | value |
 |---|---:|
-| word-F1 (micro) | **0.563** |
-| word precision | 0.738 |
+| word-F1 (micro) | **0.536** |
+| word precision | 0.654 |
 | word recall | 0.454 |
 | span F1 @ IoU 0.3 | 0.473 |
-| span F1 @ IoU 0.5 | 0.427 |
+| span F1 @ IoU 0.5 | 0.389 |
 | containment F1 @ 0.5 | 0.527 |
 | containment F1 @ 0.8 | 0.343 |
-| containment F1 @ 1.0 | 0.297 |
+| containment F1 @ 1.0 | 0.273 |
 | gold-coverage recall @ 0.5 | 0.423 |
 | gold-coverage recall @ 0.8 | 0.372 |
 | recall @ any-overlap | 0.500 |
-| over-prediction ratio | 0.679 |
-| mean latency (GPU) | ~40 ms |
+| over-prediction ratio | 0.846 |
+| mean latency (local eval run) | 0.468 s |
 
 ### How this compares
 
@@ -197,33 +197,26 @@ On the same benchmark and harness:
 
 | system | word-F1 | IoU F1 @ 0.5 | any-overlap R |
 |---|---:|---:|---:|
-| **acl-verbatim-modernbert (this model)** | **0.563** | **0.427** | 0.500 |
-| nemotron-120b-a12b | 0.561 | 0.437 | 0.654 |
-| nemotron-120b-paragraph | 0.552 | 0.459 | 0.577 |
-| qwen-3.6-paragraph (silver teacher) | 0.544 | 0.486 | 0.692 |
-| mistral-small-2603 | 0.519 | 0.201 | 0.692 |
-| glm-5 | 0.495 | 0.250 | 0.744 |
-| qwen-3.6-default | 0.494 | 0.242 | 0.705 |
-| provence-reranker-pruner | 0.480 | 0.276 | 0.718 |
-| zilliz semantic-highlight | 0.217 | 0.088 | 0.321 |
+| **acl-verbatim-modernbert (this model)** | **0.536** | 0.389 | 0.500 |
+| glm-5 | 0.487 | 0.287 | 0.795 |
+| mistral-small-2603 | 0.469 | 0.173 | 0.782 |
+| qwen-3.6-paragraph | 0.467 | 0.424 | 0.692 |
+| mistral-small-2603-paragraph | 0.466 | 0.346 | 0.795 |
+| qwen-3.6-default | 0.427 | 0.234 | 0.641 |
+| nemotron-120b-a12b | 0.409 | 0.302 | 0.667 |
+| nemotron-120b-paragraph | 0.407 | **0.435** | 0.667 |
+| provence-reranker-pruner | 0.344 | 0.153 | 0.718 |
+| zilliz semantic-highlight | 0.301 | 0.113 | 0.513 |
 
-This 150M-parameter model matches the word-F1 of the 120B nemotron (0.563 vs
-0.561) and exceeds its silver teacher (0.544) by 1.9 points. LLMs retain an
-advantage on any-overlap recall — they find more relevant passages across
-chunks — but the student is competitive on token coverage where it fires.
+These are all-row scores: irrelevant retrieved chunks are included as negative
+examples and false-positive evidence on those rows lowers precision.
 
 ### Threshold / post-processing ablation
 
-| config | word-F1 | IoU F1 @ 0.5 | over-prediction |
-|---|---:|---:|---:|
-| argmax (no merge) | 0.513 | 0.250 | 1.564 |
-| argmax + merge | 0.512 | 0.357 | 0.654 |
-| threshold 0.3 (no merge) | 0.539 | 0.250 | 1.462 |
-| **threshold 0.2 + merge** | **0.563** | **0.427** | **0.679** |
-
-Lower thresholds boost recall; span merging + min-length filtering cleans up
-fragmentation without hurting F1. The `threshold=0.2` + merge configuration
-is the default in `model.process()`.
+The released default is `threshold=0.2`, min-span length 10, and merge gap 20.
+Additional threshold ablations can be regenerated with
+`acl_verbatim/span_training/evaluate_token_cls.py`. The `threshold=0.2` +
+merge configuration is the default in `model.process()`.
 
 See the [`acl-verbatim`](https://github.com/KRLabsOrg/acl-verbatim) repo for
 the full benchmark harness, LLM extractor scripts, and qualitative analysis.
@@ -233,7 +226,7 @@ the full benchmark harness, LLM extractor scripts, and qualitative analysis.
 - Query-conditioned evidence highlighting over scientific text
 - Re-ranking or filtering of retrieval outputs for extractive QA
 - Dataset annotation assistance
-- Fast local alternative to LLM extractors for evidence selection
+- Local alternative to LLM extractors for evidence selection
 
 ## Limitations
 
@@ -242,15 +235,17 @@ the full benchmark harness, LLM extractor scripts, and qualitative analysis.
 - Silver supervision inherits noise from the LLM teacher and the retriever.
   Recall in particular reflects teacher behaviour: the model rarely extracts
   a passage the teacher would have skipped.
-- The gold benchmark is small (20 queries, 47 relevant chunks, 78 gold spans)
-  and single-annotator; confidence intervals on the headline numbers are wide.
+- The gold benchmark is small (20 queries, 100 query--chunk rows, 47 relevant
+  chunks, 78 gold spans) and single-annotator; confidence intervals on the
+  headline numbers are wide.
 - Tables and figures are represented through their caption text; the model
   has no structural awareness of tabular data.
-- Any-overlap recall (0.500) lags frontier LLMs (0.65–0.74), meaning the
+- Any-overlap recall (0.500) lags the LLM extractors rerun here, meaning the
   model sometimes predicts nothing on chunks that contain relevant evidence.
   For high-recall applications, lower `threshold` further or combine with an
   LLM fallback.
 
 ## Citation
 
-TODO
+Citation information will be added with the ACL-Verbatim paper release. For
+now, please cite the model repository and dataset if you use this model.

@@ -103,7 +103,7 @@ def main():
         threshold=args.threshold,
         always_select_title=args.always_select_title,
     )
-    rows = [row for row in load_gold_rows(args.gold_file) if row.is_relevant]
+    rows = list(load_gold_rows(args.gold_file))
     args.output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with args.output_file.open("w") as f:
