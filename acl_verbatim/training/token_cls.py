@@ -78,7 +78,7 @@ def row_to_token_examples(
         seq_ids = enc.sequence_ids(i)
         offsets = enc["offset_mapping"][i]
         labels = build_token_labels(seq_ids, offsets, spans, label_scheme)
-        has_labels = any(l not in (-100, 0) for l in labels)
+        has_labels = any(label not in (-100, 0) for label in labels)
         has_positive_window = has_positive_window or has_labels
         window_examples.append(
             {
@@ -280,6 +280,8 @@ def predict_token_records(
     batch_size: int = 4,
     doc_stride: int = 256,
 ) -> list[dict]:
+    import time
+
     import torch
 
     tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=True)
@@ -290,6 +292,7 @@ def predict_token_records(
 
     predictions = []
     for row in tqdm(rows):
+        row_start = time.perf_counter()
         question = row.get("question")
         chunk = row.get("chunk")
         if not question or chunk is None:
@@ -332,6 +335,7 @@ def predict_token_records(
                 "question": question,
                 "paper_id": row.get("paper_id"),
                 "chunk_index": row.get("chunk_index"),
+                "latency_s": time.perf_counter() - row_start,
                 "pred_spans": [
                     {
                         "start": sp["start"],

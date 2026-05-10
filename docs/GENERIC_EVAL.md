@@ -15,10 +15,11 @@ report per-domain numbers and direct comparisons to public baselines.
 
 | name | source | labels | size | notes |
 |---|---|---|---|---|
-| ACL gold | this repo (`333_20260206_dense_top5_20260305.json`) | human-curated | 47 relevant rows | ACL Anthology paper chunks; same set used in the main paper |
+| ACL gold | this repo (`333_20260206_dense_top5_20260305.json`) | human-curated | 100 rows, 47 relevant | ACL Anthology paper chunks; same set used in the main paper |
 | RAGBench test | `galileo-ai/ragbench`, all 12 configs, native `test` split | GPT-4o | ~17k rows | Cross-domain QA: finance, medical, legal, general |
 | Squeez test | `KRLabsOrg/tool-output-extraction-swebench-gliner` native `test` split | GLiNER-style silver | ~1k rows | Coding-agent tool outputs (SWE-bench) |
 | MultiSpanQA valid | [official MultiSpanQA release](https://multi-span.github.io/) | human (BIO) | 653 rows | Direct comparison point — Zilliz and Provence both publish on this set |
+| QASPER test | `allenai/qasper` native test split | human evidence | paragraph/table chunks | Scientific-paper QA with paragraph/table/figure evidence; useful out-of-domain check for the generic model |
 
 For RAGBench and Squeez we use the **source datasets' own test splits**, not
 slices of `verbatim-spans/validation`. This keeps our eval data identical to
@@ -51,6 +52,17 @@ python scripts/experiments/multispanqa_to_gold_file.py \
     /path/to/MultiSpanQA_data/valid.json \
     --output runs/eval/test_slices/multispanqa.gold.jsonl
 
+# QASPER native test
+python scripts/experiments/qasper_to_gold_file.py \
+    --split test \
+    --output runs/eval/test_slices/qasper.gold.jsonl
+
+# Optional long-context stress test over full papers
+python scripts/experiments/qasper_to_gold_file.py \
+    --split test \
+    --context-mode full_paper \
+    --output runs/eval/test_slices/qasper.full_paper.gold.jsonl
+
 # ACL gold benchmark (already in the right format)
 cp 333_20260206_dense_top5_20260305.json runs/eval/test_slices/acl.gold.jsonl
 
@@ -66,7 +78,7 @@ split — see the [main paper](../paper.tex) §4.4 for the threshold-selection
 protocol.
 
 ```bash
-SLICES=(acl ragbench squeez multispanqa)
+SLICES=(acl ragbench squeez multispanqa qasper)
 
 # Generic student
 for S in "${SLICES[@]}"; do
@@ -113,7 +125,7 @@ done
 ## Tabulating per slice
 
 ```bash
-for S in acl ragbench squeez multispanqa; do
+for S in acl ragbench squeez multispanqa qasper; do
   echo "=== $S ==="
   python acl_verbatim/eval/compare_span_runs.py \
     --gold-file runs/eval/test_slices/${S}.gold.jsonl \
@@ -128,6 +140,10 @@ The four printed tables are the spine of the
 [`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2)
 model card.
 
+All commands evaluate every row in the slice. Rows without gold spans naturally
+penalize extractors that emit false-positive text, while correct empty
+predictions on negatives do not inflate token-overlap scores.
+
 ## Caveats
 
 - **Label provenance differs across slices.** ACL gold and MultiSpanQA are
@@ -140,3 +156,8 @@ model card.
 - **MultiSpanQA reconstruction is space-joined tokens.** The dataset only
   ships token-level annotations; we join with single spaces and derive char
   offsets. All systems see the same reconstructed text.
+- **QASPER is chunked by default.** The main QASPER slice uses evidence
+  paragraphs/tables as positive chunks and samples non-evidence chunks from the
+  same paper as negatives. The converter also supports `--context-mode
+  full_paper`, but that should be treated as a long-context stress test rather
+  than the headline comparison against Zilliz and Provence.

@@ -211,6 +211,7 @@ def evaluate_rows_against_predictions(
     rows: Iterable[SpanRow], pred_map: dict[tuple[str, str, int], dict]
 ) -> dict:
     """Score arbitrary predictions against canonical gold rows."""
+    rows = list(rows)
     records: list[dict] = []
     word_tp = word_fp = word_fn = 0
     word_f1_list: list[float] = []
@@ -228,9 +229,7 @@ def evaluate_rows_against_predictions(
     gold_total = 0
     latencies: list[float] = []
 
-    relevant = [row for row in rows if row.is_relevant]
-
-    for row in relevant:
+    for row in rows:
         key = make_prediction_key(row.query, row.paper_id, row.chunk_index)
         pred_record = pred_map.get(key, {})
         predicted_texts, pred_spans = normalize_pred_spans(pred_record, row.chunk)
@@ -369,7 +368,9 @@ def evaluate_rows_against_predictions(
         )
 
     summary = {
-        "n_examples": len(relevant),
+        "n_examples": len(rows),
+        "n_relevant": sum(1 for row in rows if row.is_relevant),
+        "n_irrelevant": sum(1 for row in rows if not row.is_relevant),
         "word_level": {
             "micro_precision": word_micro_p,
             "micro_recall": word_micro_r,

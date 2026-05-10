@@ -2,64 +2,370 @@
   "model": "Qwen/Qwen3.6-35B-A3B",
   "api_base": "http://127.0.0.1:8000/v1",
   "summary": {
-    "n_examples": 47,
+    "n_examples": 100,
+    "n_relevant": 47,
+    "n_irrelevant": 53,
     "word_level": {
-      "micro_precision": 0.5442786069651742,
-      "micro_recall": 0.5440079562406763,
-      "micro_f1": 0.5441432479482716,
-      "macro_f1": 0.520893067933616
+      "micro_precision": 0.39425706472196903,
+      "micro_recall": 0.5735123487485496,
+      "micro_f1": 0.4672834087379297,
+      "macro_f1": 0.2601804857993671
     },
     "span_level_iou": {
       "0.3": {
-        "micro_p": 0.6451612903225806,
-        "micro_r": 0.5128205128205128,
-        "micro_f1": 0.5714285714285714,
-        "macro_f1": 0.5456433637284701
+        "micro_p": 0.41509433962264153,
+        "micro_r": 0.5641025641025641,
+        "micro_f1": 0.4782608695652174,
+        "macro_f1": 0.6192301587301586
       },
       "0.5": {
-        "micro_p": 0.5483870967741935,
-        "micro_r": 0.4358974358974359,
-        "micro_f1": 0.4857142857142857,
-        "macro_f1": 0.46231003039513674
+        "micro_p": 0.36792452830188677,
+        "micro_r": 0.5,
+        "micro_f1": 0.4239130434782608,
+        "macro_f1": 0.5867301587301585
       },
       "0.7": {
-        "micro_p": 0.3709677419354839,
-        "micro_r": 0.2948717948717949,
-        "micro_f1": 0.3285714285714286,
-        "macro_f1": 0.3171732522796353
+        "micro_p": 0.2358490566037736,
+        "micro_r": 0.32051282051282054,
+        "micro_f1": 0.2717391304347826,
+        "macro_f1": 0.5012936507936508
       }
     },
     "containment": {
       "0.5": {
-        "micro_p": 0.6290322580645161,
-        "micro_r": 0.5,
-        "micro_f1": 0.5571428571428572,
-        "macro_f1": 0.5208206686930091
+        "micro_p": 0.41509433962264153,
+        "micro_r": 0.5641025641025641,
+        "micro_f1": 0.4782608695652174,
+        "macro_f1": 0.6142301587301586
       },
       "0.8": {
-        "micro_p": 0.5,
-        "micro_r": 0.3974358974358974,
-        "micro_f1": 0.4428571428571429,
-        "macro_f1": 0.39772036474164124
+        "micro_p": 0.32075471698113206,
+        "micro_r": 0.4358974358974359,
+        "micro_f1": 0.3695652173913044,
+        "macro_f1": 0.5441507936507936
       },
       "1.0": {
-        "micro_p": 0.46774193548387094,
-        "micro_r": 0.3717948717948718,
-        "micro_f1": 0.41428571428571426,
-        "macro_f1": 0.36580547112462
+        "micro_p": 0.3018867924528302,
+        "micro_r": 0.41025641025641024,
+        "micro_f1": 0.34782608695652173,
+        "macro_f1": 0.5291507936507935
       }
     },
     "gold_coverage_recall": {
-      "0.5": 0.6282051282051282,
-      "0.8": 0.5384615384615384,
-      "1.0": 0.46153846153846156
+      "0.5": 0.6153846153846154,
+      "0.8": 0.5128205128205128,
+      "1.0": 0.44871794871794873
     },
     "recall_any_overlap": 0.6923076923076923,
-    "over_prediction_ratio": 0.7948717948717948,
-    "mean_latency_s": 1.9387896471567696,
+    "over_prediction_ratio": 1.358974358974359,
+    "mean_latency_s": 1.1994549428997567,
     "errors": 0
   },
   "records": [
+    {
+      "paper_id": "W06-3917",
+      "chunk_index": 4,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        "The transfer of these specifications must be handled by axiom schemata for classes of concepts: While the temporal specification of a selling act like s in (2) transfers unchanged to b , there is no such transfer of the specification ( s 1 TEMP t 1 ) of a sending act s 1 to the corresponding receiving act s 2 = s k ( s 1 ) . For the latter class we have:"
+      ],
+      "predicted_spans": [
+        {
+          "start": 2175,
+          "end": 2531
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 74,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.6426553081721067,
+      "error": null
+    },
+    {
+      "paper_id": "W11-0100",
+      "chunk_index": 80,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Table 5 shows the eight inference axioms obtained after following the steps depicted in Section 4.1. Note that the matrix is symmetric as stated by the property R 1 \u25e6 R 2 = (R 2 -1 \u25e6 R 1 -1 ) -1 .\n\n- MCAU \u25e6 MLOC -1 \u2192 MLOC -1 , the location of a cause is the same than the location of its effect .\n- MPNC \u25e6 MMNR -1 \u2192 MMNR -1 , the manner of an action is inherited by its purpose .\n- MPNC \u25e6 ARG0 -1 \u2192 ARG0 -1 , the agent of an action is inherited by its purpose ."
+      ],
+      "predicted_spans": [
+        {
+          "start": 492,
+          "end": 953
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 107,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.6426553081721067,
+      "error": null
+    },
+    {
+      "paper_id": "2024.dlnld-1.4",
+      "chunk_index": 6,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        "From the last paragraph, we have enough information to instantiate some axioms in the ULKB theory, the \u2206 above. Axiom 4 tells us that something that is the argument of the ERG unary predicate \\_benzene\\_n\\_1 is the \u00abwsd:benzene\u00bb item in Wikidata. Axiom 5 tells us that the ERG binary predicate \\_mass\\_n\\_of can be translated to the Wikidata property \u00abwsd:mass\u00bb. A Python function in ULKB can construct both axioms; these functions are actually macros in HOL. The function gets the ERG predicates and the mappings from UKB. From the mapping and the type (and arity) of the Wikidata entities (item or property), the function can instantiate the axioms from a set of templates."
+      ],
+      "predicted_spans": [
+        {
+          "start": 2123,
+          "end": 2798
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 112,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.6426553081721067,
+      "error": null
+    },
+    {
+      "paper_id": "E93-1009",
+      "chunk_index": 6,
+      "query": "dataset inference verification Description Logic axiom schema",
+      "gold_spans": [],
+      "predicted_texts": [
+        "The following axiom schemata can be used to compute these conditions as formulas of FOL.\n\n<!-- formula-not-decoded -->\n\n<!-- formula-not-decoded -->\n\n<!-- formula-not-decoded -->\n\n<!-- formula-not-decoded -->\n\n<!-- formula-not-decoded -->\n\n6. [~, ;~:~]~ ~ [~,][~]~.\n7. (-,~)~ ~ (~, ^ [ ~ ] \u00b1 ) .\n8. [-~-]~, ~ ((~)-r v (~, ^ [~-]\u00b1)).\n9. (\u03c0, \u2192 \u03c02) <\u2192 (A [\u03c0](\u03c02)T).\n10. [~r, =~ ~r,]~ ~ (([~',]((~r,)T V [~r,]J\\_)) A ([~r,](~,)T --~ 9))-\n11. (n,,: ,r)~, ~. a~,(,,-)~,.\n12. Nv: ~r]~# --Vv[vr]~.\n13. ( : \u03c0)\u2192 (3!u(\u03c0)TA3u(\u03c0)).\n\n<!-- formula-not-decoded -->\n\nThe most interesting item of this list is the universal schema for t assignment (item 14). To see what it means, note that [~r]m expresses that all output states of ~r are proper. The schema states that the following are equivalent:\n\n- For proper input state A, the program tv : lr does only have proper output states, and all of these satisfy ~a.\n- For proper input state A there is precisely one d E M for which 7r has a proper output on input A[v :- d], and for all d' for which ~r has proper outputs on A[v := d'], all outputs of lr on A[v := d'] are proper and satisfy 9.\n\nIt is not very difficult to see that these are indeed equivalent, so the axiom schema is sound, as are the other axiom schemata."
+      ],
+      "predicted_spans": [
+        {
+          "start": 1296,
+          "end": 2552
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 230,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.6426553081721067,
+      "error": null
+    },
     {
       "paper_id": "W06-1805",
       "chunk_index": 14,
@@ -139,7 +445,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 2.6492317498195916,
+      "latency_s": 1.6426553081721067,
       "error": null
     },
     {
@@ -246,50 +552,39 @@
       "any_overlap_hits": 3,
       "gold_count": 3,
       "pred_count": 4,
-      "latency_s": 5.771702062571421,
+      "latency_s": 3.0741523833945394,
       "error": null
     },
     {
-      "paper_id": "P11-1146",
-      "chunk_index": 5,
+      "paper_id": "W11-0100",
+      "chunk_index": 82,
       "query": "inference patterns from axioms semantic rules dataset characteristics",
-      "gold_spans": [
-        {
-          "start": 23,
-          "end": 78,
-          "text": "Semantic relations are composed using inference axioms."
-        },
-        {
-          "start": 122,
-          "end": 287,
-          "text": "Table 3: The four unique possible axioms taking as premises R 1 and R 2 . Conclusions are indicated by R 3 and are not guaranteed to be the same for the four axioms."
-        }
-      ],
+      "gold_spans": [],
       "predicted_texts": [
-        "ic relations are composed using inference axioms. An axiom is defined by using the composi-\n\nTable 3: The four unique possible axioms taking as premises R 1 and R 2 . Conclusions are indicated by R 3 and are not guaranteed to be the same for the four axioms.\n\n<!-- image -->\n\ntion operator ' \u25e6 '; it combines two relations called premises and yields a conclusion . We denote an axiom as R 1 (x, y) \u25e6 R 2 (y, z) \u2192 R 3 (x, z), where R 1 and R 2 are the premises and R 3 the conclusion. In order to instantiate an axiom, the premises must form a chain by having argument ",
-        "In general, for n relations there are ( n 2 ) pairs. For each pair, taking into account inverse relations, there are 16 possible combinations. Applying property R i \u25e6 R j = ( R j -1 \u25e6 R i -1 ) -1 , only 10 are unique: (a) 4 combine R 1 , R 2 and their inverses (Table 3); (b) 3 combine R 1 and R 1 -1 ; and (c) 3 combine R 2 and R 2 -1 . The most interesting axioms fall into category (a) and there are ( n 2 ) \u00d7 4 + 3 n = 2 \u00d7 n ( n -1) + 3 n = 2 n 2 + n potential axioms in this category.",
-        "epending on n , the number of potential axioms to consider can be significantly large. For n = 20 , there are 820 axioms to explore and for n = 30 , 1,830. Manual examination of those potential ax-\n\nTable 4: Extended definition for the set of relations.\n\n| Relation R | Relation R | Domain | Range | P 1 R | P 2 R | P 3 R | P 4 R | P 5 R | P 6 R | P 7 R | P 8 R | P 9 R | P 10 R | P 11 R |\n|--------------|--------------|--------------|--------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------|----------|\n| a: CAU | CAUSE | si | si | + | + | - | + | + | - | + | 0 | - | + | + |\n| b: INT | INTENT | si | aco | + | + | - | + | - | - | - | + | - | 0 | - |\n| c: PRP | PURPOSE | si , ao | si , co , ao | + | - | - | + | - | - | - | - | - | 0 | - |\n| d: AGT | AGENT | aco | si | + | + | - | + | 0 | - | - | + | - | 0 | 0 |\n| e: MNR | MANNER | st , ao , ql | si | + | - | - | + | 0 | - | - | + | - | 0 | 0 |\n| f : AT-L | AT-LOCATION | o , si | loc | + | + | - | 0 | 0 | + | - | 0 | - | 0 | 0 |\n| g: AT-T | AT-TIME | o , si | tmp | + | + | - | 0 | 0 | + | - | 0 | - | 0 | 0 |\n| h: SYN | SYNONYMY | ent | ent | + | - | + | 0 | 0 | 0 | + | 0 | + | 0 | 0 |\n\nioms would be time-consuming and prone to errors. We avoid this by using the extended definition and the algebra for composing primitive"
+        "Because of the low accuracy of axioms 1 and 5, an error analysis was performed. We found that unlike other axioms, these axioms often yield a relation type that is already present in the semantic representation. Specifically, axioms 1 and 5 often yield R( x , z ) when R( x' , z ) is already known.",
+        "An example can be found in Figure 4, where axiom 5 yields ARG1( orders , to buy ) when the relation ARG1( the basket , to buy ) is already present. We use the following heuristic in order to improve the accuracy of axioms 1 and 5: do not instantiate an axiom R 1 ( x , y ) \u25e6 R 2 ( y , z ) \u2192 R 3 ( x , z ) if a relation of the form R 3 ( x' , z ) is already known.",
+        "This simple heuristic allows us to augment the accuracy of the inferences at the cost of lowering their productivity. The last three columns in Table 7 show results when using the heuristic. The eight axioms add 840 relations (1.35% in relative terms) with an accuracy of 0.86."
       ],
       "predicted_spans": [
         {
-          "start": 29,
-          "end": 597
+          "start": 23,
+          "end": 321
         },
         {
-          "start": 611,
-          "end": 1100
+          "start": 323,
+          "end": 686
         },
         {
-          "start": 1103,
-          "end": 2445
+          "start": 688,
+          "end": 965
         }
       ],
       "word_metrics": {
-        "p": 0.06446540880503145,
-        "r": 1.0,
-        "f1": 0.12112259970457903,
-        "tp": 41,
-        "fp": 595,
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 195,
         "fn": 0
       },
       "iou_metrics_by_threshold": {
@@ -299,7 +594,7 @@
           "f1": 0.0,
           "tp": 0,
           "fp": 3,
-          "fn": 2
+          "fn": 0
         },
         "0.5": {
           "p": 0.0,
@@ -307,7 +602,7 @@
           "f1": 0.0,
           "tp": 0,
           "fp": 3,
-          "fn": 2
+          "fn": 0
         },
         "0.7": {
           "p": 0.0,
@@ -315,7 +610,7 @@
           "f1": 0.0,
           "tp": 0,
           "fp": 3,
-          "fn": 2
+          "fn": 0
         }
       },
       "containment_metrics_by_threshold": {
@@ -338,12 +633,651 @@
       "gold_coverage_recall_by_threshold": {
         "0.5": 1.0,
         "0.8": 1.0,
-        "1.0": 0.5
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 3,
+      "latency_s": 3.0741523833945394,
+      "error": null
+    },
+    {
+      "paper_id": "W06-3917",
+      "chunk_index": 4,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [],
+      "predicted_texts": [
+        "While a logical expression is either true or false in first-order logic (FOL), a semantic formalism dealing with NL must support different degrees of reliability. Moreover, logical calculi normally do not give a clue how to use the axioms in an effective inference strategy. These considerations suggest the following cross-classification of axioms.",
+        "R-axioms. From a syntactical point of view, there are two types of expressions describing axiomatic knowledge. The first type contains no lexical constants but only relation and function symbols (apart from logical signs). These expressions are called conceptually non-bound or R-Axioms . The following R-Axiom connects causality and time, saying that effects never take place before the cause: ( x CAUS y ) \u2192\u00ac ( y ANTE x ) (1) Other examples are given by axioms (4), (5), (7) below. Axioms which are conceptually not bound have to be treated with care by the reasoner, since an R-axiom for a relation R can be applied in inferences over the SN wherever R is involved (global effect). Inter alia, R-axioms serve to express the symmetry or transitivity of relations, i.e. properties which are difficult to handle efficiently.",
+        "B-axioms. Axioms containing the representative of at least one concept are called conceptually bound or B-axioms. Thus, with every selling act s there is a buying act b entailed by s . The corresponding relationship is given by the following axiom: ( s SUBS sell ) \u2227 ( s AGT a ) \u2227 ( s OBJ o ) \u2227 ( s ORNT d ) \u2192",
+        "Another example of a B-axiom is (6) which contains only one concept. Such B-axioms have only a local effect, i.e. they are applied only in those cases where one concept has to be connected to another during the inference process. Here, we meet the Frame Problem in Artificial Intelligence: In a B-axiom like (2), only the change of participant roles (like AGT, AFF, AVRT, and OBJ) is specified, but nothing is said about the local, temporal and circumstantial embedding of the main situation (mainly represented by LOC, TEMP, and CIRC, resp.) The transfer of these specifications must be handled by axiom schemata for classes of concepts: While the temporal specification of a selling act like s in (2) transfers unchanged to b , there is no such transfer of the specification ( s 1 TEMP t 1 ) of a sending act s 1 to the corresponding receiving act s 2 = s k ( s 1 ) . For the latter class we have:"
+      ],
+      "predicted_spans": [
+        {
+          "start": 53,
+          "end": 402
+        },
+        {
+          "start": 465,
+          "end": 1289
+        },
+        {
+          "start": 1291,
+          "end": 1600
+        },
+        {
+          "start": 1632,
+          "end": 2531
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 418,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 4,
+      "latency_s": 3.0741523833945394,
+      "error": null
+    },
+    {
+      "paper_id": "H05-1047",
+      "chunk_index": 11,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [],
+      "predicted_texts": [
+        "We measured the applicability of our set of semantic rules, by counting the number of times they extract new semantic information from text. Table 6 shows, in percentages, the coverage of the semantic axioms when applied to the texts T and the hypotheses H . Wealso show the number of times the semantic rules solve a ( T, H ) entailment without employing any other type of axioms.",
+        "Table 6: Applicability on the RTE data",
+        "Clearly, because the texts T convey much more information than H , they are the ones that beneGLYPH<2>t the most from our semantic axioms. The hypotheses H are more straightforward and a semantic parser can extract all their semantic information. Also, the rules tend to solve more positive ( T, H ) entailments. Because there are seven subsets corresponding to different NLP applications that make up the RTE data, we analyzed the contribution of our semantic axioms to each of the seven tasks. Table 5 shows the axioms' impact on each type of data. The logic-based approach proves to be useful to tasks like Information Extraction, Reading Comprehension, or Comparable Documents, and it doesn't seem to be the right choice for the more lexical-orientated applications like Paraphrase Acquisition, Machine Translation, and Information Retrieval."
+      ],
+      "predicted_spans": [
+        {
+          "start": 37,
+          "end": 418
+        },
+        {
+          "start": 420,
+          "end": 458
+        },
+        {
+          "start": 1144,
+          "end": 1990
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 208,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 3,
+      "latency_s": 3.0741523833945394,
+      "error": null
+    },
+    {
+      "paper_id": "P11-1146",
+      "chunk_index": 5,
+      "query": "inference patterns from axioms semantic rules dataset characteristics",
+      "gold_spans": [
+        {
+          "start": 23,
+          "end": 78,
+          "text": "Semantic relations are composed using inference axioms."
+        },
+        {
+          "start": 122,
+          "end": 287,
+          "text": "Table 3: The four unique possible axioms taking as premises R 1 and R 2 . Conclusions are indicated by R 3 and are not guaranteed to be the same for the four axioms."
+        }
+      ],
+      "predicted_texts": [
+        "Semantic relations are composed using inference axioms. An axiom is defined by using the composi-",
+        "Table 3: The four unique possible axioms taking as premises R 1 and R 2 . Conclusions are indicated by R 3 and are not guaranteed to be the same for the four axioms.",
+        "tion operator ' \u25e6 '; it combines two relations called premises and yields a conclusion . We denote an axiom as R 1 (x, y) \u25e6 R 2 (y, z) \u2192 R 3 (x, z), where R 1 and R 2 are the premises and R 3 the conclusion. In order to instantiate an axiom, the premises must form a chain by having argument y in common.",
+        "In general, for n relations there are ( n 2 ) pairs. For each pair, taking into account inverse relations, there are 16 possible combinations. Applying property R i \u25e6 R j = ( R j -1 \u25e6 R i -1 ) -1 , only 10 are unique: (a) 4 combine R 1 , R 2 and their inverses (Table 3); (b) 3 combine R 1 and R 1 -1 ; and (c) 3 combine R 2 and R 2 -1 . The most interesting axioms fall into category (a) and there are ( n 2 ) \u00d7 4 + 3 n = 2 \u00d7 n ( n -1) + 3 n = 2 n 2 + n potential axioms in this category.",
+        "Depending on n , the number of potential axioms to consider can be significantly large. For n = 20 , there are 820 axioms to explore and for n = 30 , 1,830. Manual examination of those potential ax-",
+        "Table 4: Extended definition for the set of relations.",
+        "ioms would be time-consuming and prone to errors. We avoid this by using the extended definition and the algebra for composing primitives."
+      ],
+      "predicted_spans": [
+        {
+          "start": 23,
+          "end": 120
+        },
+        {
+          "start": 122,
+          "end": 287
+        },
+        {
+          "start": 305,
+          "end": 609
+        },
+        {
+          "start": 611,
+          "end": 1100
+        },
+        {
+          "start": 1102,
+          "end": 1300
+        },
+        {
+          "start": 1302,
+          "end": 1356
+        },
+        {
+          "start": 2309,
+          "end": 2447
+        }
+      ],
+      "word_metrics": {
+        "p": 0.13268608414239483,
+        "r": 1.0,
+        "f1": 0.23428571428571426,
+        "tp": 41,
+        "fp": 268,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.2857142857142857,
+          "r": 1.0,
+          "f1": 0.4444444444444445,
+          "tp": 2,
+          "fp": 5,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.2857142857142857,
+          "r": 1.0,
+          "f1": 0.4444444444444445,
+          "tp": 2,
+          "fp": 5,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.14285714285714285,
+          "r": 0.5,
+          "f1": 0.22222222222222224,
+          "tp": 1,
+          "fp": 6,
+          "fn": 1
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.2857142857142857,
+          "r": 1.0,
+          "f1": 0.4444444444444445
+        },
+        "0.8": {
+          "p": 0.14285714285714285,
+          "r": 0.5,
+          "f1": 0.22222222222222224
+        },
+        "1.0": {
+          "p": 0.14285714285714285,
+          "r": 0.5,
+          "f1": 0.22222222222222224
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
       },
       "any_overlap_hits": 2,
       "gold_count": 2,
-      "pred_count": 3,
-      "latency_s": 5.771702062571421,
+      "pred_count": 7,
+      "latency_s": 3.0741523833945394,
+      "error": null
+    },
+    {
+      "paper_id": "W04-3242",
+      "chunk_index": 8,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1265809666365385,
+      "error": null
+    },
+    {
+      "paper_id": "2025.findings-acl.361",
+      "chunk_index": 7,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1265809666365385,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.125",
+      "chunk_index": 3,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1265809666365385,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.550",
+      "chunk_index": 29,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1265809666365385,
+      "error": null
+    },
+    {
+      "paper_id": "2025.naacl-long.158",
+      "chunk_index": 24,
+      "query": "tree vertex identification algorithm LiDAR tree height step by step",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.1265809666365385,
       "error": null
     },
     {
@@ -435,7 +1369,7 @@
       "any_overlap_hits": 2,
       "gold_count": 3,
       "pred_count": 1,
-      "latency_s": 3.174365575006232,
+      "latency_s": 2.758913099952042,
       "error": null
     },
     {
@@ -517,7 +1451,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 3.174365575006232,
+      "latency_s": 2.758913099952042,
       "error": null
     },
     {
@@ -599,7 +1533,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 3.174365575006232,
+      "latency_s": 2.758913099952042,
       "error": null
     },
     {
@@ -691,7 +1625,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 3,
-      "latency_s": 3.174365575006232,
+      "latency_s": 2.758913099952042,
       "error": null
     },
     {
@@ -773,7 +1707,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 3.174365575006232,
+      "latency_s": 2.758913099952042,
       "error": null
     },
     {
@@ -848,7 +1782,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 1.6278691354673356,
+      "latency_s": 0.6986241250298917,
       "error": null
     },
     {
@@ -868,21 +1802,26 @@
         }
       ],
       "predicted_texts": [
-        "Reducing neutral and offensive language classes to match the number of hate speech instances resulted in decreased performance across models (Table 5). LitLat BERT (0.74 accuracy, 0.74 weighted F1score) and Electra (0.69 accuracy, 0.69 weighted F1-score) were the top performers, but overall accuracy dropped compared to over-sampling.\n\nTraditional classifiers, SVM and Random Forest, dropped significantly (SVM: 0.64 accuracy, Random Forest: 0.56 accuracy), highlighting their dependency on larger training datasets. RWKV struggled (0.40 accuracy, 0.41 weighted F1-score), reaffirming its weaker performance in hate speech detection.\n\nTable 6 demonstrates the effect of undersampling alongside augmentation. LitLat BERT and Multilingual BERT achieved identical accuracy scores of 0.76, showing that even with fewer training examples, augmentation provided a performance boost. Electra, however, saw a slight drop in accuracy to 0.68, suggesting that it relies more on a larger dataset to generalize well. RWKV improved from 0.40 to 0.53 accuracy, though it still under-\n\nTable 5: Model Performance with Dataset Balanced via Under-Sampling\n\n| Model | Accuracy | Weighted F1-score |\n|-------------------|------------|---------------------|\n| CNN | 0.6 | 0.58 |\n| LSTM | 0.62 | 0.59 |\n| BiLSTM | 0.62 | 0.61 |\n| RWKV | 0.4 | 0.41 |\n| SVM | 0.64 | 0.62 |\n| Random Forest | 0.56 | 0.52 |\n| LitLat BERT | 0.74 | 0.74 |\n| Electra | 0.69 | 0.69 |\n| Multilingual BERT | 0.68 | 0.68 |\n\nperformed compared to transformer-based models. While under-sampling with augmentation was beneficial, it proved less effective than over-sampling approaches.\n\nTable 6: Effect of Under-Sampling and Data Augmentation on Model Performance\n\n| Model | Accuracy | Weighted F1-score |\n|-------------------|------------|---------------------|\n| RWKV | 0.53 | 0.52 |\n| LitLat BERT | 0.76 | 0.77 |\n| Electra | 0.68 | 0.67 |\n| Multilingual BERT | 0.76 | 0.75 |"
+        "Reducing neutral and offensive language classes to match the number of hate speech instances resulted in decreased performance across models (Table 5). LitLat BERT (0.74 accuracy, 0.74 weighted F1score) and Electra (0.69 accuracy, 0.69 weighted F1-score) were the top performers, but overall accuracy dropped compared to over-sampling.",
+        "Table 5: Model Performance with Dataset Balanced via Under-Sampling\n\n| Model | Accuracy | Weighted F1-score |\n|-------------------|------------|---------------------|\n| CNN | 0.6 | 0.58 |\n| LSTM | 0.62 | 0.59 |\n| BiLSTM | 0.62 | 0.61 |\n| RWKV | 0.4 | 0.41 |\n| SVM | 0.64 | 0.62 |\n| Random Forest | 0.56 | 0.52 |\n| LitLat BERT | 0.74 | 0.74 |\n| Electra | 0.69 | 0.69 |\n| Multilingual BERT | 0.68 | 0.68 |"
       ],
       "predicted_spans": [
         {
           "start": 71,
-          "end": 1998
+          "end": 406
+        },
+        {
+          "start": 1143,
+          "end": 1546
         }
       ],
       "word_metrics": {
-        "p": 0.07973421926910298,
-        "r": 1.0,
-        "f1": 0.14769230769230768,
-        "tp": 24,
-        "fp": 277,
-        "fn": 0
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 131,
+        "fn": 24
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -890,7 +1829,7 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
+          "fp": 2,
           "fn": 2
         },
         "0.5": {
@@ -898,7 +1837,7 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
+          "fp": 2,
           "fn": 2
         },
         "0.7": {
@@ -906,7 +1845,7 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
+          "fp": 2,
           "fn": 2
         }
       },
@@ -928,14 +1867,14 @@
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 1.0,
-        "0.8": 1.0,
-        "1.0": 1.0
+        "0.5": 0.0,
+        "0.8": 0.0,
+        "1.0": 0.0
       },
-      "any_overlap_hits": 2,
+      "any_overlap_hits": 0,
       "gold_count": 2,
-      "pred_count": 1,
-      "latency_s": 1.6278691354673356,
+      "pred_count": 2,
+      "latency_s": 0.6986241250298917,
       "error": null
     },
     {
@@ -950,20 +1889,20 @@
         }
       ],
       "predicted_texts": [
-        "The experiments are based on a balanced subset of labelled sentences. All the sentences labelled as HATE have been collected, and an equivalent number of NOHATE sentences have been randomly sampled, summing up 2k labelled sentences. From this amount, the 80% has been used for training and the remaining 20% for testing."
+        "The experiments are based on a balanced subset of labelled sentences. All the sentences labelled as HATE have been collected, and an equivalent number of NOHATE sentences have been randomly sampled, summing up 2k labelled sentences."
       ],
       "predicted_spans": [
         {
           "start": 29,
-          "end": 349
+          "end": 261
         }
       ],
       "word_metrics": {
-        "p": 0.4807692307692308,
+        "p": 0.6944444444444444,
         "r": 1.0,
-        "f1": 0.6493506493506493,
+        "f1": 0.819672131147541,
         "tp": 25,
-        "fp": 27,
+        "fp": 11,
         "fn": 0
       },
       "iou_metrics_by_threshold": {
@@ -1017,7 +1956,76 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.6278691354673356,
+      "latency_s": 0.6986241250298917,
+      "error": null
+    },
+    {
+      "paper_id": "2023.paclic-1.77",
+      "chunk_index": 7,
+      "query": "hate speech detection downsampled training examples number",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.6986241250298917,
       "error": null
     },
     {
@@ -1031,15 +2039,98 @@
           "text": "The experimental results in Table 2 have shown that the incorporation of negative samples during training has significantly improved the performance-the model trained with 95% of hate class outperforms those models trained with 100% hate speech features."
         }
       ],
-      "predicted_texts": [],
-      "predicted_spans": [],
+      "predicted_texts": [
+        "The experimental results in Table 2 have shown that the incorporation of negative samples during training has significantly improved the performance-the model trained with 95% of hate class outperforms those models trained with 100% hate speech features."
+      ],
+      "predicted_spans": [
+        {
+          "start": 280,
+          "end": 534
+        }
+      ],
+      "word_metrics": {
+        "p": 1.0,
+        "r": 1.0,
+        "f1": 1.0,
+        "tp": 37,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 1,
+      "gold_count": 1,
+      "pred_count": 1,
+      "latency_s": 0.6986241250298917,
+      "error": null
+    },
+    {
+      "paper_id": "2022.case-1.1",
+      "chunk_index": 5,
+      "query": "multi-label hate speech dataset multiple annotators features",
+      "gold_spans": [],
+      "predicted_texts": [
+        "t statistics.\n\n| Labels | No. of Tweets | Avg. char/ tweet | Avg word/ tweet |\n|----------|-----------------|--------------------|-------------------|\n| Hate | 746 | 60.88 | 9.68 |\n| No Hate | 4934 | 64.48 | 10.03 |\n\nenced researchers in NLP research involving the data collection and establishment of benchmarks. This helped to frame clear instructions and ensure the quality of annotations. In the literature, it has been discussed that having a diverse range of annotators is useful to mitigate bias (Vargas et al., 2022). The annotators were volunteers and did not receive any remunerations. Since labeling tweets involving both text and image is challenging, we made the annotations go through three phases. In the first phase, we run a pilot annotation for 50 tweets to ensure that everyone understood the instructions. Each of the four members annotated the tweets. The instructions were revised to clarify that they addressed all the confusion that annotators had. In the second phase, all four annotators were made to annotate 200 tweets. The purpose of the second phase was to make sure that the instructions revised after the first stage were clear enough. In the third stage, a group discussion was done regarding the conflicts in annotation (Table 3). The instructions became apparent, and the annotators annotated all of the datasets."
+      ],
+      "predicted_spans": [
+        {
+          "start": 1226,
+          "end": 2574
+        }
+      ],
       "word_metrics": {
         "p": 0.0,
         "r": 0.0,
         "f1": 0.0,
         "tp": 0,
-        "fp": 0,
-        "fn": 37
+        "fp": 217,
+        "fn": 0
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -1047,24 +2138,24 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 0
         },
         "0.5": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 0
         },
         "0.7": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 0
         }
       },
       "containment_metrics_by_threshold": {
@@ -1085,14 +2176,14 @@
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 0.0,
-        "0.8": 0.0,
-        "1.0": 0.0
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
       },
       "any_overlap_hits": 0,
-      "gold_count": 1,
-      "pred_count": 0,
-      "latency_s": 1.6278691354673356,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.5766234500333667,
       "error": null
     },
     {
@@ -1111,68 +2202,75 @@
           "text": "We requested native speakers to annotate the data and chose annotators with good reputation scores (more than 0.90). We informed the annotator in the guidelines, that in case of noticeable patterns of random labeling on a substantial number of tweets, their work will be rejected and we may have to block them. Since the rejection affects the reputation of the annotators and their chances to get new tasks on Amazon Mechanical Turk, wellreputed annotators are usually reliable. We have divided our corpora into smaller batches on Amazon Mechanical Turk in order to facilitate the analysis of the annotations of the workers and, fairly identify any incoherence patterns possibly caused by the use of an automatic translation system on the tweets, or the repetition of the same annotation schema. If we reject the work of a scam, we notify them, then reassign the tasks to other annotators."
         }
       ],
-      "predicted_texts": [],
-      "predicted_spans": [],
+      "predicted_texts": [
+        "We requested native speakers to annotate the data and chose annotators with good reputation scores (more than 0.90). We informed the annotator in the guidelines, that in case of noticeable patterns of random labeling on a substantial number of tweets, their work will be rejected and we may have to block them. Since the rejection affects the reputation of the annotators and their chances to get new tasks on Amazon Mechanical Turk, wellreputed annotators are usually reliable. We have divided our corpora into smaller batches on Amazon Mechanical Turk in order to facilitate the analysis of the annotations of the workers and, fairly identify any incoherence patterns possibly caused by the use of an automatic translation system on the tweets, or the repetition of the same annotation schema. If we reject the work of a scam, we notify them, then reassign the tasks to other annotators."
+      ],
+      "predicted_spans": [
+        {
+          "start": 1411,
+          "end": 2300
+        }
+      ],
       "word_metrics": {
-        "p": 0.0,
-        "r": 0.0,
-        "f1": 0.0,
-        "tp": 0,
+        "p": 1.0,
+        "r": 0.5703125,
+        "f1": 0.7263681592039801,
+        "tp": 146,
         "fp": 0,
-        "fn": 256
+        "fn": 110
       },
       "iou_metrics_by_threshold": {
         "0.3": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0,
-          "tp": 0,
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 1,
           "fp": 0,
-          "fn": 2
+          "fn": 1
         },
         "0.5": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0,
-          "tp": 0,
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 1,
           "fp": 0,
-          "fn": 2
+          "fn": 1
         },
         "0.7": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0,
-          "tp": 0,
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 1,
           "fp": 0,
-          "fn": 2
+          "fn": 1
         }
       },
       "containment_metrics_by_threshold": {
         "0.5": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666
         },
         "0.8": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666
         },
         "1.0": {
-          "p": 0.0,
-          "r": 0.0,
-          "f1": 0.0
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.6666666666666666
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 0.0,
-        "0.8": 0.0,
-        "1.0": 0.0
+        "0.5": 0.5,
+        "0.8": 0.5,
+        "1.0": 0.5
       },
-      "any_overlap_hits": 0,
+      "any_overlap_hits": 1,
       "gold_count": 2,
-      "pred_count": 0,
-      "latency_s": 1.9629444583163906,
+      "pred_count": 1,
+      "latency_s": 1.5766234500333667,
       "error": null
     },
     {
@@ -1202,17 +2300,17 @@
         }
       ],
       "predicted_texts": [
-        "Table 2: The label distributions of each task. The counts of direct and indirect hate speech include all tweets except those that are single labeled as 'normal'. Tweet and annotator's sentiment (Annotator) are multilabel classification tasks, while target attribute (Target) and target group (Group) are not.",
-        " Weassigned each tweet to five annotators, then applied majority voting to each of the labeling tasks. Given the numbers of annotators and labels in each annotation sub-task, we allowed multilabel annotations in the most subjective classification tasks, namely the hostility type and the annotator's sentiment labels, in order to keep the right human-like approximations. If there are two annotators agreeing on two labels respectively, we add both labels to the annotation."
+        "Weassigned each tweet to five annotators, then applied majority voting to each of the labeling tasks. Given the numbers of annotators and labels in each annotation sub-task, we allowed multilabel annotations in the most subjective classification tasks, namely the hostility type and the annotator's sentiment labels, in order to keep the right human-like approximations. If there are two annotators agreeing on two labels respectively, we add both labels to the annotation.",
+        "Table 2: The label distributions of each task. The counts of direct and indirect hate speech include all tweets except those that are single labeled as 'normal'. Tweet and annotator's sentiment (Annotator) are multilabel classification tasks, while target attribute (Target) and target group (Group) are not."
       ],
       "predicted_spans": [
         {
-          "start": 1195,
-          "end": 1503
+          "start": 676,
+          "end": 1149
         },
         {
-          "start": 675,
-          "end": 1149
+          "start": 1195,
+          "end": 1503
         }
       ],
       "word_metrics": {
@@ -1274,7 +2372,7 @@
       "any_overlap_hits": 1,
       "gold_count": 4,
       "pred_count": 2,
-      "latency_s": 1.9629444583163906,
+      "latency_s": 1.5766234500333667,
       "error": null
     },
     {
@@ -1361,7 +2459,76 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 1.9629444583163906,
+      "latency_s": 1.5766234500333667,
+      "error": null
+    },
+    {
+      "paper_id": "D19-1474",
+      "chunk_index": 14,
+      "query": "multi-label hate speech dataset multiple annotators features",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.5766234500333667,
       "error": null
     },
     {
@@ -1381,21 +2548,21 @@
         }
       ],
       "predicted_texts": [
-        "The bar chart in Figure 4 illustrates the performance of MSIT compared to GPT-4 across different input types: images, bullet points, and titles. As illustrated in Figure 4, our MSIT method generally exhibits superior performance across most metrics. For instance, MSIT achieves a notable Similar Match Precision of 69.21% for images, compared to GPT-4's 63.81%, and an Exact Match\n\nPrecision of 40.96% versus GPT-4's 23.81%. Furthermore, MSIT outperforms GPT-4 significantly in bullet points recall, achieving a Similar Match Recall of 58.37% compared to GPT-4's 47.19%. Additionally, from the recall distribution it could be observed that images consistently yield a high number of extracted attributes. This observation underscores the validity of our multimodal approach, affirming that leveraging multiple modalities can uncover an extensive range of product attributes"
+        "he bar chart in Figure 4 illustrates the performance of MSIT compared to GPT-4 across different input types: images, bullet points, and titles. As illustrated in Figure 4, our MSIT method generally exhibits superior performance across most metrics. For instance, MSIT achieves a notable Similar Match Precision of 69.21% for images, compared to GPT-4's 63.81%, and an Exact Match\n\nPrecision of 40.96% versus GPT-4's 23.81%. Furthermore, MSIT outperforms GPT-4 significantly in bullet points recall, achieving a Similar Match Recall of 58.37% compared to GPT-4's 47.19%."
       ],
       "predicted_spans": [
         {
-          "start": 58,
-          "end": 931
+          "start": 59,
+          "end": 628
         }
       ],
       "word_metrics": {
         "p": 1.0,
-        "r": 1.0,
-        "f1": 1.0,
-        "tp": 126,
+        "r": 0.6746031746031746,
+        "f1": 0.8056872037914692,
+        "tp": 85,
         "fp": 0,
-        "fn": 0
+        "fn": 41
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -1441,14 +2608,14 @@
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 1.0,
-        "0.8": 1.0,
-        "1.0": 0.5
+        "0.5": 0.5,
+        "0.8": 0.5,
+        "1.0": 0.0
       },
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 1.8011772704776376,
+      "latency_s": 0.7693604833446444,
       "error": null
     },
     {
@@ -1530,7 +2697,642 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.8011772704776376,
+      "latency_s": 0.7693604833446444,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 11,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [
+        "On the WOAM dataset, MSIT achieves the highest Similar Match precision of 66.90%, compared to the next best model, GPT-4, which achieves 52.03%. MSIT also excels in recall, with a score of 66.99%, far surpassing the second-best score of 65.35% by GPT-4. In terms of Exact Match, MSIT shows a substantial improvement with a precision of 35.34% and a recall of 52.50%, compared to GPT-4's precision of 15.51% and recall of 41.60%."
+      ],
+      "predicted_spans": [
+        {
+          "start": 494,
+          "end": 922
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 72,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.7693604833446444,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 23,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7693604833446444,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.85",
+      "chunk_index": 25,
+      "query": "MSIT vs GPT-4 attribute extraction precision images bullet points titles",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.7693604833446444,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 21,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23952449178323149,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 6,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Results As shown in Table 2, all the GPT models outperform BioViL-T, achieving new SOTA. In particular, GPT-4 significantly outperforms both text-davinci-003 and ChatGPT on MS-CXR-T, indicating an advanced understanding of disease progression."
+      ],
+      "predicted_spans": [
+        {
+          "start": 909,
+          "end": 1152
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 33,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.23952449178323149,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.44",
+      "chunk_index": 10,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23952449178323149,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-main.44",
+      "chunk_index": 28,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23952449178323149,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.891",
+      "chunk_index": 30,
+      "query": "MSIT Similar Match Precision images GPT-4 comparison",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23952449178323149,
+      "error": null
+    },
+    {
+      "paper_id": "2023.acl-industry.29",
+      "chunk_index": 1,
+      "query": "multimodal attribute extraction input types performance",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.43580589154735205,
       "error": null
     },
     {
@@ -1605,7 +3407,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.7376079583385339,
+      "latency_s": 0.43580589154735205,
       "error": null
     },
     {
@@ -1692,7 +3494,7 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 0.7376079583385339,
+      "latency_s": 0.43580589154735205,
       "error": null
     },
     {
@@ -1772,7 +3574,221 @@
       "any_overlap_hits": 0,
       "gold_count": 2,
       "pred_count": 0,
-      "latency_s": 0.7376079583385339,
+      "latency_s": 0.43580589154735205,
+      "error": null
+    },
+    {
+      "paper_id": "2023.acl-industry.29",
+      "chunk_index": 3,
+      "query": "multimodal attribute extraction input types performance",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.43580589154735205,
+      "error": null
+    },
+    {
+      "paper_id": "C00-2099",
+      "chunk_index": 8,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [
+        "To avoid the combinatorial explosion of un/restricted string merging/, we only allow edges with continuous indices to be converted into PPF entries/, with the exception of a very limited class of lexically signaled nuclei/, such as the ne pas /, ne jamais /, etc/./, scheme of French negation/."
+      ],
+      "predicted_spans": [
+        {
+          "start": 4632,
+          "end": 4926
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 48,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.47437232499942183,
+      "error": null
+    },
+    {
+      "paper_id": "C00-1080",
+      "chunk_index": 7,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.47437232499942183,
       "error": null
     },
     {
@@ -1847,7 +3863,76 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.9039087705314159,
+      "latency_s": 0.47437232499942183,
+      "error": null
+    },
+    {
+      "paper_id": "U07-1012",
+      "chunk_index": 11,
+      "query": "chart parsing merge predicate",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.47437232499942183,
       "error": null
     },
     {
@@ -1929,7 +4014,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.9039087705314159,
+      "latency_s": 0.47437232499942183,
       "error": null
     },
     {
@@ -1944,12 +4029,118 @@
         }
       ],
       "predicted_texts": [
-        "e x 's left- and rightmost child. (b) feature window. (c) kernel features.\n\n<!-- image -->\n\n(i.e., same step) if they have the same feature values, because they will have the same costs as shown in the deductive system in Figure 1. Thus we can define two states \u3008 j, S \u3009 and \u3008 j \u2032 , S \u2032 \u3009 to be equivalent, notated \u3008 j, S \u3009 \u223c \u3008 j \u2032 , S \u2032 \u3009 , iff.\n"
+        "The key observation for dynamic programming is to merge 'equivalent states' in the same beam",
+        "Thus we can define two states \u3008 j, S \u3009 and \u3008 j \u2032 , S \u2032 \u3009 to be equivalent, notated \u3008 j, S \u3009 \u223c \u3008 j \u2032 , S \u2032 \u3009 , iff.",
+        "Note that j = j \u2032 is also needed because the queue head position j determines which word to shift next. In practice, however, a small subset of atomic features will be enough to determine the whole feature vector, which we call kernel features \u02dc f ( j, S ) , defined as the smallest set of atomic templates such that"
       ],
       "predicted_spans": [
         {
-          "start": 2504,
-          "end": 2851
+          "start": 65,
+          "end": 157
+        },
+        {
+          "start": 2736,
+          "end": 2850
+        },
+        {
+          "start": 2882,
+          "end": 3198
+        }
+      ],
+      "word_metrics": {
+        "p": 0.13392857142857142,
+        "r": 1.0,
+        "f1": 0.23622047244094488,
+        "tp": 15,
+        "fp": 97,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5,
+          "tp": 1,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5,
+          "tp": 1,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5,
+          "tp": 1,
+          "fp": 2,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5
+        },
+        "0.8": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5
+        },
+        "1.0": {
+          "p": 0.3333333333333333,
+          "r": 1.0,
+          "f1": 0.5
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 0.0
+      },
+      "any_overlap_hits": 1,
+      "gold_count": 1,
+      "pred_count": 3,
+      "latency_s": 0.9702400081790984,
+      "error": null
+    },
+    {
+      "paper_id": "P85-1014",
+      "chunk_index": 10,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [
+        ";oodall's delinition of eqnivalence w,'~s that two terminal strings were said to be equivalent if they h;ul the same left and right contexts.",
+        "We can now specify a l,redicate lindcandi(lates(X Y SI $2) that hohls when {X. Y} is an equiw,hmt pair front the two grantmatical simple .:e,te,ces {SI. $2} .~ f, llows (li!,\u00a2. 17):-",
+        "findcandidates(X and Y in SI and $2) ir parse(Sl nil) ilnld parse(S2 nil) and eqlniv(X Y SL $2) wh,.rc eqt,iv is ,h'fit~,'d as :. ~q.iv(X Y X1 YI) if append3(Chi X Omega Xl) and ternfinals(X) and append3(C.hi Y Omega YI) and terminals(Y)",
+        "Then the predicate findcquivalencos is simply defined ;t~ (fig. 18) :-",
+        "findequivalences(X and Y in S1 and $2) if findcandidates(X and Y in S1 and $2) and not redundant(X Y)"
+      ],
+      "predicted_spans": [
+        {
+          "start": 26,
+          "end": 167
+        },
+        {
+          "start": 1966,
+          "end": 2148
+        },
+        {
+          "start": 2154,
+          "end": 2391
+        },
+        {
+          "start": 2642,
+          "end": 2712
+        },
+        {
+          "start": 2718,
+          "end": 2819
         }
       ],
       "word_metrics": {
@@ -1957,8 +4148,8 @@
         "r": 0.0,
         "f1": 0.0,
         "tp": 0,
-        "fp": 78,
-        "fn": 15
+        "fp": 127,
+        "fn": 0
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -1966,24 +4157,24 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
-          "fn": 1
+          "fp": 5,
+          "fn": 0
         },
         "0.5": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
-          "fn": 1
+          "fp": 5,
+          "fn": 0
         },
         "0.7": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 1,
-          "fn": 1
+          "fp": 5,
+          "fn": 0
         }
       },
       "containment_metrics_by_threshold": {
@@ -2004,14 +4195,83 @@
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 0.0,
-        "0.8": 0.0,
-        "1.0": 0.0
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
       },
       "any_overlap_hits": 0,
-      "gold_count": 1,
-      "pred_count": 1,
-      "latency_s": 1.3514355205697939,
+      "gold_count": 0,
+      "pred_count": 5,
+      "latency_s": 0.9702400081790984,
+      "error": null
+    },
+    {
+      "paper_id": "C82-2021",
+      "chunk_index": 2,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.9702400081790984,
       "error": null
     },
     {
@@ -2103,7 +4363,450 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 2,
-      "latency_s": 1.3514355205697939,
+      "latency_s": 0.9702400081790984,
+      "error": null
+    },
+    {
+      "paper_id": "E89-1002",
+      "chunk_index": 9,
+      "query": "parsing merge predicate sequence equivalence conditions",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.9702400081790984,
+      "error": null
+    },
+    {
+      "paper_id": "W16-2603",
+      "chunk_index": 10,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.2380060082301498,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 7,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [
+        "The counting algorithm just outlined is given more formally in the pseudocode below. The code afterline12is identical to that of the original algorithm.\n\n```\nPARSE for do if left[d] = then t t N, right[d] , N, 6 return r) then if = = then return else return elseif = = then total for do if left[d] = then total total + R, right[d] , total total + R, return total else 1t\u21900 3 4 1ifR=L+1 2 3 4 5 6 7 8 9 10 11\n```",
+        "This algorithm returns a number that is, in general, less than the number of legal linkages in the extended grammar; that is, it only counts a subset of all chained linkages. The reason is that the extended grammar introduces NL links symmetrically, and this symmetry is not \"broken\" by the parsing algorithm. For example, if one of the following linkages is legal in the extended grammar then all three of them are:\n\n<!-- image -->\n\n<!-- formula-not-decoded -->\n\nIn the algorithm given above, however, a null link can be introduced in this case only as follows:\n\n<!-- formula-not-decoded -->\n\nThis inconsistency is easily remedied. The algorithms will return the same number of chained linkages if the original parsing algorithm for the extended grammar is modified so that in the case where l NL and r = NL, a connection is only allowed to l.\n\nKnowing the total number of chained linkages is of limited use. This collection of parses includes \u00b7 many that have little or no structural information, such as the linkage that joins each word with its immediate neighbors by null links. Using the ideas just described, however, we can count the number of linkages that have the minimal number of null links. We first modify the algorithm to compute the cost of each span. To do this, the increment operations are replaced by \"min\" operations. The following pseudocode demonstrates how this is carried out."
+      ],
+      "predicted_spans": [
+        {
+          "start": 779,
+          "end": 1190
+        },
+        {
+          "start": 1355,
+          "end": 2757
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 324,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 2,
+      "latency_s": 1.2380060082301498,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 6,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [
+        "In this section we describe an algorithm for calculati!}g the cost of a sentence. The algorithm determines the minimum number of null links necessary to parse the sentence by making three dynamic programming passes. In the first pass the input is parsed using the original algorithm which counts the number of legal linkages. If the sentence is grammatical then this is the only pass that is carried out. If not, a second pass is made to calculate the minimum number of null links necessary to parse each substring. Since the results of th\ufffd first pass are memoized, only regions of the input sentence that are not grammatical need to be explored in this pass. The final pass counts the total number of parses with minimal cost.",
+        "The robust parsing algorithm is most easily understood by first considering the problem of counting all chained linkages, not just those with the fewest possible null links. To explain how'this calculation is carried out we need to review the original link grammar parsing algorithm, which proceeds by recursively counting parses in a top-down fashion. Consider the situation after a link has been proposed between a connector l' on word L and a connector on word R. For convenience, we define l and to be next[l1 and next[r'] respectively.",
+        "To explain the robust algorithm it will be helpful to repeat a fragment of the pseudocode representing thenumber of differentways todrawlinks among the connectors on the words strictlybetween L and R, and among the connectors in lists I and r."
+      ],
+      "predicted_spans": [
+        {
+          "start": 35,
+          "end": 762
+        },
+        {
+          "start": 764,
+          "end": 1304
+        },
+        {
+          "start": 2891,
+          "end": 3134
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 254,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 3,
+      "latency_s": 1.2380060082301498,
+      "error": null
+    },
+    {
+      "paper_id": "1993.iwpt-1.22",
+      "chunk_index": 16,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.2380060082301498,
+      "error": null
+    },
+    {
+      "paper_id": "1995.iwpt-1.15",
+      "chunk_index": 16,
+      "query": "RTN parse links per node total",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.2380060082301498,
       "error": null
     },
     {
@@ -2200,7 +4903,7 @@
       "any_overlap_hits": 2,
       "gold_count": 3,
       "pred_count": 2,
-      "latency_s": 2.4868291807360947,
+      "latency_s": 1.3216922500170767,
       "error": null
     },
     {
@@ -2292,7 +4995,145 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 3,
-      "latency_s": 2.4868291807360947,
+      "latency_s": 1.3216922500170767,
+      "error": null
+    },
+    {
+      "paper_id": "2024.emnlp-demo.19",
+      "chunk_index": 2,
+      "query": "sign language translation video backbone architecture",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.3216922500170767,
+      "error": null
+    },
+    {
+      "paper_id": "2022.emnlp-main.427",
+      "chunk_index": 17,
+      "query": "sign language translation video backbone architecture",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.3216922500170767,
       "error": null
     },
     {
@@ -2379,50 +5220,39 @@
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 2.4868291807360947,
+      "latency_s": 1.3216922500170767,
       "error": null
     },
     {
-      "paper_id": "2024.findings-acl.903",
-      "chunk_index": 25,
+      "paper_id": "D16-1047",
+      "chunk_index": 11,
       "query": "visual backbone number of parameters",
-      "gold_spans": [
-        {
-          "start": 40,
-          "end": 631,
-          "text": "The table presented in Table 9 outlines the number of total parameters and trainable parameters across various model configurations. It is evident that the choice of teacher models primarily determines the total number of parameters. As the number of teachers increases, there is a corresponding enhancement in the total parameter count. Furthermore, the architecture of the student model significantly influences the number of trainable parameters. For instance, encoder-decoder-based student models exhibit a higher count of trainable parameters compared to architectures employing only an"
-        },
-        {
-          "start": 633,
-          "end": 677,
-          "text": "Table 9: Model configurations and parameters"
-        }
-      ],
+      "gold_spans": [],
       "predicted_texts": [
-        "## D Additional Implementation Details\n\nThe table presented in Table 9 outlines the number of total parameters and trainable parameters across various model configurations. It is evident that the choice of teacher models primarily determines the total number of parameters. As the number of teachers increases, there is a corresponding enhancement in the total parameter count. Furthermore, the architecture of the student model significantly influences the number of trainable parameters. For instance, encoder-decoder-based student models exhibit a higher count of trainable parameters compared to architectures employing only an\n\nTable 9: Model configurations and parameters\n\n| Fine-grained | Coarse-Grained | Configure | # Para | # Trainable |\n|-----------------|--------------------------|-------------|-------------|---------------|\n| LiLT | N/A | Teacher | 130,169,799 | 130,169,799 |\n| LayoutLMv3 | N/A | Teacher | 125,332,359 | 125,332,359 |\n| LayoutLMv3 | LXMERT | JG-Encoder | 393,227,514 | 19,586,415 |\n| LayoutLMv3 | LXMERT | JG-Decoder | 423,952,890 | 50,311,791 |\n| LayoutLMv3 | LXMERT | JG- E & D | 440,494,842 | 66,853,743 |\n| LayoutLMv3 | VisualBERT&LXMERT | JG- E & D | 557,260,798 | 70,394,991 |\n| LayoutLMv3&LiLT | LXMERT VisualBERT&LXMERT | JG- E & D | 574,205,889 | 68,034,159 |\n| LayoutLMv3&LiLT | LXMERT VisualBERT&LXMERT | JG- E & D | 688,611,013 | 71,575,407 |"
+        "The dominant terms in the overall number of parameters are the (expected) word embeddings themselves. The variational parameters of the input word embeddings, \u03b3 , are of size k \u00d7 v w . The output word embeddings are of size # | h | \u00d7 v w . The morpheme embeddings are of size k \u00d7 v m , with v m /lessmuch v w . In our main experiments, we set v w = 48 , 896 (see above), k = 128 , and # | h | = 128 . After including the character embeddings and the parameters of the recurrent models, the total number of parameters is roughly 12 . 8 million. This is identical to number of parameters in the SUMEMBED baseline."
       ],
       "predicted_spans": [
         {
-          "start": 0,
-          "end": 1387
+          "start": 29,
+          "end": 640
         }
       ],
       "word_metrics": {
-        "p": 0.4238095238095238,
-        "r": 1.0,
-        "f1": 0.5953177257525083,
-        "tp": 89,
-        "fp": 121,
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 126,
         "fn": 0
       },
       "iou_metrics_by_threshold": {
         "0.3": {
-          "p": 1.0,
-          "r": 0.5,
-          "f1": 0.6666666666666666,
-          "tp": 1,
-          "fp": 0,
-          "fn": 1
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
         },
         "0.5": {
           "p": 0.0,
@@ -2430,7 +5260,7 @@
           "f1": 0.0,
           "tp": 0,
           "fp": 1,
-          "fn": 2
+          "fn": 0
         },
         "0.7": {
           "p": 0.0,
@@ -2438,7 +5268,7 @@
           "f1": 0.0,
           "tp": 0,
           "fp": 1,
-          "fn": 2
+          "fn": 0
         }
       },
       "containment_metrics_by_threshold": {
@@ -2463,32 +5293,44 @@
         "0.8": 1.0,
         "1.0": 1.0
       },
-      "any_overlap_hits": 2,
-      "gold_count": 2,
+      "any_overlap_hits": 0,
+      "gold_count": 0,
       "pred_count": 1,
-      "latency_s": 2.637543416582048,
+      "latency_s": 2.126655508391559,
       "error": null
     },
     {
-      "paper_id": "2023.findings-acl.725",
-      "chunk_index": 20,
+      "paper_id": "2024.findings-acl.903",
+      "chunk_index": 25,
       "query": "visual backbone number of parameters",
       "gold_spans": [
         {
-          "start": 35,
-          "end": 1196,
-          "text": "Following He et al. (2021), to simplify the computation of tunable parameters, we compute the sum of parameter used in one encoder layer and one decoder layer as the parameter overhead of one single layer of the pre-trained encoder-decoder model. T5 has an encoder-decoder structure that has L layers. Each layer has B attn blocks and B ffn blocks. For the encoder-decoder models like T5, B attn = 3 : the encoder self-attention block, the decoder self-attention block and the decoder cross-attention block and B ffn = 2 : encoder feedforward block and decoder feed-forward block. For modifications applied at the attention blocks, the number of tunable parameters is computed by \u03b8 attn = \u03b8 attn W \u00d7 B attn \u00d7 L , where \u03b8 attn W denotes the number of parameters used for one attention sub-layer. Similarly, the number of tunable parameters for the FFN sub-layers is computed by \u03b8 ffn = \u03b8 ffn W \u00d7 B ffn \u00d7 L . Finally, the total number of tunable parameters for prefix tuning and adapter variants is \u03b8 = \u03b8 attn + \u03b8 ffn as applicable. Using T5 as an example, we present the number of parameters used by several representative methods throughout our paper in Tab. 3."
+          "start": 40,
+          "end": 631,
+          "text": "The table presented in Table 9 outlines the number of total parameters and trainable parameters across various model configurations. It is evident that the choice of teacher models primarily determines the total number of parameters. As the number of teachers increases, there is a corresponding enhancement in the total parameter count. Furthermore, the architecture of the student model significantly influences the number of trainable parameters. For instance, encoder-decoder-based student models exhibit a higher count of trainable parameters compared to architectures employing only an"
+        },
+        {
+          "start": 633,
+          "end": 677,
+          "text": "Table 9: Model configurations and parameters"
         }
       ],
-      "predicted_texts": [],
-      "predicted_spans": [],
+      "predicted_texts": [
+        "Table 9: Model configurations and parameters\n\n| Fine-grained | Coarse-Grained | Configure | # Para | # Trainable |\n|-----------------|--------------------------|-------------|-------------|---------------|\n| LiLT | N/A | Teacher | 130,169,799 | 130,169,799 |\n| LayoutLMv3 | N/A | Teacher | 125,332,359 | 125,332,359 |\n| LayoutLMv3 | LXMERT | JG-Encoder | 393,227,514 | 19,586,415 |\n| LayoutLMv3 | LXMERT | JG-Decoder | 423,952,890 | 50,311,791 |\n| LayoutLMv3 | LXMERT | JG- E & D | 440,494,842 | 66,853,743 |\n| LayoutLMv3 | VisualBERT&LXMERT | JG- E & D | 557,260,798 | 70,394,991 |\n| LayoutLMv3&LiLT | LXMERT VisualBERT&LXMERT | JG- E & D | 574,205,889 | 68,034,159 |\n| LayoutLMv3&LiLT | LXMERT VisualBERT&LXMERT | JG- E & D | 688,611,013 | 71,575,407 |"
+      ],
+      "predicted_spans": [
+        {
+          "start": 633,
+          "end": 1387
+        }
+      ],
       "word_metrics": {
-        "p": 0.0,
-        "r": 0.0,
-        "f1": 0.0,
-        "tp": 0,
-        "fp": 0,
-        "fn": 207
+        "p": 0.04918032786885246,
+        "r": 0.06741573033707865,
+        "f1": 0.05687203791469194,
+        "tp": 6,
+        "fp": 116,
+        "fn": 83
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -2496,24 +5338,24 @@
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 2
         },
         "0.5": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 2
         },
         "0.7": {
           "p": 0.0,
           "r": 0.0,
           "f1": 0.0,
           "tp": 0,
-          "fp": 0,
-          "fn": 1
+          "fp": 1,
+          "fn": 2
         }
       },
       "containment_metrics_by_threshold": {
@@ -2534,14 +5376,246 @@
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 0.0,
-        "0.8": 0.0,
-        "1.0": 0.0
+        "0.5": 0.5,
+        "0.8": 0.5,
+        "1.0": 0.5
+      },
+      "any_overlap_hits": 1,
+      "gold_count": 2,
+      "pred_count": 1,
+      "latency_s": 2.126655508391559,
+      "error": null
+    },
+    {
+      "paper_id": "2023.findings-acl.725",
+      "chunk_index": 20,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [
+        {
+          "start": 35,
+          "end": 1196,
+          "text": "Following He et al. (2021), to simplify the computation of tunable parameters, we compute the sum of parameter used in one encoder layer and one decoder layer as the parameter overhead of one single layer of the pre-trained encoder-decoder model. T5 has an encoder-decoder structure that has L layers. Each layer has B attn blocks and B ffn blocks. For the encoder-decoder models like T5, B attn = 3 : the encoder self-attention block, the decoder self-attention block and the decoder cross-attention block and B ffn = 2 : encoder feedforward block and decoder feed-forward block. For modifications applied at the attention blocks, the number of tunable parameters is computed by \u03b8 attn = \u03b8 attn W \u00d7 B attn \u00d7 L , where \u03b8 attn W denotes the number of parameters used for one attention sub-layer. Similarly, the number of tunable parameters for the FFN sub-layers is computed by \u03b8 ffn = \u03b8 ffn W \u00d7 B ffn \u00d7 L . Finally, the total number of tunable parameters for prefix tuning and adapter variants is \u03b8 = \u03b8 attn + \u03b8 ffn as applicable. Using T5 as an example, we present the number of parameters used by several representative methods throughout our paper in Tab. 3."
+        }
+      ],
+      "predicted_texts": [
+        "Following He et al. (2021), to simplify the computation of tunable parameters, we compute the sum of parameter used in one encoder layer and one decoder layer as the parameter overhead of one single layer of the pre-trained encoder-decoder model. T5 has an encoder-decoder structure that has L layers. Each layer has B attn blocks and B ffn blocks. For the encoder-decoder models like T5, B attn = 3 : the encoder self-attention block, the decoder self-attention block and the decoder cross-attention block and B ffn = 2 : encoder feedforward block and decoder feed-forward block. For modifications applied at the attention blocks, the number of tunable parameters is computed by \u03b8 attn = \u03b8 attn W \u00d7 B attn \u00d7 L , where \u03b8 attn W denotes the number of parameters used for one attention sub-layer. Similarly, the number of tunable parameters for the FFN sub-layers is computed by \u03b8 ffn = \u03b8 ffn W \u00d7 B ffn \u00d7 L . Finally, the total number of tunable parameters for prefix tuning and adapter variants is \u03b8 = \u03b8 attn + \u03b8 ffn as applicable. Using T5 as an example, we present the number of parameters used by several representative methods throughout our paper in Tab. 3."
+      ],
+      "predicted_spans": [
+        {
+          "start": 35,
+          "end": 1196
+        }
+      ],
+      "word_metrics": {
+        "p": 1.0,
+        "r": 1.0,
+        "f1": 1.0,
+        "tp": 207,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 1,
+      "gold_count": 1,
+      "pred_count": 1,
+      "latency_s": 2.126655508391559,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.351",
+      "chunk_index": 22,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [],
+      "predicted_texts": [
+        "backbone and the router embeddings; (ii) frozen parameters which are the routers SMoE-Dropout and hypernetworks in HyperRouter ; (iii) dynamic parameters that are dynamically generated in each iteration, such as the routers in HyperRouter . Overall, the additional trainable parameters in HyperRouter is neglectable. Moreover, the number of frozen parameters (hypernetworks) is quite small compared to the transformer backbone ( 5 . 7% ). Investigating into sharing the hypernetworks across layers or generating the routers coordinately (Pham et al., 2022) can further reduce this cost while improving the performance, which we will leave for the future work.\n\n",
+        "Table A4: Number of parameters in different components of SMoE-Dropout and HyperRouter during training. Blue parameters are trainable, red parameters are frozen, and underline parameter are dynamically generated in each iteration.\n\n| Method | Router Emb. | Router | HyperNetwork | Transformer |\n|--------------|---------------|----------|----------------|----------------|\n| SMoE-Dropout | - | 16 . 448 | - | 19 , 505 . 350 |\n| HyperRouter | 1 . 024 | 16 . 448 | 1 , 112 . 576 | 19 , 505 . 350 |"
+      ],
+      "predicted_spans": [
+        {
+          "start": 706,
+          "end": 1367
+        },
+        {
+          "start": 209,
+          "end": 704
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 181,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
       },
       "any_overlap_hits": 0,
-      "gold_count": 1,
+      "gold_count": 0,
+      "pred_count": 2,
+      "latency_s": 2.126655508391559,
+      "error": null
+    },
+    {
+      "paper_id": "2025.naacl-long.476",
+      "chunk_index": 19,
+      "query": "visual backbone number of parameters",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
       "pred_count": 0,
-      "latency_s": 2.637543416582048,
+      "latency_s": 2.126655508391559,
       "error": null
     },
     {
@@ -2628,7 +5702,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 2,
-      "latency_s": 1.214142075041309,
+      "latency_s": 1.049447133205831,
       "error": null
     },
     {
@@ -2710,7 +5784,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.214142075041309,
+      "latency_s": 1.049447133205831,
       "error": null
     },
     {
@@ -2797,7 +5871,7 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 1.214142075041309,
+      "latency_s": 1.049447133205831,
       "error": null
     },
     {
@@ -2884,7 +5958,7 @@
       "any_overlap_hits": 1,
       "gold_count": 2,
       "pred_count": 1,
-      "latency_s": 1.214142075041309,
+      "latency_s": 1.049447133205831,
       "error": null
     },
     {
@@ -2976,7 +6050,7 @@
       "any_overlap_hits": 1,
       "gold_count": 3,
       "pred_count": 1,
-      "latency_s": 1.214142075041309,
+      "latency_s": 1.049447133205831,
       "error": null
     },
     {
@@ -2991,20 +6065,20 @@
         }
       ],
       "predicted_texts": [
-        "The primary reason for using language sequenceto-sequence models for this task, rather than causal models, is their computational efficiency, resulting in faster query processing times."
+        "The primary reason for using language sequenceto-sequence models for this task, rather than causal models, is their computational efficiency, resulting in faster query processing times. Additionally, given the nature of the datasets, farmers or users may require a clear, one-shot answer to their agricultural queries, which seq2seq transformers can effectively provide."
       ],
       "predicted_spans": [
         {
           "start": 325,
-          "end": 510
+          "end": 695
         }
       ],
       "word_metrics": {
-        "p": 1.0,
+        "p": 0.49019607843137253,
         "r": 1.0,
-        "f1": 1.0,
+        "f1": 0.6578947368421052,
         "tp": 25,
-        "fp": 0,
+        "fp": 26,
         "fn": 0
       },
       "iou_metrics_by_threshold": {
@@ -3025,12 +6099,12 @@
           "fn": 0
         },
         "0.7": {
-          "p": 1.0,
-          "r": 1.0,
-          "f1": 1.0,
-          "tp": 1,
-          "fp": 0,
-          "fn": 0
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1
         }
       },
       "containment_metrics_by_threshold": {
@@ -3040,14 +6114,14 @@
           "f1": 1.0
         },
         "0.8": {
-          "p": 1.0,
-          "r": 1.0,
-          "f1": 1.0
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
         },
         "1.0": {
-          "p": 1.0,
-          "r": 1.0,
-          "f1": 1.0
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
         }
       },
       "gold_coverage_recall_by_threshold": {
@@ -3058,7 +6132,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.2997542709344998,
+      "latency_s": 0.43067276673391464,
       "error": null
     },
     {
@@ -3133,7 +6207,221 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 0.2997542709344998,
+      "latency_s": 0.43067276673391464,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-naacl.136",
+      "chunk_index": 10,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.43067276673391464,
+      "error": null
+    },
+    {
+      "paper_id": "2023.findings-acl.740",
+      "chunk_index": 9,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Compared to the lightweight slot-filling classifiers in sketchbased models, recent sequence-to-sequence model decoders rely heavily on grammar-guided decoding processes which requires navigating through a huge search space and requires an even longer inference time than the encoders. For example, 76.62% and 87.14% of the inference time are spent in the decoding step for BRIDGE and RATSQL, while most of the inference time in NL2SQL-RULE is spent on the encoder. Considering the speed, compression effectiveness, and performance, sketch-based models would be better choices if we get similar performances on benchmark datasets."
+      ],
+      "predicted_spans": [
+        {
+          "start": 148,
+          "end": 777
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 90,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 0.43067276673391464,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-naacl.136",
+      "chunk_index": 11,
+      "query": "sequence-to-sequence vs causal models agricultural query speed",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.43067276673391464,
       "error": null
     },
     {
@@ -3245,7 +6533,7 @@
       "any_overlap_hits": 3,
       "gold_count": 5,
       "pred_count": 3,
-      "latency_s": 1.7480321418028324,
+      "latency_s": 1.7579040500335394,
       "error": null
     },
     {
@@ -3352,7 +6640,7 @@
       "any_overlap_hits": 4,
       "gold_count": 4,
       "pred_count": 3,
-      "latency_s": 1.7480321418028324,
+      "latency_s": 1.7579040500335394,
       "error": null
     },
     {
@@ -3372,13 +6660,13 @@
         }
       ],
       "predicted_texts": [
-        "Although our batched training involves actionspecific operations (Section 3), to our surprise, the efficiency improvement for our RNNG with large batch sizes is almost linear up to 256 (Figure 2). The improvement is narrow at 512, though this is mainly due to the restriction of the maximum number of actions in a batch (Section 5.1), which reduces the actual batch size for longer inputs. DyNet's Autobatch is quite effective up to 16, running much faster than ours due to the speed of C++, but further improvement is not obtained probably because of the increased overhead of finding mini-batch units themselves from a large computational graph.",
+        "Although our batched training involves actionspecific operations (Section 3), to our surprise, the efficiency improvement for our RNNG with large batch sizes is almost linear up to 256 (Figure 2). The improvement is narrow at 512, though this is mainly due to the restriction of the maximum number of actions in a batch (Section 5.1), which reduces the actual batch size for longer inputs.",
         "Though this result clearly demonstrates the efficiency of our batching mechanism, it is only meaningful when the large batch size in fact leads to a faster model convergence . This is the case, as shown in Figure 3, where we compare the total validation losses as a function of actual wall clock time during training. The loss is calculated every 1000 batches. The model with batch size 512 converges fastest, and importantly, to better parameters. This result suggests that we can safely benefit from large batch size as long as memory permits. In the following experiments, we fix the batch size to 512."
       ],
       "predicted_spans": [
         {
           "start": 31,
-          "end": 678
+          "end": 420
         },
         {
           "start": 680,
@@ -3387,11 +6675,11 @@
       ],
       "word_metrics": {
         "p": 1.0,
-        "r": 1.0,
-        "f1": 1.0,
-        "tp": 208,
+        "r": 0.8028846153846154,
+        "f1": 0.8906666666666667,
+        "tp": 167,
         "fp": 0,
-        "fn": 0
+        "fn": 41
       },
       "iou_metrics_by_threshold": {
         "0.3": {
@@ -3411,12 +6699,12 @@
           "fn": 0
         },
         "0.7": {
-          "p": 1.0,
-          "r": 1.0,
-          "f1": 1.0,
-          "tp": 2,
-          "fp": 0,
-          "fn": 0
+          "p": 0.5,
+          "r": 0.5,
+          "f1": 0.5,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1
         }
       },
       "containment_metrics_by_threshold": {
@@ -3438,13 +6726,13 @@
       },
       "gold_coverage_recall_by_threshold": {
         "0.5": 1.0,
-        "0.8": 1.0,
-        "1.0": 1.0
+        "0.8": 0.5,
+        "1.0": 0.5
       },
       "any_overlap_hits": 2,
       "gold_count": 2,
       "pred_count": 2,
-      "latency_s": 1.7480321418028324,
+      "latency_s": 1.7579040500335394,
       "error": null
     },
     {
@@ -3526,7 +6814,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.7480321418028324,
+      "latency_s": 1.7579040500335394,
       "error": null
     },
     {
@@ -3608,7 +6896,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.7480321418028324,
+      "latency_s": 1.7579040500335394,
       "error": null
     },
     {
@@ -3695,7 +6983,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 2,
-      "latency_s": 1.8651680276573945,
+      "latency_s": 1.6492319833487272,
       "error": null
     },
     {
@@ -3710,79 +6998,74 @@
         }
       ],
       "predicted_texts": [
-        "Table 2: Aggregated performance for LLMs across text domains, showing average start/end performances and recovery percentages for students without/with lessons in the dynamic setting and the static teacher performance. Higher recovery percentages indicate stronger concept understanding as measured by quiz performance.\n\n| Model | Student w/o Lesson | Student w/o Lesson | Student w/ Lesson | Student w/ Lesson | Teacher | Quiz Recovery of Student w/o Lesson (%) | Quiz Recovery of Student w/o Lesson (%) |\n|--------------|----------------------|----------------------|---------------------|---------------------|-------------|-------------------------------------------|-------------------------------------------|\n| | Start | End ( \u2206 ) | Start | End ( \u2206 ) | Performance | wrt S w/ L Start | wrt Teacher |\n| gpt-4o-mini | 47.91 | 73.68 (+25.77) | 78.83 | 81.23 (+2.40) | 90.05 | 91.23 | 81.47 |",
-        "Figure 4: Performance of student gpt-4o-mini models across various static and dynamic evaluation settings over five interaction rounds. Errorbars indicate the 95% confidence interval calculated by bootstrap. Performance with other LLMs can be found in App. Fig. 6."
+        "Table 2: Aggregated performance for LLMs across text domains, showing average start/end performances and recovery percentages for students without/with lessons in the dynamic setting and the static teacher performance. Higher recovery percentages indicate stronger concept understanding as measured by quiz performance.\n\n| Model | Student w/o Lesson | Student w/o Lesson | Student w/ Lesson | Student w/ Lesson | Teacher | Quiz Recovery of Student w/o Lesson (%) | Quiz Recovery of Student w/o Lesson (%) |\n|--------------|----------------------|----------------------|---------------------|---------------------|-------------|-------------------------------------------|-------------------------------------------|\n| | Start | End ( \u2206 ) | Start | End ( \u2206 ) | Performance | wrt S w/ L Start | wrt Teacher |\n| gpt-4o-mini | 47.91 | 73.68 (+25.77) | 78.83 | 81.23 (+2.40) | 90.05 | 91.23 | 81.47 |"
       ],
       "predicted_spans": [
         {
           "start": 1552,
           "end": 2447
-        },
-        {
-          "start": 1270,
-          "end": 1534
         }
       ],
       "word_metrics": {
-        "p": 0.2331288343558282,
-        "r": 1.0,
-        "f1": 0.3781094527363184,
-        "tp": 38,
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
         "fp": 125,
-        "fn": 0
+        "fn": 38
       },
       "iou_metrics_by_threshold": {
         "0.3": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666,
-          "tp": 1,
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
           "fp": 1,
-          "fn": 0
+          "fn": 1
         },
         "0.5": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666,
-          "tp": 1,
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
           "fp": 1,
-          "fn": 0
+          "fn": 1
         },
         "0.7": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666,
-          "tp": 1,
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
           "fp": 1,
-          "fn": 0
+          "fn": 1
         }
       },
       "containment_metrics_by_threshold": {
         "0.5": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
         },
         "0.8": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
         },
         "1.0": {
-          "p": 0.5,
-          "r": 1.0,
-          "f1": 0.6666666666666666
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
         }
       },
       "gold_coverage_recall_by_threshold": {
-        "0.5": 1.0,
-        "0.8": 1.0,
+        "0.5": 0.0,
+        "0.8": 0.0,
         "1.0": 0.0
       },
-      "any_overlap_hits": 1,
+      "any_overlap_hits": 0,
       "gold_count": 1,
-      "pred_count": 2,
-      "latency_s": 1.8651680276573945,
+      "pred_count": 1,
+      "latency_s": 1.6492319833487272,
       "error": null
     },
     {
@@ -3864,7 +7147,433 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 1.8651680276573945,
+      "latency_s": 1.6492319833487272,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.27",
+      "chunk_index": 10,
+      "query": "interactive Q&A 5 rounds vs static lesson learning accuracy",
+      "gold_spans": [],
+      "predicted_texts": [
+        "Table 4: One-round vs. multi-round: we compare (from the top) the model trained on around 800 examples in one round, the model trained with four rounds of iterative improvement (around 200 ex. per round), and the model with 8-round of improvements (around 100 ex. per round). We report overall F1, F1 on the ground-truth answerable subset, F1 on the ground-truth unanswerable subset, and the percentage of model-predicted unanswerable examples.\n\n| | F1 | Ans. F1 | Unans. F1 | %Unans. |\n|---------|-------|-----------|-------------|-----------|\n| 1-Round | 56.57 | 60.73 | 49.7 | 24.97 |\n| 4-Round | 64.34 | 56.93 | 79.01 | 41.41 |\n| 8-Round | 63.13 | 56.98 | 75.31 | 40.79 |",
+        "Overall, the one-round model does worse on F1 score, illustrating the benefit of the multi-round design."
+      ],
+      "predicted_spans": [
+        {
+          "start": 556,
+          "end": 1231
+        },
+        {
+          "start": 1606,
+          "end": 1710
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 131,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 2,
+      "latency_s": 1.6492319833487272,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 20,
+      "query": "interactive Q&A 5 rounds vs static lesson learning accuracy",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.6492319833487272,
+      "error": null
+    },
+    {
+      "paper_id": "2023.emnlp-main.120",
+      "chunk_index": 17,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23103731656447052,
+      "error": null
+    },
+    {
+      "paper_id": "2022.findings-emnlp.433",
+      "chunk_index": 13,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23103731656447052,
+      "error": null
+    },
+    {
+      "paper_id": "W17-2802",
+      "chunk_index": 14,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23103731656447052,
+      "error": null
+    },
+    {
+      "paper_id": "W17-2802",
+      "chunk_index": 11,
+      "query": "8B model concept learning accuracy gain after 5 interactive rounds",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 0.23103731656447052,
       "error": null
     },
     {
@@ -3946,7 +7655,7 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 1,
-      "latency_s": 0.7038670829497278,
+      "latency_s": 0.23103731656447052,
       "error": null
     },
     {
@@ -4021,7 +7730,7 @@
       "any_overlap_hits": 0,
       "gold_count": 1,
       "pred_count": 0,
-      "latency_s": 1.9435737919993699,
+      "latency_s": 1.4175993083976208,
       "error": null
     },
     {
@@ -4123,7 +7832,221 @@
       "any_overlap_hits": 1,
       "gold_count": 1,
       "pred_count": 5,
-      "latency_s": 1.9435737919993699,
+      "latency_s": 1.4175993083976208,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 9,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [
+        "We first evaluate students' ability to learn concepts without interaction. Here, the student either receives (1) no knowledge about the concept, or (2) the static lesson for the concept. We then compare these students' quiz performance to the teacher's performance. The teacher is given direct access to the context for the concept (and optionally, also the static lesson) and serves as a conceptual upper bound for the student models' performance."
+      ],
+      "predicted_spans": [
+        {
+          "start": 71,
+          "end": 519
+        }
+      ],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 70,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "0.8": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        },
+        "1.0": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 1,
+      "latency_s": 1.4175993083976208,
+      "error": null
+    },
+    {
+      "paper_id": "2022.inlg-main.14",
+      "chunk_index": 10,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.4175993083976208,
+      "error": null
+    },
+    {
+      "paper_id": "2025.acl-long.441",
+      "chunk_index": 8,
+      "query": "student accuracy after five rounds interactive questioning no initial lesson",
+      "gold_spans": [],
+      "predicted_texts": [],
+      "predicted_spans": [],
+      "word_metrics": {
+        "p": 0.0,
+        "r": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "iou_metrics_by_threshold": {
+        "0.3": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "0.7": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "containment_metrics_by_threshold": {
+        "0.5": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "0.8": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        },
+        "1.0": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0
+        }
+      },
+      "gold_coverage_recall_by_threshold": {
+        "0.5": 1.0,
+        "0.8": 1.0,
+        "1.0": 1.0
+      },
+      "any_overlap_hits": 0,
+      "gold_count": 0,
+      "pred_count": 0,
+      "latency_s": 1.4175993083976208,
       "error": null
     }
   ]

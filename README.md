@@ -39,9 +39,8 @@ All reproducible artifacts are on Hugging Face:
 
 [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/acl-verbatim-modernbert)
 is a 150M-parameter token classifier that highlights supporting evidence spans in a paper chunk
-given a query. On our gold benchmark it matches the word-level F1 of a 120B-parameter LLM
-extractor (0.563 vs 0.561) while running in ~50 ms per (question, chunk) on a single GPU.
-
+given a query. On the gold benchmark it scores 0.536 word-level F1 and is the
+best committed run in [artifacts/eval/gold_extraction/summary.csv](artifacts/eval/gold_extraction/summary.csv).
 ```python
 from transformers import AutoModel
 
@@ -172,7 +171,8 @@ python acl_verbatim/eval/compare_results.py SEARCH_RESULTS_FILE_1 SEARCH_RESULTS
 
 ## Extractor evaluation on the gold benchmark
 
-The gold benchmark is 20 queries × 5 retrieved chunks (47 relevant rows, 78 gold spans). See
+The gold benchmark is 20 queries × 5 retrieved chunks: 100 rows total, with 47 relevant rows
+containing 78 gold spans and 53 irrelevant negative rows. See
 [acl_verbatim/eval/README.md](acl_verbatim/eval/README.md) for supported prediction formats.
 Committed per-row predictions for every reported system live under
 [artifacts/eval/gold_extraction/](artifacts/eval/gold_extraction/) and can be rescored at any time.
@@ -226,7 +226,14 @@ python acl_verbatim/eval/evaluate_predictions.py --gold-file 333_20260206_dense_
 Print a one-row-per-system comparison across any number of runs:
 
 ```bash
-python acl_verbatim/eval/compare_span_runs.py --gold-file 333_20260206_dense_top5_20260305.json --run qwen=artifacts/eval/gold_extraction/qwen_paragraph_gold.json --run provence=artifacts/eval/gold_extraction/provence_gold.jsonl --run modernbert=artifacts/eval/gold_extraction/gte-reranker.thr_0.2_merged.json
+python acl_verbatim/eval/compare_span_runs.py \
+  --gold-file 333_20260206_dense_top5_20260305.json \
+  --run modernbert=artifacts/eval/gold_extraction/gte-reranker.thr_0.2_merged.json \
+  --run glm=artifacts/eval/gold_extraction/glm-5.json \
+  --run qwen=artifacts/eval/gold_extraction/qwen_paragraph_gold.json \
+  --run mistral=artifacts/eval/gold_extraction/mistral-small-2603.json \
+  --run provence=artifacts/eval/gold_extraction/provence_gold.jsonl \
+  --run zilliz=artifacts/eval/gold_extraction/zilliz_spans_03_gold.jsonl
 ```
 
 ---

@@ -1,11 +1,13 @@
 import tempfile
 import unittest
 from pathlib import Path
+from random import Random
 
 from acl_verbatim.core.jsonl import load_jsonl, write_jsonl
 from acl_verbatim.data.spans import Span, SpanRow
 from acl_verbatim.eval.span_metrics import evaluate_rows_against_predictions
 from acl_verbatim.synthetic.filtering import SilverFilterConfig, filter_and_split_rows
+from scripts.experiments.qasper_to_gold_file import convert_paper_paragraph
 
 
 class JsonlSmokeTest(unittest.TestCase):
@@ -85,6 +87,95 @@ class SpanMetricsSmokeTest(unittest.TestCase):
         self.assertAlmostEqual(summary["gold_coverage_recall"]["1.0"], 1.0)
         self.assertAlmostEqual(summary["recall_any_overlap"], 1.0)
         self.assertAlmostEqual(summary["over_prediction_ratio"], 1.0)
+
+    def test_negative_false_positive_penalizes_word_precision(self):
+        positive = SpanRow(
+            query="what is modernbert",
+            paper_id="2025.acl-long.5",
+            chunk_index=2,
+            chunk="ModernBERT is a long-context encoder for NLP.",
+            relevance_label="r",
+            is_relevant=True,
+            gold_spans=[Span(start=0, end=10, text="ModernBERT")],
+        )
+        negative = SpanRow(
+            query="what is modernbert",
+            paper_id="2025.acl-long.5",
+            chunk_index=3,
+            chunk="This paragraph discusses unrelated references.",
+            relevance_label="n",
+            is_relevant=False,
+            gold_spans=[],
+        )
+        pred_map = {
+            ("what is modernbert", "2025.acl-long.5", 2): {
+                "query": "what is modernbert",
+                "paper_id": "2025.acl-long.5",
+                "chunk_index": 2,
+                "pred_spans": [{"start": 0, "end": 10, "text": "ModernBERT"}],
+            },
+            ("what is modernbert", "2025.acl-long.5", 3): {
+                "query": "what is modernbert",
+                "paper_id": "2025.acl-long.5",
+                "chunk_index": 3,
+                "pred_spans": [{"start": 0, "end": 14, "text": "This paragraph"}],
+            },
+        }
+        summary = evaluate_rows_against_predictions([positive, negative], pred_map)[
+            "summary"
+        ]
+        self.assertEqual(summary["n_examples"], 2)
+        self.assertEqual(summary["n_relevant"], 1)
+        self.assertEqual(summary["n_irrelevant"], 1)
+        self.assertLess(summary["word_level"]["micro_precision"], 1.0)
+        self.assertAlmostEqual(summary["word_level"]["micro_recall"], 1.0)
+
+
+class QasperConverterSmokeTest(unittest.TestCase):
+    def test_qasper_converter_aligns_paragraph_and_float_evidence(self):
+        rows = convert_paper_paragraph(
+            {
+                "id": "paper-1",
+                "title": "Paper title",
+                "abstract": "Paper abstract.",
+                "full_text": {
+                    "section_name": ["Methods"],
+                    "paragraphs": [["The model uses a token classifier."]],
+                },
+                "figures_and_tables": {"caption": ["Table 1: Results."]},
+                "qas": {
+                    "question": ["What model is used?"],
+                    "question_id": ["q1"],
+                    "answers": [
+                        {
+                            "answer": [
+                                {
+                                    "unanswerable": False,
+                                    "evidence": [
+                                        "The model uses a token classifier.",
+                                        "FLOAT SELECTED: Table 1: Results.",
+                                    ],
+                                    "highlighted_evidence": [],
+                                }
+                            ]
+                        }
+                    ],
+                },
+            },
+            evidence_field="evidence",
+            include_unanswerable=False,
+            negative_ratio=0,
+            rng=Random(1337),
+        )
+        self.assertEqual(len(rows), 2)
+        chunks = [row["results"][0]["chunk"] for row in rows]
+        self.assertTrue(
+            all(row["results"][0]["relevance_label"] == "r" for row in rows)
+        )
+        self.assertTrue(
+            any("The model uses a token classifier." in chunk for chunk in chunks)
+        )
+        self.assertIn("FLOAT SELECTED: Table 1: Results.", chunks)
 
 
 if __name__ == "__main__":
