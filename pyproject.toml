@@ -45,6 +45,27 @@ training = [
     "peft>=0.7.0",
     "accelerate>=0.24.0",
 ]
+papermeta = [
+    "docopt>=0.6.2",
+    "filetype>=1.2.0",
+    "gitpython>=3.1.46",
+    "iso-639==0.4.4",
+    "jsonschema>=4.26.0",
+    "lxml>=6.1.0",
+    "msgspec>=0.20.0",
+    "nltk>=3.9.2",
+    "pre-commit>=4.5.1",
+    "pybtex>=0.26.1",
+    "pygithub>=2.8.1",
+    "pypdf2>=3.0.1",
+    "pytest>=9.0.2",
+    "rich>=14.3.2",
+    "texsoup~=0.3.1",
+    "python-slugify>=8.0.4",
+    "citeproc-py>=0.9.3",
+    "langcodes>=3.5.1",
+    "language_data>=1.4.0"
+]
 exit = [
     "torch>=2.0.0",
     "transformers>=4.36.0",

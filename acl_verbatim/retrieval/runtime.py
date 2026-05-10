@@ -46,6 +46,7 @@ def query_index(
         k=retrieve_k,
         rrf_k=60,
         hybrid_weights=hybrid_weights,
+        search_type=search_type,
         search_params=search_params,
         filter=None,
     )
