@@ -52,16 +52,32 @@ def normalize_text(text: str) -> str:
     return " ".join(text.split())
 
 
+def resolve_device(device: str | None) -> str:
+    if device:
+        return device
+    import torch
+
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
+
 class ProvenceSentenceExtractor:
-    def __init__(self, model_name: str, threshold: float, always_select_title: bool):
-        import torch
+    def __init__(
+        self,
+        model_name: str,
+        threshold: float,
+        always_select_title: bool,
+        device: str | None,
+    ):
         from transformers import AutoModel
 
+        self.device = resolve_device(device)
         self.model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
-        if torch.cuda.is_available():
-            self.model.to("cuda")
-        elif torch.backends.mps.is_available():
-            self.model.to("mps")
+        self.model.to(self.device)
+        self.model.eval()
         self.threshold = threshold
         self.always_select_title = always_select_title
 
@@ -94,6 +110,7 @@ def main():
     parser.add_argument("--gold-file", type=Path, required=True)
     parser.add_argument("--output-file", type=Path, required=True)
     parser.add_argument("--model-name", default="naver/provence-reranker-debertav3-v1")
+    parser.add_argument("--device", default=None)
     parser.add_argument("--threshold", type=float, default=0.1)
     parser.add_argument("--always-select-title", action="store_true")
     args = parser.parse_args()
@@ -102,6 +119,7 @@ def main():
         model_name=args.model_name,
         threshold=args.threshold,
         always_select_title=args.always_select_title,
+        device=args.device,
     )
     rows = list(load_gold_rows(args.gold_file))
     args.output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -135,6 +153,7 @@ def main():
                 "model": args.model_name,
                 "extractor": "provence",
                 "threshold": args.threshold,
+                "device": extractor.device,
             }
             f.write(json.dumps(record) + "\n")
 

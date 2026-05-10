@@ -15,6 +15,21 @@ from acl_verbatim.data.spans import load_gold_rows
 from acl_verbatim.eval.span_metrics import align_predicted_texts
 
 
+def resolve_device(device: str | None) -> str:
+    if device:
+        return device
+    try:
+        import torch
+
+        if torch.cuda.is_available():
+            return "cuda"
+        if torch.backends.mps.is_available():
+            return "mps"
+    except Exception:
+        pass
+    return "cpu"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gold-file", type=Path, required=True)
@@ -30,13 +45,17 @@ def main():
     parser.add_argument("--language", default="auto")
     args = parser.parse_args()
 
+    device = resolve_device(args.device)
     extractor = SemanticHighlightExtractor(
         model_name=args.model_name,
-        device=args.device,
+        device=device,
         threshold=args.threshold,
         output_mode=args.output_mode,
         language=args.language,
     )
+    if hasattr(extractor, "model"):
+        extractor.model.to(device)
+        extractor.model.eval()
     rows = list(load_gold_rows(args.gold_file))
     args.output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -68,6 +87,7 @@ def main():
                 "model": args.model_name,
                 "extractor": "semantic_highlight",
                 "output_mode": args.output_mode,
+                "device": device,
             }
             f.write(json.dumps(record) + "\n")
 
