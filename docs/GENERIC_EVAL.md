@@ -139,6 +139,9 @@ The four printed tables are the spine of the
 [`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2)
 model card.
 
+The current committed summary table is stored at
+[`artifacts/eval/generic_extraction/summary.csv`](../artifacts/eval/generic_extraction/summary.csv).
+
 All commands evaluate every row in the slice. Rows without gold spans naturally
 penalize extractors that emit false-positive text, while correct empty
 predictions on negatives do not inflate token-overlap scores.
