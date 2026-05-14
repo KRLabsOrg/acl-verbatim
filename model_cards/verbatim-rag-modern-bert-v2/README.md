@@ -218,7 +218,7 @@ on device, batching, and serving setup.
 
 | dataset | system | Word-P | Word-R | Word-F1 | IoU@0.5 | AnyOverlap | OverPred |
 |---|---|---:|---:|---:|---:|---:|---:|
-| ACL gold | **verbatim-rag-modern-bert-v2** | **0.625** | 0.368 | **0.463** | **0.366** | 0.449 | 0.679 |
+| ACL gold | **verbatim-rag-modern-bert-v2** | **0.630** | 0.366 | **0.463** | **0.364** | 0.449 | 0.692 |
 | ACL gold | Zilliz semantic-highlight | 0.470 | 0.221 | 0.301 | 0.113 | 0.513 | 1.500 |
 | ACL gold | Provence | 0.276 | **0.457** | 0.344 | 0.153 | **0.718** | 3.013 |
 | RAGBench | **verbatim-rag-modern-bert-v2** | 0.516 | **0.770** | **0.618** | 0.309 | **0.753** | 0.732 |
@@ -245,6 +245,8 @@ more conservative and lower recall.
 
 Evaluation commands and slice construction are documented in
 [`docs/GENERIC_EVAL.md`](https://github.com/KRLabsOrg/acl-verbatim/blob/main/docs/GENERIC_EVAL.md).
+The committed summary backing this table is
+[`artifacts/eval/generic_extraction/summary.csv`](https://github.com/KRLabsOrg/acl-verbatim/blob/main/artifacts/eval/generic_extraction/summary.csv).
 
 ## Citing
 
