@@ -34,6 +34,8 @@ relevant to your query.
 
 No paraphrasing. No synthesis. No hallucinations.
 
+![ACL-Verbatim example](acl_verbatim_example.png "ACL-Verbatim example")
+
 If the answer is in the ACL Anthology, the system should find the paper, retrieve the relevant
 section, and highlight the precise passage that addresses your question. If it isn't there — or if
 no retrieved chunk is sufficiently relevant — the system should tell you so, rather than making
