@@ -337,8 +337,22 @@ Apache 2.0. See [LICENSE](LICENSE).
 
 ## Citation
 
-TODO
+Please cite our paper *ACL-Verbatim: hallucination-free question answering for research*
+
+```
+@misc{Recski:2026,
+      title={ACL-Verbatim: hallucination-free question answering for research},
+      author={Gábor Recski and Szilveszter Tóth and Nadia Verdha and István Boros and Ádám Kovács},
+      year={2026},
+      eprint={2605.21102},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2605.21102},
+}
+```
 
 ## Acknowledgements
 
-TODO
+ACL-Verbatim was built in collaboration by [KR Labs](https://krlabs.eu/) and the [TU Wien Data Science
+Research Unit](https://informatics.tuwien.ac.at/orgs/e194-04).
+Work partially supported by the [CLEAR project](https://www.k-pass.at/en/financed-proposals/detail/clear-comprehensible-learning-for-entity-anonymization-and-recognition/), funded within the Cybersecurity Programme Kybernet-Pass of the Austrian Federal Ministry of Finance.
