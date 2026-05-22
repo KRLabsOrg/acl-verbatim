@@ -10,13 +10,14 @@ you check — and the detail it described doesn't quite exist in the source (if 
 exists). This is the hallucination problem, and for researchers who need to trust their tools, it's
 a dealbreaker. KR Labs has built [VerbatimRAG](https://huggingface.co/blog/adaamko/verbatimrag) for
 transparent and trustworthy question answering, and you can now use it to search through all papers
-in the ACL Anthology, the primary resource for research on natural language processing. This
-application of VerbatimRAG is called **ACL-Verbatim**, and you can try it right now at
-**[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**. In this short blogpost we describe the
-creation of the dataset, models, and pipelines necessary to deploy ACL-Verbatim. All components are
-released as open-source software under the
-[acl-verbatim](https://github.com/KRLabsOrg/acl-verbatim) repository and can serve as a blueprint
-for deploying VerbatimRAG on any document collection.
+in the ACL Anthology, the primary resource for research on natural language processing. Let's start
+with some highlights:
+
+- You can start querying NLP papers via **ACL-Verbatim** right now by going to **[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**
+- The markdown version of all papers in the ACL Anthology are released publicly as [KRLabsOrg/acl-anthology-md](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md) under CC
+BY 4.0 (114K papers as of February 2026 and growing).
+- All components are free and open-source. The [acl-verbatim](https://github.com/KRLabsOrg/acl-verbatim) repo can serve as a blueprint for deploying [verbatim-rag](https://github.com/KRLabsOrg/acl-verbatim) on any document collection.
+- We also release our state-of-the-art **extraction models**. [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v1) has been trained on gold spans of the ACL data, [`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) is its generic counterpart trained on our [`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans) dataset.
 
 ---
 
@@ -73,7 +74,11 @@ We created a pipeline that generates **synthetic queries** based on the [ScIRGen
 methodology](https://dl.acm.org/doi/10.1145/3711896.3737432). For each sampled paper, a random
 chunk is selected, and an LLM generates question types and questions for that chunk, which are then
 rewritten into short, search-engine-style queries. This three-step pipeline produced 906 queries
-across 333 papers. The **manually annotated portion** of the dataset consists of 100 query–chunk
+across 333 papers. Here is an example:
+
+![Query generation example](query_gen_example.png "Query generation example")
+
+The **manually annotated portion** of the dataset consists of 100 query–chunk
 pairs (20 queries × top-5 retrieved chunks), annotated by NLP researchers. For each chunk,
 annotators:
 
@@ -82,7 +87,7 @@ annotators:
 
 This is genuinely hard work. The annotation task demands domain knowledge, careful reading, and
 judgment calls about what counts as a "useful" span versus merely related text. You can read more
-on the challenges of this task in our [paper](TODO). The final benchmark — 47 relevant chunks with
+on the challenges of this task in our [paper](https://arxiv.org/abs/2605.21102). The final benchmark — 47 relevant chunks with
 78 gold evidence spans, and 53 irrelevant chunks — is small by the standards of NLP datasets, but
 it's gold-standard quality for a genuinely difficult task. All code for query generation and
 annotation is on [GitHub](https://github.com/KRLabsOrg/acl-verbatim).
@@ -104,7 +109,7 @@ signal we care about.
 
 On our gold benchmark, this 150M-parameter model achieves **Word-F1 of 53.6**, outperforming every
 evaluated LLM extractor. The table below shows word-level F1 scores, more detailed metrics are
-available in the [paper](TODO).
+available in the [paper](https://arxiv.org/abs/2605.21102).
 
 | Model | Word-F1 | Parameters |
 |---|---|---|
@@ -119,7 +124,7 @@ plausible-sounding but off-topic text. On the 53 irrelevant chunks in the evalua
 predicted no spans for 60 out of 100 total chunks, compared to only 35 abstentions for the
 paragraph-style Mistral model.
 
-For a RAG system, high-precision extraction is exactly what you want: it means fewer false
+For a RAG system, **high-precision extraction is exactly what you want**: it means fewer false
 positives surfaced to the user, not just more relevant text highlighted.
 
 ---
@@ -157,7 +162,7 @@ All code, models, and data are open:
 - **Application & pipeline**:
   [github.com/KRLabsOrg/acl-verbatim](https://github.com/KRLabsOrg/acl-verbatim)
 - **Paper**:
-  [ACL-Verbatim: hallucination-free question answering for research](TODO)
+  [ACL-Verbatim: hallucination-free question answering for research](https://arxiv.org/abs/2605.21102)
 - **Markdown corpus**:
   [KRLabsOrg/acl-anthology-md](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md)
 - **ACL model**:
