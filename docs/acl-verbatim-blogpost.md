@@ -17,6 +17,7 @@ with some highlights:
 - The **markdown version of all papers** in the ACL Anthology are released publicly as [KRLabsOrg/acl-anthology-md](https://huggingface.co/datasets/KRLabsOrg/acl-anthology-md) under CC
 BY 4.0 (114K papers as of February 2026 and growing).
 - All components are **free and open-source**. The [acl-verbatim](https://github.com/KRLabsOrg/acl-verbatim) repo can serve as a blueprint for deploying [verbatim-rag](https://github.com/KRLabsOrg/acl-verbatim) on any document collection.
+- Our hosted platform includes an [MCP server](https://github.com/KRLabsOrg/verbatim-mcp), and there is even a [Claude Code skill](https://github.com/KRLabsOrg/verbatim-skill) for Verbatim research.
 - We also release our state-of-the-art **extraction models** and the underlying **span datasets**
     - [`KRLabsOrg/acl-verbatim-modernbert`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v1) has been trained on gold spans of the ACL data, released as [`acl-verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/acl-verbatim-spans)
     - [`KRLabsOrg/verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) is its generic counterpart trained on our multi-domain [`KRLabsOrg/verbatim-spans`](https://huggingface.co/datasets/KRLabsOrg/verbatim-spans) dataset
@@ -159,9 +160,7 @@ that you can fine-tune further on domain-specific data.
 
 ## Build With It: API, Local Extraction, and Agent Integrations
 
-The artifacts above are open, but you don't have to assemble them yourself. The same stack runs as a hosted platform at **[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**, with a Python SDK, an MCP server, and a Claude Code skill on top.
-
-Before we get to the platform, we show how to use our SOTA, 150M-parameter model. It's a token classifier with a `.process()` method. The [model card](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) ships the entire integration in five lines:
+All components are open-source software, but you don't have to assemble them yourself. The same stack runs as a hosted platform at **[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**, with a Python SDK, an MCP server, and a Claude Code skill on top. Examples are shown below for all of these, but first, let's see how our state-of-the-art 150M-parameter model can be used from Python code. The model is a token classifier with a `.process()` method, the [model card](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) ships the entire integration in five lines:
 
 ```python
 from transformers import AutoModel
@@ -191,9 +190,9 @@ Output:
 [0.99] ModernBERT is a long-context encoder for NLP. It supports sequences up to 8192 tokens. Unlike earlier BERT variants, it uses rotary position embeddings.
 ```
 
-That's the entire integration. `.process()` returns a list of `{text, score, start, end}` spans — character offsets into the input context, with confidence scores. No LLM, no API key, no network call at inference time. On a modest GPU it's a few milliseconds per chunk; on CPU it's still well under a second. For short-answer style queries (file paths, table cells, numbers) the model card suggests `threshold=0.1, min_span_chars=10`; the defaults (`threshold=0.2, min_span_chars=30`) are tuned for paragraph-style scientific QA.
+That's the entire integration. `.process()` returns a list of `{text, score, start, end}` spans — character offsets into the input context, with confidence scores. No LLM, no API key, no network call at inference time. On a modest GPU it's a few milliseconds per chunk; on CPU it's still well under a second. For short-answer style queries (file paths, table cells, numbers) the model card suggests `threshold=0.1, min_span_chars=10`; the defaults (`threshold=0.2, min_span_chars=30`) are tuned for scientific question-answering where paragraph-length highlights are often called for.
 
-The rest of the section we'll introduce how to use our hosted platform, and then show a recipe for using the platform's retrieval with local extraction to get a fully deterministic, LLM-free question answering pipeline.
+The rest of the section will demo all other features of our hosted platform, and in the end we will also show a recipe for using the platform's retrieval with local extraction to get a fully deterministic, LLM-free question answering pipeline.
 
 ### The Platform API
 
