@@ -157,6 +157,228 @@ that you can fine-tune further on domain-specific data.
 
 ---
 
+## Build With It: API, Local Extraction, and Agent Integrations
+
+The artifacts above are open, but you don't have to assemble them yourself. The same stack runs as a hosted platform at **[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**, with a Python SDK, an MCP server, and a Claude Code skill on top.
+
+Before we get to the platform, we show how to use our SOTA, 150M-parameter model. It's a token classifier with a `.process()` method. The [model card](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) ships the entire integration in five lines:
+
+```python
+from transformers import AutoModel
+
+model = AutoModel.from_pretrained(
+    "KRLabsOrg/verbatim-rag-modern-bert-v2",
+    trust_remote_code=True,
+)
+
+result = model.process(
+    question="What is ModernBERT?",
+    context=(
+        "ModernBERT is a long-context encoder for NLP. "
+        "It supports sequences up to 8192 tokens. "
+        "Unlike earlier BERT variants, it uses rotary position embeddings."
+    ),
+    threshold=0.2,
+)
+
+for span in result["spans"]:
+    print(f"[{span['score']:.2f}] {span['text']}")
+```
+
+Output:
+
+```
+[0.99] ModernBERT is a long-context encoder for NLP. It supports sequences up to 8192 tokens. Unlike earlier BERT variants, it uses rotary position embeddings.
+```
+
+That's the entire integration. `.process()` returns a list of `{text, score, start, end}` spans — character offsets into the input context, with confidence scores. No LLM, no API key, no network call at inference time. On a modest GPU it's a few milliseconds per chunk; on CPU it's still well under a second. For short-answer style queries (file paths, table cells, numbers) the model card suggests `threshold=0.1, min_span_chars=10`; the defaults (`threshold=0.2, min_span_chars=30`) are tuned for paragraph-style scientific QA.
+
+The rest of the section we'll introduce how to use our hosted platform, and then show a recipe for using the platform's retrieval with local extraction to get a fully deterministic, LLM-free question answering pipeline.
+
+### The Platform API
+
+The ACL Anthology is the only collection currently available (`anthology`, 114K papers). Sign in, create an API key, then:
+
+```bash
+export VERBATIM_API_KEY=vb_your_key_here
+```
+
+The REST surface is small and explicit:
+
+| Endpoint | What it returns |
+|---|---|
+| `GET  /api/v1/collections` | List visible collections (id, name, record count) |
+| `GET  /api/v1/collections/{id}` | Single collection metadata |
+| `GET  /api/v1/papers/search?query=…&year=…&limit=…&include_chunks=…` | Retrieve papers and their chunks. Pass `include_chunks=true` to also receive the retrieved chunks behind each match |
+| `GET  /api/v1/papers/{id}` | Paper metadata |
+| `GET  /api/v1/papers/{id}/bibtex` | BibTeX entry |
+| `GET  /api/v1/papers/{id}/content` | Full markdown of the paper |
+| `GET  /api/v1/facets?field=…&q=…` | Trigram-fuzzy facet autocomplete (`author`, `venue`, `booktitle`, `year`) |
+| `POST /api/v1/query` | Grounded RAG answer with citations (LLM-backed) |
+| `POST /api/v1/query/stream` | NDJSON stream of the same |
+| `POST /api/v1/transform/verbatim` | Caller-supplied context → cited answer |
+
+Search, facet, and content endpoints don't invoke an LLM and don't count against query quota — they're the building blocks for any custom pipeline.
+
+### `verbatim-client` — Python SDK + CLI
+
+The official Python client is on PyPI:
+
+```bash
+pip install verbatim-client
+```
+
+It ships both an SDK and a `verbatim` command-line tool. First run:
+
+```bash
+verbatim collections list
+verbatim search "attention mechanism" --year 2017 --limit 3
+verbatim paper bibtex I17-1004 > ghader-2017.bib
+verbatim query "What is the attention mechanism?"
+```
+
+From Python the same operations are typed end-to-end:
+
+```python
+from verbatim_client import VerbatimClient
+
+with VerbatimClient() as client:           # reads VERBATIM_API_KEY
+    papers = client.search_papers("attention mechanism", year=2017, limit=3)
+    for p in papers:
+        print(p.id, p.title)
+
+    res = client.query("What is the attention mechanism in transformers?")
+    print(res.answer)
+    for cite in res.structured_answer.citations:
+        print(f"  [{cite.number}] {cite.text}")
+```
+
+Every response is a Pydantic model, every API error raises a single `VerbatimError(status_code, detail)`, and `AsyncVerbatimClient` mirrors the same surface for `async`/`await` code. `query_stream(...)` yields the documents → highlights → answer stages as NDJSON events.
+
+Sample outputs in the terminal can be seen in the screenshots below. The CLI is a nice way to explore the platform and get a feel for the capabilities before building your own integration.
+
+![verbatim query in the CLI returning a cited, structured answer](verbatim_q.png "`verbatim query` returns a structured answer with numbered citations grounded in real ACL papers.")
+
+![verbatim search returning a typed table of ACL papers](verbatim_s.png "`verbatim search` returns ranked paper metadata — no LLM, no quota cost.")
+
+### Recipe: Hosted Search + Local Extraction — No LLM in the Loop
+
+A particularly nice pattern: let the platform handle retrieval, and run the **verbatim extractor locally** for highlights. The result is a fully deterministic, LLM-free pipeline.
+
+Run `search_papers` with `include_chunks=True`. With that flag, the api returns the chunks it scored as relevant, exactly what an extractor wants as input. No need to refetch full papers, no need to chunk them yourself.
+
+```python
+from types import SimpleNamespace
+from verbatim_client import VerbatimClient
+from verbatim_rag.extractors import ModelSpanExtractor
+from verbatim_core.templates.static import StaticTemplate
+
+question = "What is the attention mechanism in transformers?"
+
+# 1) Platform-side retrieval. Free — no LLM, no query quota.
+#    Each PaperSummary carries `matched_chunks=[{text, score}, ...]`.
+with VerbatimClient() as client:
+    papers = client.search_papers(question, limit=5, include_chunks=True)
+
+chunks = [
+    SimpleNamespace(text=c.text, metadata={"paper_id": p.id, "title": p.title})
+    for p in papers
+    for c in (p.matched_chunks or [])
+]
+
+# 2) Extract evidence spans locally with verbatim-rag-modern-bert-v2.
+extractor = ModelSpanExtractor("KRLabsOrg/verbatim-rag-modern-bert-v2")
+spans_by_doc = extractor.extract_spans(question, chunks)
+
+# 3) Assemble the final response with a static template — also LLM-free.
+display_spans = [
+    {"text": span, "doc_text": doc_text}
+    for doc_text, spans in spans_by_doc.items()
+    for span in spans
+][:5]
+template = StaticTemplate.create_academic()
+print(template.fill(template.get_template(), display_spans, citation_spans=[]))
+```
+
+Running this against the live platform with a real API key gives back a literature-review-style Markdown answer composed entirely of verbatim spans:
+
+```
+## Literature Review
+
+Based on the available literature:
+
+[1] The attention mechanism att is specified with the following components:
+- A masking function m : N × N →{ 0 , 1 } that determines the positions attended to…
+- A scoring function score : R D × R D → R.
+- A normalization function norm : R T → ∆ T -1 that normalizes the attention scores.
+
+[2] Attention is a core component of Transformers, which consist of several layers,
+each containing multiple attentions ('heads'). We focused on analyzing the inner
+workings of these heads.
+
+[3] Figure 1: Overview of attention mechanism in Transformers. Sizes of the colored
+circles illustrate the value of the scalar or the norm of the corresponding vector…
+
+[4] One problem with transformers is the quadratic memory, and computational growth
+as sequence length increases because every token attends to all other tokens. Some
+have dealt with this problem by modifying the attention patterns…
+
+[5] The general superior performance of transformers at these tasks is due to its
+attention mechanism: where the word vectors representations of the text sequence Q
+are compared to those from sequence K…
+
+### Summary
+These findings provide evidence relevant to the research question.
+```
+
+What happened:
+
+- `search_papers(include_chunks=True)` is a single platform call. It runs the Milvus vector search, ranks the papers, **and returns the chunks the ranker actually used** in `matched_chunks`. No LLM used.
+- `ModelSpanExtractor` loads [`verbatim-rag-modern-bert-v2`](https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2) (~150M params, runs comfortably on CPU or a small GPU) and returns character spans per chunk. No generation, no token cost, no hallucination, the model either points at evidence or abstains.
+- `StaticTemplate.fill(...)` is the deterministic answer-assembly step VerbatimRAG would otherwise hand to an LLM. It expands `[DISPLAY_SPANS]` into the numbered evidence list using the same code path that `VerbatimTransform` runs internally.
+
+Swap `verbatim-rag-modern-bert-v2` for `acl-verbatim-modernbert` if you want the ACL-specialized model, or point at your own fine-tune.
+
+### Agent Integrations: MCP + Claude Code Skill
+
+Two more packages wrap the same platform for agentic use:
+
+**[`verbatim-mcp`](https://github.com/KRLabsOrg/verbatim-mcp)** — an MCP server that exposes the platform as tools (`search_papers`, `get_paper`, `get_paper_content`, `query_rag`, `verbatim_transform`, plus facet listings). Drop it into Claude Desktop, Cursor, or any MCP-aware client; the assistant can search the ACL Anthology and pull grounded answers without leaving the chat.
+
+```bash
+pip install verbatim-mcp
+# then point your MCP client at `verbatim-mcp` with VERBATIM_API_KEY set
+```
+
+**[`verbatim-skill`](https://github.com/KRLabsOrg/verbatim-skill)** — a [Claude Code](https://code.claude.com/) plugin that exposes the platform as two slash commands: `/verbatim:search` for collection search + research questions, and `/verbatim:transform` for cited verbatim answers over any context you supply.
+
+Install it from the KR Labs marketplace:
+
+```bash
+claude plugin marketplace add https://github.com/KRLabsOrg/verbatim-skill
+claude plugin install verbatim
+export VERBATIM_API_KEY=vb_your_key_here
+```
+
+Restart Claude Code and the commands show up in autocomplete. A few things to try:
+
+```text
+/verbatim:search papers about transformer efficiency from 2023
+/verbatim:search what does the research say about attention mechanisms?
+/verbatim:search find recent EMNLP work on prompt sensitivity
+/verbatim:transform what are the main findings? <paste-your-context-here>
+```
+
+`/verbatim:search` routes between paper search (with optional year, venue, and author filters) and the RAG query endpoint depending on whether you handed it a query or a question, then drops the typed table or cited answer back inline. `/verbatim:transform` takes a question plus context from your buffer (file contents, conversation history, anything you paste in) and runs the collection-agnostic verbatim transform to return a cited answer grounded in **your** text rather than the platform's index.
+
+You can also just ask Claude naturally — *"find me three papers about retrieval-augmented generation from EMNLP 2023"* — and it picks the right slash command on its own.
+
+![/verbatim:search running in Claude Code, returning a typed table of ACL papers](verbatim_skill.png "`/verbatim:search papers about transformer efficiency from 2023` rendered inline in Claude Code via the verbatim-skill plugin.")
+
+`verbatim-client`, `verbatim-mcp`, and `verbatim-skill` cover the integration surface: SDK for scripts and notebooks, MCP for agentic clients, skill for Claude Code workflows. All three hit the same hosted platform and the same collections.
+
+---
+
 ## Try It
 
 The full ACL-Verbatim application is live at **[verbatim.krlabs.eu](https://verbatim.krlabs.eu)**.
@@ -176,6 +398,22 @@ All code, models, and data are open:
 
 
 Questions, feedback, and pull requests are all welcome.
+
+
+## Research & Citation
+
+**If you use ACL-Verbatim in your research:**
+```bibtex
+@misc{Recski:2026,
+      title={ACL-Verbatim: hallucination-free question answering for research}, 
+      author={Gábor Recski and Szilveszter Tóth and Nadia Verdha and István Boros and Ádám Kovács},
+      year={2026},
+      eprint={2605.21102},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2605.21102}, 
+}
+```
 
 ---
 
