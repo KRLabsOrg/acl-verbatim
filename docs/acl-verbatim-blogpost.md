@@ -35,7 +35,7 @@ relevant to your query.
 
 No paraphrasing. No synthesis. No hallucinations.
 
-![ACL-Verbatim example](acl_verbatim_example.png "ACL-Verbatim example")
+![ACL-Verbatim example](https://raw.githubusercontent.com/KRLabsOrg/acl-verbatim/main/docs/acl_verbatim_example.png "ACL-Verbatim example")
 
 If the answer is in the ACL Anthology, the system should find the paper, retrieve the relevant
 section, and highlight the precise passage that addresses your question. If it isn't there — or if
@@ -81,7 +81,7 @@ chunk is selected, and an LLM generates question types and questions for that ch
 rewritten into short, search-engine-style queries. This three-step pipeline produced 906 queries
 across 333 papers. Here is an example:
 
-![Query generation example](query_gen_example.png "Query generation example")
+![Query generation example](https://raw.githubusercontent.com/KRLabsOrg/acl-verbatim/main/docs/query_gen_example.png "Query generation example")
 
 The **manually annotated portion** of the dataset consists of 100 query–chunk
 pairs (20 queries × top-5 retrieved chunks), annotated by NLP researchers. For each chunk,
@@ -256,9 +256,9 @@ Every response is a Pydantic model, every API error raises a single `VerbatimErr
 
 Sample outputs in the terminal can be seen in the screenshots below. The CLI is a nice way to explore the platform and get a feel for the capabilities before building your own integration.
 
-![verbatim query in the CLI returning a cited, structured answer](verbatim_q.png "`verbatim query` returns a structured answer with numbered citations grounded in real ACL papers.")
+![verbatim query in the CLI returning a cited, structured answer](https://raw.githubusercontent.com/KRLabsOrg/acl-verbatim/main/docs/verbatim_q.png "`verbatim query` returns a structured answer with numbered citations grounded in real ACL papers.")
 
-![verbatim search returning a typed table of ACL papers](verbatim_s.png "`verbatim search` returns ranked paper metadata — no LLM, no quota cost.")
+![verbatim search returning a typed table of ACL papers](https://raw.githubusercontent.com/KRLabsOrg/acl-verbatim/main/docs/verbatim_s.png "`verbatim search` returns ranked paper metadata — no LLM, no quota cost.")
 
 ### Recipe: Hosted Search + Local Extraction — No LLM in the Loop
 
@@ -372,7 +372,7 @@ Restart Claude Code and the commands show up in autocomplete. A few things to tr
 
 You can also just ask Claude naturally — *"find me three papers about retrieval-augmented generation from EMNLP 2023"* — and it picks the right slash command on its own.
 
-![/verbatim:search running in Claude Code, returning a typed table of ACL papers](verbatim_skill.png "`/verbatim:search papers about transformer efficiency from 2023` rendered inline in Claude Code via the verbatim-skill plugin.")
+![/verbatim:search running in Claude Code, returning a typed table of ACL papers](https://raw.githubusercontent.com/KRLabsOrg/acl-verbatim/main/docs/verbatim_skill.png "`/verbatim:search papers about transformer efficiency from 2023` rendered inline in Claude Code via the verbatim-skill plugin.")
 
 `verbatim-client`, `verbatim-mcp`, and `verbatim-skill` cover the integration surface: SDK for scripts and notebooks, MCP for agentic clients, skill for Claude Code workflows. All three hit the same hosted platform and the same collections.
 
